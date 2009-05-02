@@ -1,0 +1,17 @@
+.config
+~$*
+.DS_Store
+.metadata
+.actionScriptProperties
+.#*
+*~
+*.o
+*.swf
+*.swp
+*.rej
+*.log
+*.pem
+*old
+*bak
+*diff
+*orig
