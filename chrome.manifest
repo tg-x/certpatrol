@@ -1,0 +1,5 @@
+content	certpatrol	chrome/content/
+locale	certpatrol	en-US	chrome/locale/en-US/
+skin	certpatrol	classic/1.0	chrome/skin/
+
+overlay	chrome://browser/content/browser.xul	chrome://CertPatrol/content/ff-overlay.xul

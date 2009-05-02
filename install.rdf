@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://developer.mozilla.org/en/docs/Building_an_Extension -->
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>CertPatrol@PSYC.EU</em:id>
+    <em:type>2</em:type>
+    <em:name>Certificate Patrol</em:name>
+    <em:version>0.4.0.6</em:version>
+    <em:creator>The PSYC Community</em:creator>
+    <!-- See also http://www.developerfriendly.com/ and http://www.psyc.us -->
+    <em:developer>Mukunda Modell</em:developer>
+    <em:developer>Carl v. symlynX</em:developer>
+    <em:homepageURL>http://patrol.psyced.org</em:homepageURL>
+    <em:description>Monitor certificates the browser adopts for encrypted https websites.</em:description>
+    <!-- em:optionsURL>chrome://CertPatrol/content/options.xul</em:optionsURL -->
+    <!-- em:updateURL>http://www.foo.com/update.cgi?id=%ITEM_ID%&amp;version=%ITEM_VERSION%</em:updateURL -->
+    <!-- aboutURL, iconURL -->
+
+    <!-- https://addons.mozilla.org/en-US/firefox/pages/appversions -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
+        <em:minVersion>2.0a1</em:minVersion>
+        <em:maxVersion>3.2a1pre</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+  </Description>
+</RDF>
