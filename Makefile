@@ -1,5 +1,5 @@
-V=0.4.0.6
-N=CertPatrol
+#V=0.4.0.6
+#N=CertPatrol
 
 # Certificate Patrol - a paranoid Firefox extension.
 #
