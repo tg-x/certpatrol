@@ -16,3 +16,26 @@ have a working web browsing experience, abuses your trust allowing
 someone to read into your HTTPS communications by means of a subtle man
 in the middle attack. Still, this is a very paranoid thing to expect to
 happen, so only use this if you think you are sufficiently paranoid.
+
+======/--------
+TODO / WISHLIST
+====/----------
+
+ - convert validity dates to iso standard.
+   the american mm/dd/yy order is very confusing.
+   only iso using yyyy-mm-dd makes sense for everyone
+    ? maybe even show how many days that is from today?
+ + green/yellow/red indicator
+    - if only the expiry has been updated, and the old
+      certificate was to expire within the next 3 months,
+      show green.
+    - if the expiry was not due, but the issuer is still
+      the same, show lime.
+    - if the expiry was due, but the issuer has changed,
+      show yellow.
+    - if issuer has changed while expiry was not due, 
+      show red.
+ + preferences panel
+    ? option to suppress certificate-added popups?
+    ? option to wildcard-excempt annoying domains?
+
