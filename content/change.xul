@@ -12,6 +12,7 @@
   onDialogAccept="return doOK();">
   <script>
     function onLoad() {
+      /* host information in brackets is pretty important.. isn't it? */
       document.getElementById("cmdiag").setAttribute("description", 
         "("+window.arguments[0].host+")");
       document.getElementById("cmdiag").setAttribute("title", 
