@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<!-- http://developer.mozilla.org/en/docs/Code_snippets:Dialogs_and_Prompts -->
+
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<dialog id="ssl-change"
+  title="Certificate Monitor"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  buttons="accept"
+  onload="return onLoad();"
+  onDialogAccept="return doOK();">
+  <script>
+    function onLoad() {
+      document.getElementById("cmdiag").setAttribute("description", 
+        "("+window.arguments[0].host+")");
+      document.getElementById("cmdiag").setAttribute("title", 
+        window.arguments[0].lang.changeEvent);
+      
+      document.getElementById("cmold").value = window.arguments[0].lang.oldCert;
+      document.getElementById("cmnew").value = window.arguments[0].lang.newCert;
+      
+      document.getElementById("cmissto").setAttribute("label",
+        window.arguments[0].lang.issuedTo);
+      document.getElementById("cmissby").setAttribute("label",
+        window.arguments[0].lang.issuedBy);
+      document.getElementById("cmvalid").setAttribute("label",
+        window.arguments[0].lang.validity);
+      document.getElementById("cmfinger").setAttribute("label",
+        window.arguments[0].lang.fingerprints);
+      
+      document.getElementById("cmcnl").value = window.arguments[0].lang.commonName;
+      document.getElementById("cmol").value = window.arguments[0].lang.organization;
+      document.getElementById("cmoul").value = window.arguments[0].lang.organizationalUnit;
+      document.getElementById("cmsnl").value = window.arguments[0].lang.serialNumber;
+      document.getElementById("cmeml").value = window.arguments[0].lang.emailAddress;
+      
+      document.getElementById("cmicnl").value = window.arguments[0].lang.commonName;
+      document.getElementById("cmiol").value = window.arguments[0].lang.organization;
+      document.getElementById("cmioul").value = window.arguments[0].lang.organizationalUnit;
+      
+      document.getElementById("cmnbl").value = window.arguments[0].lang.notBeforeGMT;
+      document.getElementById("cmnal").value = window.arguments[0].lang.notAfterGMT;
+
+      document.getElementById("cmmd5l").value = window.arguments[0].lang.md5Fingerprint;
+      document.getElementById("cmsha1l").value = window.arguments[0].lang.sha1Fingerprint;
+
+      document.getElementById("cmcno").value = window.arguments[0].sql.commonName;
+      document.getElementById("cmcnn").value = window.arguments[0].moz.commonName;
+      document.getElementById("cmoo").value = window.arguments[0].sql.organization;
+      document.getElementById("cmon").value = window.arguments[0].moz.organization;
+      document.getElementById("cmouo").value = window.arguments[0].sql.organizationalUnit;
+      document.getElementById("cmoun").value = window.arguments[0].moz.organizationalUnit;
+      document.getElementById("cmsno").value = window.arguments[0].sql.serialNumber;
+      document.getElementById("cmsnn").value = window.arguments[0].moz.serialNumber;
+      document.getElementById("cmemo").value = window.arguments[0].sql.emailAddress;
+      document.getElementById("cmemn").value = window.arguments[0].moz.emailAddress;
+
+      document.getElementById("cmicno").value = window.arguments[0].sql.issuerCommonName;
+      document.getElementById("cmicnn").value = window.arguments[0].moz.issuerCommonName;
+      document.getElementById("cmioo").value = window.arguments[0].sql.issuerOrganization;
+      document.getElementById("cmion").value = window.arguments[0].moz.issuerOrganization;
+      document.getElementById("cmiouo").value = window.arguments[0].sql.issuerOrganizationUnit;
+      document.getElementById("cmioun").value = window.arguments[0].moz.issuerOrganizationUnit;
+      
+      document.getElementById("cmnbo").value = window.arguments[0].sql.notBeforeGMT;
+      document.getElementById("cmnbn").value = window.arguments[0].moz.notBeforeGMT;
+      document.getElementById("cmnao").value = window.arguments[0].sql.notAfterGMT;
+      document.getElementById("cmnan").value = window.arguments[0].moz.notAfterGMT;
+      
+      document.getElementById("cmmd5o").value = window.arguments[0].sql.md5Fingerprint;
+      document.getElementById("cmmd5n").value = window.arguments[0].moz.md5Fingerprint;
+      document.getElementById("cmsha1o").value = window.arguments[0].sql.sha1Fingerprint;
+      document.getElementById("cmsha1n").value = window.arguments[0].moz.sha1Fingerprint;
+    }
+  </script>
+  <dialogheader id="cmdiag" />
+
+  <vbox flex="1" style="overflow: auto">
+
+    <grid>
+      <columns>
+        <column flex="1" />
+        <column flex="1" />
+        <column flex="1" />
+      </columns>
+    
+      <rows>
+        <row>
+          <label value="" />
+          <label id="cmold" />
+          <label id="cmnew" />
+        </row>
+        <groupbox>
+          <caption id="cmissto" />
+        </groupbox>
+        <row>
+          <label id="cmcnl" />
+          <label id="cmcno" />
+          <label id="cmcnn" />
+        </row>
+        <row>
+          <label id="cmol" />
+          <label id="cmoo" />
+          <label id="cmon" />
+        </row>
+        <row>
+          <label id="cmoul" />
+          <label id="cmouo" />
+          <label id="cmoun" />
+        </row>
+        <row>
+          <label id="cmsnl" />
+          <label id="cmsno" />
+          <label id="cmsnn" />
+        </row>
+        <row>
+          <label id="cmeml" />
+          <label id="cmemo" />
+          <label id="cmemn" />
+        </row>
+        <groupbox>
+          <caption id="cmissby" />
+        </groupbox>
+        <row>
+          <label id="cmicnl" />
+          <label id="cmicno" />
+          <label id="cmicnn" />
+        </row>
+        <row>
+          <label id="cmiol" />
+          <label id="cmioo" />
+          <label id="cmion" />
+        </row>
+        <row>
+          <label id="cmioul" />
+          <label id="cmiouo" />
+          <label id="cmioun" />
+        </row>
+        <groupbox>
+          <caption id="cmvalid" />
+        </groupbox>
+        <row>
+          <label id="cmnbl" />
+          <label id="cmnbo" />
+          <label id="cmnbn" />
+        </row>
+        <row>
+          <label id="cmnal" />
+          <label id="cmnao" />
+          <label id="cmnan" />
+        </row>
+        <groupbox>
+          <caption id="cmfinger" />
+        </groupbox>
+        <row>
+          <label id="cmmd5l" />
+          <label id="cmmd5o" />
+          <label id="cmmd5n" />
+        </row>
+        <row>
+          <label id="cmsha1l" />
+          <label id="cmsha1o" />
+          <label id="cmsha1n" />
+        </row>
+      </rows>
+    </grid>
+
+  </vbox>
+</dialog>

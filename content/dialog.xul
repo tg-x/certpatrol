@@ -4,6 +4,7 @@
 
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
+<!-- currently unused, but might change in future -->
 <dialog id="cpat-dialog"
     title="Certificate Patrol Report"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

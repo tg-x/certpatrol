@@ -13,10 +13,13 @@ N=CertPatrol
 # Privacy Policy:
 #	This extension does not store any personal data on third party sites.
 
-it:
-	@make clean dist
+build:
+	./build.sh
 
-dist:
+it:
+	@make clean
+
+olddist:
 	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*
 	mv $N-$V.xpi /dev/shm
 	@echo About to copy the new version to the website.. yes?
@@ -32,3 +35,5 @@ clean:
 # http://developer.mozilla.org/en/docs/Building_an_Extension
 # http://developer.mozilla.org/en/docs/Installing_Extensions_and_Themes_From_Web_Pages
 # http://developer.mozilla.org/en/docs/Extension_Versioning%2C_Update_and_Compatibility#Securing_Updates
+#
+# XUL Examples: http://www.hevanet.com/acorbin/xul/top.xul

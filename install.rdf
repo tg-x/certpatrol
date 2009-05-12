@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- http://developer.mozilla.org/en/docs/Building_an_Extension -->
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>CertPatrol@PSYC.EU</em:id>
     <em:type>2</em:type>
     <em:name>Certificate Patrol</em:name>
-    <em:version>0.4.0.6</em:version>
-    <em:creator>The PSYC Community</em:creator>
-    <!-- See also http://www.developerfriendly.com/ and http://www.psyc.us -->
+    <em:version>0.5</em:version>
+    <em:creator>Aiko Barz, 20after4 and symlynX</em:creator>
+    <em:developer>Aiko Barz</em:developer>
     <em:developer>Mukunda Modell</em:developer>
-    <em:developer>Carl v. symlynX</em:developer>
+    <em:developer>Carlo v. Loesch</em:developer>
     <em:homepageURL>http://patrol.psyced.org</em:homepageURL>
     <em:description>Monitor certificates the browser adopts for encrypted https websites.</em:description>
     <!-- em:optionsURL>chrome://CertPatrol/content/options.xul</em:optionsURL -->
@@ -24,6 +25,12 @@
         <em:maxVersion>3.2a1pre</em:maxVersion>
       </Description>
     </em:targetApplication>
-
+    <em:targetApplication>
+      <Description>
+	<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id> <!-- thunderbird -->
+	<em:minVersion>2.0</em:minVersion>
+	<em:maxVersion>2.0.0.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
   </Description>
 </RDF>

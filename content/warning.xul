@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<!-- http://developer.mozilla.org/en/docs/Code_snippets:Dialogs_and_Prompts -->
+
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<dialog id="ssl-warning"
+  title="cmon"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  buttons="accept"
+  onload="return onLoad();"
+  onDialogAccept="return true;">
+  <script>
+    function onLoad() {
+      document.getElementById("cmontxt").value = window.arguments[0];
+    }
+  </script>
+  <dialogheader title="cmon" description="Warning" />
+  <textbox id="cmontxt" flex="1" multiline="true" readonly="true" />
+</dialog>
