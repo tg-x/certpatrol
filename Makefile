@@ -1,5 +1,5 @@
 #V=0.4.0.6
-#N=CertPatrol
+N=certpatrol
 
 # Certificate Patrol - a paranoid Firefox extension.
 #
@@ -13,11 +13,9 @@
 # Privacy Policy:
 #	This extension does not store any personal data on third party sites.
 
-build:
-	./build.sh
-
 it:
-	@make clean
+	./build.sh
+	cp -p $N.xpi /dev/shm
 
 olddist:
 	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*

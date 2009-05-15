@@ -5,6 +5,19 @@ locale	certpatrol	en-US	locale/en/
 locale	certpatrol	de	locale/de/
 locale	certpatrol	de-DE	locale/de/
 locale	certpatrol	it	locale/it/
+locale	certpatrol	it-IT	locale/it/
 
-overlay	chrome://browser/content/browser.xul		chrome://CertPatrol/content/firefoxOverlay.xul
-overlay chrome://messenger/content/messenger.xul	chrome://CertPatrol/content/thunderbirdOverlay.xul
+# Firefox, Flock
+overlay	chrome://browser/content/browser.xul chrome://certpatrol/content/overlay.xul
+
+# Thunderbird, Mozilla Mail
+overlay chrome://messenger/content/messenger.xul chrome://certpatrol/content/overlay.xul
+
+# SeaMonkey
+overlay chrome://navigator/content/navigator.xul chrome://certpatrol/content/overlay.xul
+
+# Songbird
+overlay chrome://songbird/content/xul/mainScriptsOverlay.xul chrome://certpatrol/content/overlay.xul
+
+# chrome://chatzilla/content/chatzilla.xul and
+# chrome://calendar/content/calendar.xul maybe?

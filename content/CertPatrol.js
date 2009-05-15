@@ -317,19 +317,19 @@ var CertPatrol = {
 
 
   outnew: function(certobj) {
-    window.openDialog("chrome://CertPatrol/content/new.xul","ssl-new",
+    window.openDialog("chrome://certpatrol/content/new.xul","ssl-new",
                       "chrome,dialog,modal", certobj);
   },
   
   
   outchange: function(certobj) {
-    window.openDialog("chrome://CertPatrol/content/change.xul","ssl-change",
+    window.openDialog("chrome://certpatrol/content/change.xul","ssl-change",
                       "chrome,dialog,modal", certobj);
   },
   
   
   warn: function(result) {
-    window.openDialog("chrome://CertPatrol/content/warning.xul","ssl-warning",
+    window.openDialog("chrome://certpatrol/content/warning.xul","ssl-warning",
                       "chrome,dialog,modal", result);
   },
 };

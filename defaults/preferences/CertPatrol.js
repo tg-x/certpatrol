@@ -3,7 +3,7 @@
 //pref("extensions.CertPatrol.stringpref", "A string");
 
 // See http://kb.mozillazine.org/Localize_extension_descriptions
-pref("extensions.CertPatrol@PSYC.EU.description", "chrome://CertPatrol/locale/CertPatrol.properties");
+pref("extensions.CertPatrol@PSYC.EU.description", "chrome://certpatrol/locale/CertPatrol.properties");
 
 //show debug messages?
 pref("extensions.CertPatrol@PSYC.EU.debug", false);
