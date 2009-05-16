@@ -1,18 +1,6 @@
 #V=0.4.0.6
 N=certpatrol
 
-# Certificate Patrol - a paranoid Firefox extension.
-#
-# Copyright by Mukunda Modell (prototype)
-# 	and Carl v. symlynX (idea & refinement).
-#
-# License:
-#	This extension is MPL 1.1/GPL 2.0/LGPL 2.1 tri-licensed
-#	 (that means, it is open source).
-#
-# Privacy Policy:
-#	This extension does not store any personal data on third party sites.
-
 it:
 	./build.sh
 	cp -p $N.xpi /dev/shm

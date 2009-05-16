@@ -17,6 +17,11 @@ someone to read into your HTTPS communications by means of a subtle man
 in the middle attack. Still, this is a very paranoid thing to expect to
 happen, so only use this if you think you are sufficiently paranoid.
 
+== VERSION 0.6 ==
+
+This version has been improved to show and store the complete information about certificates, which makes it a lot more useful when a certificate is updated: You can now decide for yourself if expiry was due, if a change of issuer is acceptable, or if a phone call to the affected company is appropriate to get a voice confirmation of such a new certificate. We have tentatively added support for Thunderbird, Songbird, SeaMonkey, Mozilla and Fennec. Concerning Firefox, this version is a release candidate for Certificate Patrol 1.0 as this version implements all we expect from a 1.0.
+
+
 ======/--------
 TODO / WISHLIST
 ====/----------

@@ -24,7 +24,7 @@
         <RDF:li resource="chrome://navigator/content/navigator.xul"/>
     </RDF:Seq>
 
-    <!-- old firefox versions -->
+    <!-- old Firefox versions -->
     <RDF:Seq about="chrome://browser/content/browser.xul">
         <RDF:li>chrome://certpatrol/content/overlay.xul</RDF:li>
     </RDF:Seq>

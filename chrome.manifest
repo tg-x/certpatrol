@@ -7,7 +7,7 @@ locale	certpatrol	de-DE	locale/de/
 locale	certpatrol	it	locale/it/
 locale	certpatrol	it-IT	locale/it/
 
-# Firefox, Flock
+# Firefox, Iceweasel, Flock
 overlay	chrome://browser/content/browser.xul chrome://certpatrol/content/overlay.xul
 
 # Thunderbird, Mozilla Mail
