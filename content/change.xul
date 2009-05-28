@@ -89,80 +89,80 @@
       <rows>
         <row>
           <label value="" />
-          <label id="cmold" />
-          <label id="cmnew" />
+          <textbox class="plain" readonly="true" id="cmold" />
+          <textbox class="plain" readonly="true" id="cmnew" />
         </row>
         <groupbox>
           <caption id="cmissto" />
         </groupbox>
         <row>
           <label id="cmcnl" />
-          <label id="cmcno" />
-          <label id="cmcnn" />
+          <textbox class="plain" readonly="true" id="cmcno" />
+          <textbox class="plain" readonly="true" id="cmcnn" />
         </row>
         <row>
           <label id="cmol" />
-          <label id="cmoo" />
-          <label id="cmon" />
+          <textbox class="plain" readonly="true" id="cmoo" />
+          <textbox class="plain" readonly="true" id="cmon" />
         </row>
         <row>
           <label id="cmoul" />
-          <label id="cmouo" />
-          <label id="cmoun" />
+          <textbox class="plain" readonly="true" id="cmouo" />
+          <textbox class="plain" readonly="true" id="cmoun" />
         </row>
         <row>
           <label id="cmsnl" />
-          <label id="cmsno" />
-          <label id="cmsnn" />
+          <textbox class="plain" readonly="true" id="cmsno" />
+          <textbox class="plain" readonly="true" id="cmsnn" />
         </row>
         <row>
           <label id="cmeml" />
-          <label id="cmemo" />
-          <label id="cmemn" />
+          <textbox class="plain" readonly="true" id="cmemo" />
+          <textbox class="plain" readonly="true" id="cmemn" />
         </row>
         <groupbox>
           <caption id="cmissby" />
         </groupbox>
         <row>
           <label id="cmicnl" />
-          <label id="cmicno" />
-          <label id="cmicnn" />
+          <textbox class="plain" readonly="true" id="cmicno" />
+          <textbox class="plain" readonly="true" id="cmicnn" />
         </row>
         <row>
           <label id="cmiol" />
-          <label id="cmioo" />
-          <label id="cmion" />
+          <textbox class="plain" readonly="true" id="cmioo" />
+          <textbox class="plain" readonly="true" id="cmion" />
         </row>
         <row>
           <label id="cmioul" />
-          <label id="cmiouo" />
-          <label id="cmioun" />
+          <textbox class="plain" readonly="true" id="cmiouo" />
+          <textbox class="plain" readonly="true" id="cmioun" />
         </row>
         <groupbox>
           <caption id="cmvalid" />
         </groupbox>
         <row>
           <label id="cmnbl" />
-          <label id="cmnbo" />
-          <label id="cmnbn" />
+          <textbox class="plain" readonly="true" id="cmnbo" />
+          <textbox class="plain" readonly="true" id="cmnbn" />
         </row>
         <row>
           <label id="cmnal" />
-          <label id="cmnao" />
-          <label id="cmnan" />
+          <textbox class="plain" readonly="true" id="cmnao" />
+          <textbox class="plain" readonly="true" id="cmnan" />
         </row>
         <groupbox>
           <caption id="cmfinger" />
         </groupbox>
         <row>
           <label id="cmmd5l" />
-          <label id="cmmd5o" />
-          <label id="cmmd5n" />
+          <textbox class="plain" readonly="true" width="64" id="cmmd5o" />
+          <textbox class="plain" readonly="true" width="64" id="cmmd5n" />
         </row>
         <row>
           <label id="cmsha1l" />
-          <label id="cmsha1o" />
-          <label id="cmsha1n" />
+          <textbox class="plain" readonly="true" width="64" id="cmsha1o" />
+          <textbox class="plain" readonly="true" width="64" id="cmsha1n" />
         </row>
       </rows>
     </grid>

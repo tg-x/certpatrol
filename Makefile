@@ -1,4 +1,4 @@
-#V=0.4.0.6
+#V=0.xx
 N=certpatrol
 
 it:

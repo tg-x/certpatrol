@@ -75,60 +75,60 @@
         </groupbox>
         <row>
           <label id="cmcnl" />
-          <label id="cmcnv" />
+          <textbox class="plain" readonly="true" id="cmcnv" />
         </row>
         <row>
           <label id="cmol" />
-          <label id="cmov" />
+          <textbox class="plain" readonly="true" id="cmov" />
         </row>
         <row>
           <label id="cmoul" />
-          <label id="cmouv" />
+          <textbox class="plain" readonly="true" id="cmouv" />
         </row>
         <row>
           <label id="cmsnl" />
-          <label id="cmsnv" />
+          <textbox class="plain" readonly="true" id="cmsnv" />
         </row>
         <row>
           <label id="cmeml" />
-          <label id="cmemv" />
+          <textbox class="plain" readonly="true" id="cmemv" />
         </row>
         <groupbox>
           <caption id="cmissby" />
         </groupbox>
         <row>
           <label id="cmicnl" />
-          <label id="cmicnv" />
+          <textbox class="plain" readonly="true" id="cmicnv" />
         </row>
         <row>
           <label id="cmiol" />
-          <label id="cmiov" />
+          <textbox class="plain" readonly="true" id="cmiov" />
         </row>
         <row>
           <label id="cmioul" />
-          <label id="cmiouv" />
+          <textbox class="plain" readonly="true" id="cmiouv" />
         </row>
         <groupbox>
           <caption id="cmvalid" />
         </groupbox>
         <row>
           <label id="cmnbl" />
-          <label id="cmnbv" />
+          <textbox class="plain" readonly="true" id="cmnbv" />
         </row>
         <row>
           <label id="cmnal" />
-          <label id="cmnav" />
+          <textbox class="plain" readonly="true" id="cmnav" />
         </row>
         <groupbox>
           <caption id="cmfinger" />
         </groupbox>
         <row>
           <label id="cmmd5l" />
-          <label id="cmmd5v" />
+          <textbox class="plain" readonly="true" size="64" id="cmmd5v" />
         </row>
         <row>
           <label id="cmsha1l" />
-          <label id="cmsha1v" />
+          <textbox class="plain" readonly="true" size="64" id="cmsha1v" />
         </row>
       </rows>
     </grid>
