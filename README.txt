@@ -25,6 +25,12 @@ This version has been improved to show and store the complete information about 
 
 Allow to copy & paste data from pop-up.
 
+== VERSION 1.0 ==
+
+Nothing changed. Version 0.7 has proven to be super stable,
+therefore we move from "release candidate" directly to 1.0.
+
+
 == HOW TO TEST ==
 
 You'll see certificate information pop up whenever you visit a
