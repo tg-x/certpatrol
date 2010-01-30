@@ -25,6 +25,26 @@ This version has been improved to show and store the complete information about 
 
 Allow to copy & paste data from pop-up.
 
+== HOW TO TEST ==
+
+You'll see certificate information pop up whenever you visit a
+new https: website, including https://addons.mozilla.org for
+example. "New" is anything Patrol hasn't seen and stored yet.
+
+To manually trigger seeing a website replace its certificate, 
+you can do one of these steps:
+
+* Have an https website yourself and change the certificate.
+* Manually have an address in /etc/hosts point to this or that
+  https: IP address and add many security exceptions to Firefox
+  in order for Patrol to even get to do its warning part.
+* Use an Sqlite editor like the "SQLite Manager" add-on, edit
+  the CertPatrol.sqlite file and modify any of the fingerprints
+  of an https: website you have visited before. This way, Patrol
+  will think it has seen that website using a different certificate
+  than it actually does, so as soon as you go to that website it
+  will warn you of an apparent change in certificate.
+* Be lucky and actually run into a regular certificate upgrade.
 
 
 
