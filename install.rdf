@@ -7,7 +7,7 @@
     <em:id>CertPatrol@PSYC.EU</em:id>
     <em:type>2</em:type>    <!-- Extension -->
     <em:name>Certificate Patrol</em:name>
-    <em:version>1.0</em:version>
+    <em:version>1.0.1</em:version>
     <em:creator>Aiko Barz, 20after4 and symlynX</em:creator>
     <em:developer>Aiko Barz</em:developer>
     <em:developer>Mukunda Modell</em:developer>
@@ -25,7 +25,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
         <em:minVersion>2.0a1</em:minVersion>
-        <em:maxVersion>3.7a1pre</em:maxVersion>
+        <em:maxVersion>3.7a4pre</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -65,7 +65,7 @@
       <Description>
         <em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id> <!-- Fennec -->
         <em:minVersion>0.7</em:minVersion>
-        <em:maxVersion>1.0.*</em:maxVersion>
+        <em:maxVersion>1.1a2pre</em:maxVersion>
       </Description>
     </em:targetApplication>
 
