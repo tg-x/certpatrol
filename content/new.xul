@@ -7,6 +7,7 @@
 <dialog id="ssl-new"
   title="Certificate Monitor"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  persist="screenX screenY width height" width="555" height="555"
   buttons="accept"
   onload="return onLoad();"
   onDialogAccept="return doOK();">

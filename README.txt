@@ -75,3 +75,33 @@ TODO / WISHLIST
  + preferences panel
     ? option to suppress certificate-added popups?
     ? option to wildcard-excempt annoying domains?
+
+== FEEDBACK ==
+
+jmd says: hi guys
+jmd asks: I suppose you probably heard about the whole CNNIC root ca in mozilla story ?
+
+.. funny, i had twittered about just that couple minutes earlier ..
+
+jmd says: I wondered if you would be open to bringing some evolution to the Certificat Patrol extension
+jmd says: to better handle such a case
+jmd says: *Actual* proof of misbehaving of CNNIC would be a cause for immediat removal of it and would have a large impact beyong that
+jmd says: A user of Certificate Patrol certainly would be able to detect it easily
+jmd says: but then it wouldn't be easy enough to report the information about it
+jmd says: to maximilize the probability he would do it even if he's not expert
+jmd says: .
+jmd says: So I see two things that would help in certificat patrol
+jmd says: - a button to copy all the information about the cert so that you can easily paste it in a mail to report that
+jmd says: it would be the whole path of the certificate up to a root ca, so that expert could easily see from the content if a fake MITM certificate was involved or not
+jmd says: - the possibility to configure a watch string in certificate patrol
+jmd says: wenever you access a site that uses a certification path where one of the CA matches this string, you would get a specific warning
+jmd says: so you could avoid specifically that CA
+jmd says: even if it tried to hide itself behind a hierarchy of subca with innocent names
+jmd says: and more obviously that by having to check the cert path
+jmd says: each time you add a new SSL cert
+
+> hello!
+> better copy+paste .. ok
+> .. the whole path.. i'm afraid firefox doesn't give us js access to that
+> then again.. not sure
+
