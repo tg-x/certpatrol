@@ -1,0 +1,63 @@
+<blockquote>
+Your web browser trusts a lot of certification authorities and chained
+sub-authorities, and it does so blindly. "Subordinate certification
+authorities" are a little known device: The root CAs in your browser can
+delegate permission to issue certificates to an unlimited amount of
+subordinate CAs (SCA) just by signing their certificate, not by
+borrowing their precious private key to them. Even Wikipedia doesn't
+mention this, nor do any public transparent listings exist of all the
+sub-CAs that your browser trusts every day. It might be virtually
+impossible to tell how many CAs you are trusting de-facto.
+
+Revealing this and other inner workings of X.509 to end users is deemed
+as being too difficult for them to handle. You however are an advanced
+user, who wants to keep track on when certificates are updated and make
+sure none of the many authorities you involuntarily need to trust to
+have a working web browsing experience, abuses your trust allowing
+someone to read into your HTTPS communications by means of a subtle man
+in the middle attack. This used to be a very paranoid thing to expect to
+happen, but in fact it is happening, so you may want to protect yourself.
+</blockquote>
+
+You'll see certificate information pop up whenever you visit a
+new https: website, including https://addons.mozilla.org for
+example. "New" is anything Patrol hasn't seen and stored yet.
+
+You are also prompted whenever a web site updates its certificate
+and given the opportunity to compare the two certificates side by
+side, line by line. See the screenshot for an example.
+
+<b>Even if you do not fully understand what is shown to you, you
+get a chance of distinguishing legitimate from suspicious changes.</b>
+Here's a little list of things to look out for:
+
+<ol>
+<li>If the old certificate is about to expire (Validity / Expires On),
+  it was necessary to replace it with a new one.</li>
+<li>In most cases web sites keep using the same certification
+  authority (Issued By) over time. Should the web site have changed
+  its certification authority, make sure the old certificate was
+  about to expire.</li>
+<li>If all certificates you see are always issued by the same
+  certification authority, you should be very suspicious.</li>
+<li>In case of doubt install the Perspectives add-on to make further
+  checks on the credibility of a certificate.</li>
+</ol>
+
+== DEVELOPER COMMENTS ==
+
+For the interested ones, to manually trigger seeing a web site
+replace its certificate, you can do one of these things:
+
+<ol>
+<li>Have an https web site yourself and change the certificate.</li>
+<li>Manually have an address in /etc/hosts point to this or that
+  https: IP address and add many security exceptions to Firefox
+  in order for Patrol to even get to do its warning part.</li>
+<li>Use an sqlite editor like the "SQLite Manager" add-on, edit
+  the CertPatrol.sqlite file and modify any of the fingerprints
+  of an https: website you have visited before. This way, Patrol
+  will think it has seen that web site using a different certificate
+  than it actually does, so as soon as you go to that web site it
+  will warn you of an apparent change in certificate.</li>
+</ol>

@@ -7,7 +7,7 @@
 <dialog id="ssl-change"
   title="Certificate Monitor"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="777" height="555"
+  persist="screenX screenY width height" width="789" height="555"
   buttons="accept"
   onload="return onLoad();"
   onDialogAccept="return doOK();">
@@ -82,7 +82,7 @@
 
     <grid>
       <columns>
-        <column flex="1" />
+        <column/>
         <column flex="1" />
         <column flex="1" />
       </columns>
