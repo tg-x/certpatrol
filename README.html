@@ -1,23 +1,10 @@
 <blockquote>
-Your web browser trusts a lot of certification authorities and chained
-sub-authorities, and it does so blindly. "Subordinate certification
-authorities" are a little known device: The root CAs in your browser can
-delegate permission to issue certificates to an unlimited amount of
-subordinate CAs (SCA) just by signing their certificate, not by
-borrowing their precious private key to them. Even Wikipedia doesn't
-mention this, nor do any public transparent listings exist of all the
-sub-CAs that your browser trusts every day. It might be virtually
-impossible to tell how many CAs you are trusting de-facto.
+Your web browser trusts a lot of certification authorities and chained sub-authorities, and it does so blindly. "<a href="http://en.wikipedia.org/wiki/Intermediate_certificate_authorities">Subordinate or intermediate certification authorities</a>" are a little known device: The root CAs in your browser can delegate permission to issue certificates to an unlimited amount of subordinate CAs (<a href="http://www.linuxsecurity.com/component/option,com_dictionary/task,view/id,411/">SCA</a>) just by signing their certificate, not by borrowing their precious private key to them. You can even buy yourself such a CA from <a href="http://geotrust.com/enterprise-ssl-certificates/georoot/">GeoTrust</a> or <a href="http://www.sslshopper.com/article-trusted-root-signing-certificates.html">elsewhere</a>.
 
-Revealing this and other inner workings of X.509 to end users is deemed
-as being too difficult for them to handle. You however are an advanced
-user, who wants to keep track on when certificates are updated and make
-sure none of the many authorities you involuntarily need to trust to
-have a working web browsing experience, abuses your trust allowing
-someone to read into your HTTPS communications by means of a subtle man
-in the middle attack. This used to be a very paranoid thing to expect to
-happen, but in fact it is happening, so you may want to protect yourself.
+It is unclear how many intermediate certification authorities really exist, and yet each of them has god-like power to impersonate any https web site using a <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the Middle</a> (MITM) attack scenario. <a href="http://www.freedom-to-tinker.com/blog/sjs/web-security-trust-models">Researchers at Princeton are acknowledging this problem</a> and recommending Certificate Patrol.  Revealing the inner workings of <a href="http://en.wikipedia.org/wiki/X.509">X.509</a> to end users is still deemed too difficult, but only getting familiar with this will really help you get in control. That's why Certificate Patrol gives you insight of what is happening.
 </blockquote>
+
+<h2>Developer Comments.</h2>
 
 You'll see certificate information pop up whenever you visit a
 new https: website, including https://addons.mozilla.org for
@@ -30,7 +17,6 @@ side, line by line. See the screenshot for an example.
 <b>Even if you do not fully understand what is shown to you, you
 get a chance of distinguishing legitimate from suspicious changes.</b>
 Here's a little list of things to look out for:
-
 <ol>
 <li>If the old certificate is about to expire (Validity / Expires On),
   it was necessary to replace it with a new one.</li>
@@ -44,7 +30,13 @@ Here's a little list of things to look out for:
   checks on the credibility of a certificate.</li>
 </ol>
 
-== DEVELOPER COMMENTS ==
+<h2>Credits.</h2>
+
+Prototyped by <a href="psyc://psyc.us/~20after4">20after4</a> (Mukunda Modell),
+reengineered by <a href="http://www.deepco.de">Aiko Barz</a>.
+Originally conceived, planned and continously refined by <a href="psyc://psyced.org/~lynX">the lynX</a> (Carlo v. Loesch).
+
+<h2>Testing the add-on.</h2>
 
 For the interested ones, to manually trigger seeing a web site
 replace its certificate, you can do one of these things:
@@ -61,3 +53,4 @@ replace its certificate, you can do one of these things:
   than it actually does, so as soon as you go to that web site it
   will warn you of an apparent change in certificate.</li>
 </ol>
+

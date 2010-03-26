@@ -19,6 +19,11 @@ TODO / WISHLIST
  + preferences panel
     ? option to suppress certificate-added popups?
     ? option to wildcard-excempt annoying domains?
+ + support for other protocols than https:
+    + currently certpatrol in messengers like thunderbird only
+      serves the purpose of handling https: links in e-mails
+      and such. would be cooler if SMTP and IMAP certificates
+      were actually checked.
 
 == FEEDBACK ==
 
