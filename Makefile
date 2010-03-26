@@ -15,6 +15,9 @@ olddist:
 clean:
 	-rm *.xpi
 
+reset:
+	git reset --hard
+
 # Some things to look at when doing extensions.
 #
 # http://addons.mozilla.org/developers/
