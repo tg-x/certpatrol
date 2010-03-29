@@ -1,0 +1,14 @@
+@import url("chrome://global/skin/global.css");
+
+.warnCP {
+	outline: 2px dashed yellow;
+	outline-offset: 1px;
+	-moz-outline-radius: 12px;
+}
+.panicCP {
+	outline: 2px dashed red;
+	outline-offset: 1px;
+	-moz-outline-radius: 12px;
+}
+
+

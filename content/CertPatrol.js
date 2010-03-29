@@ -100,6 +100,12 @@ var CertPatrol = {
 //      messagepane.addEventListener("load", this.onPageLoad(), true);
   },
 
+  // helper functions for advanced patrol
+  isodate: function(tim) {
+    tim = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) .*$/, "$3-$1-$2");
+    if (tim.length == 8) tim = "20"+ tim;
+    return tim;
+  },
 
   // Event trigger
   onPageLoad: function(aEvent) {
@@ -164,7 +170,6 @@ var CertPatrol = {
         sha1Fingerprint:this.strings.getFormattedString("sha1Fingerprint",[])
       }
     };
- 
 
     // Find the right tab, that issued the event.
     // Load the corresponding securityUI for this event.
@@ -280,6 +285,11 @@ var CertPatrol = {
         stmt.reset();
       }
 
+      certobj.sql.notBeforeGMT = this.isodate(certobj.sql.notBeforeGMT);
+      certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT);
+      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT);
+      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT);
+
       // Output
       this.outchange(certobj);
 
@@ -309,6 +319,8 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT);
+      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT);
 
       // Output
       this.outnew(certobj);
