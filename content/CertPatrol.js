@@ -298,8 +298,8 @@ var CertPatrol = {
       }
 
       if (certobj.moz.commonName != certobj.sql.commonName) {
-	certobj.info += "Alert: Hostname has changed. Take a look.\n";
-	certobj.threat += 3;
+	certobj.info += "Alert: Hostname has changed. Take a look if that's okay.\n";
+	certobj.threat += 2;
       }
 
       if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
@@ -323,6 +323,15 @@ var CertPatrol = {
 	certobj.info += "Warning: This certificate wasn't due yet. It still had over 4 months to go.\n";
       }
       else if (td > 0) certobj.info = "Info: This certificate will expire in the next 4 months. Okay to replace it.\n";
+
+      if (certobj.threat > 2)
+	 certobj.lang.changeEvent = "Reason to worry";
+      else if (certobj.threat > 1)
+	 certobj.lang.changeEvent = "Suspicious change?";
+      else if (certobj.threat > 0)
+	 certobj.lang.changeEvent = "A word of warning";
+      else
+	 certobj.lang.changeEvent = "Mostly harmless";
 
       certobj.sql.notBeforeGMT = this.isodate(certobj.sql.notBeforeGMT);
       certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT);

@@ -2,20 +2,11 @@
 TODO / WISHLIST
 ====/----------
 
- - convert validity dates to iso standard.
-   the american mm/dd/yy order is very confusing.
-   only iso using yyyy-mm-dd makes sense for everyone
-    ? maybe even show how many days that is from today?
- + green/yellow/red indicator
-    - if only the expiry has been updated, and the old
-      certificate was to expire within the next 3 months,
-      show green.
-    - if the expiry was not due, but the issuer is still
-      the same, show lime.
-    - if the expiry was due, but the issuer has changed,
-      show yellow.
-    - if issuer has changed while expiry was not due, 
-      show red.
+ - use proper localization for the new warning messages
+ + show number of days until expiry
+ ? we could show expiry in locale text style
+   but is it actually better than iso?
+ + green/yellow/red threat level indicator
  + preferences panel
     ? option to suppress certificate-added popups?
     ? option to wildcard-excempt annoying domains?
@@ -75,4 +66,15 @@ therefore we move from "release candidate" directly to 1.0.
 Some tweaks in the dialog GUI and a fix for a rare race condition
 that has been reported to us by honeybee. Thanks!
 Good luck with your factorbee!!!!  ;)
+
+== VERSION 1.2 ==
+
+Patrol now gives a few hints on what may be wrong about
+a certificate change, like expiry not being due or issuer
+having changed and it makes an estimate on a possible
+threat level.
+
+Also, validity dates are shown using ISO standard notation
+as the American mm/dd/yy order used by X.509 is quite
+confusing for everybody else.
 
