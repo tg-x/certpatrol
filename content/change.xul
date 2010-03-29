@@ -6,7 +6,7 @@
 <dialog id="ssl-change"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="800" height="500"
+  persist="screenX screenY width height" width="800" height="555"
   buttons="accept"
   onload="return onLoad();"
   onDialogAccept="return doOK();">
@@ -73,9 +73,13 @@
       document.getElementById("cmmd5n").value = window.arguments[0].moz.md5Fingerprint;
       document.getElementById("cmsha1o").value = window.arguments[0].sql.sha1Fingerprint;
       document.getElementById("cmsha1n").value = window.arguments[0].moz.sha1Fingerprint;
+
+      document.getElementById("cminfo").value = window.arguments[0].info;
     }
   </script>
   <dialogheader id="cmdiag" />
+
+  <textbox class="infoCP" id="cminfo" flex="1" multiline="true" readonly="true" />
 
   <vbox flex="1" style="overflow: auto">
 

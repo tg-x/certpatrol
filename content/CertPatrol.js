@@ -100,16 +100,26 @@ var CertPatrol = {
 //      messagepane.addEventListener("load", this.onPageLoad(), true);
   },
 
+
   // helper functions for advanced patrol
   isodate: function(tim) {
-    tim = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) .*$/, "$3-$1-$2");
+    tim = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) /, "$3-$1-$2 ");
     if (tim.length == 8) tim = "20"+ tim;
     return tim;
   },
+  timedelta: function(x509time) {
+    var d = new Date(x509time);
+    // Y2K bug in X.509 and javascript...
+    if (d.getFullYear() < 2000) d.setFullYear(100 + d.getFullYear());
+    var now = new Date();
+    return d.getTime() - now.getTime();
+  },
+
 
   // Event trigger
   onPageLoad: function(aEvent) {
     var doc = aEvent.originalTarget;
+
     if (doc.location.protocol == "https:")
       CertPatrol.onSecurePageLoad(doc);
   },
@@ -121,6 +131,8 @@ var CertPatrol = {
     var thiscert;
     var validity;
     var certobj={
+      threat:0,
+      info:"",
       host:"",
       moz:{
         commonName:"",
@@ -284,6 +296,33 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+
+      if (certobj.moz.commonName != certobj.sql.commonName) {
+	certobj.info += "Alert: Hostname has changed. Take a look.\n";
+	certobj.threat += 3;
+      }
+
+      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+	certobj.info += "Caution: Certification Authority has changed.\n";
+	certobj.threat ++;
+      }
+
+      var td = this.timedelta(certobj.sql.notBeforeGMT);
+      if (td > 0) {
+	certobj.info += "Alert: This certificate isn't valid yet!?\n";
+	certobj.threat += 2;
+      }
+
+      var td = this.timedelta(certobj.sql.notAfterGMT);
+      if (td <= 0) certobj.info += "Info: Old certificate had expired. It needed to be replaced.\n";
+      else if (td > 10364400000) {
+	certobj.threat += 2;
+	certobj.info += "Warning: This certificate wasn't due yet. It still had over 4 months to go.\n";
+      } else if (td > 5182200000 / 2) {
+	certobj.threat ++;
+	certobj.info += "Warning: This certificate wasn't due yet. It still had over 4 months to go.\n";
+      }
+      else if (td > 0) certobj.info = "Info: This certificate will expire in the next 4 months. Okay to replace it.\n";
 
       certobj.sql.notBeforeGMT = this.isodate(certobj.sql.notBeforeGMT);
       certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT);
