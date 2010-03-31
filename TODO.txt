@@ -15,6 +15,9 @@ TODO / WISHLIST
       serves the purpose of handling https: links in e-mails
       and such. would be cooler if SMTP and IMAP certificates
       were actually checked.
+ + detect forms in the document that carry an https: action and
+   warn if the host mentioned in that action isn't in our database
+   yet (= we haven't shown the certificate to our user yet)
 
 == FEEDBACK ==
 

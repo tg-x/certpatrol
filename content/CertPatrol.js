@@ -91,13 +91,15 @@ var CertPatrol = {
 
     // Firefox
     var content = document.getElementById("content");
-    if(content)
+    if(content) {
       content.addEventListener("DOMContentLoaded", this.onPageLoad, true);
+      content.addEventListener("DOMFrameContentLoaded", this.onPageLoad, true);
+    }
 
     // Thunderbird
-//    var messagepane = document.getElementById("messagepane");
-//    if(messagepane)
-//      messagepane.addEventListener("load", this.onPageLoad(), true);
+    var messagepane = document.getElementById("messagepane");
+    if(messagepane)
+      messagepane.addEventListener("load", this.onPageLoad, true);
   },
 
 
@@ -317,12 +319,12 @@ var CertPatrol = {
       if (td <= 0) certobj.info += "Info: Old certificate had expired. It needed to be replaced.\n";
       else if (td > 10364400000) {
 	certobj.threat += 2;
-	certobj.info += "Warning: This certificate wasn't due yet. It still had over 4 months to go.\n";
-      } else if (td > 5182200000 / 2) {
+	certobj.info += "Warning: This certificate wasn't due yet. Maybe there are other reasons why it needed to be exchanged, though.\n";
+      } else if (td > 5182200000) {
 	certobj.threat ++;
-	certobj.info += "Warning: This certificate wasn't due yet. It still had over 4 months to go.\n";
+	certobj.info += "Info: This certificate still had over 2 months before it expires, but it's okay to replace it now.\n";
       }
-      else if (td > 0) certobj.info = "Info: This certificate will expire in the next 4 months. Okay to replace it.\n";
+      else if (td > 0) certobj.info = "Info: This certificate will expire in the next 2 months. Normal to replace it.\n";
 
       if (certobj.threat > 2)
 	 certobj.lang.changeEvent = "Reason to worry";
