@@ -2,7 +2,6 @@
 TODO / WISHLIST
 ====/----------
 
- - use proper localization for the new warning messages
  + show number of days until expiry
  ? we could show expiry in locale text style
    but is it actually better than iso?

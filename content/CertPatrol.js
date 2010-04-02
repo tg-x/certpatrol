@@ -299,41 +299,34 @@ var CertPatrol = {
         stmt.reset();
       }
 
-      if (certobj.moz.commonName != certobj.sql.commonName) {
-	certobj.info += "Alert: Hostname has changed. Take a look if that's okay.\n";
-	certobj.threat += 2;
-      }
-
-      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
-	certobj.info += "Caution: Certification Authority has changed.\n";
-	certobj.threat ++;
-      }
-
-      var td = this.timedelta(certobj.sql.notBeforeGMT);
-      if (td > 0) {
-	certobj.info += "Alert: This certificate isn't valid yet!?\n";
-	certobj.threat += 2;
-      }
-
+      // Try to make some sense out of the certificate changes
       var td = this.timedelta(certobj.sql.notAfterGMT);
-      if (td <= 0) certobj.info += "Info: Old certificate had expired. It needed to be replaced.\n";
+      if (td <= 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_expired",[]) +"\n";
       else if (td > 10364400000) {
 	certobj.threat += 2;
-	certobj.info += "Warning: This certificate wasn't due yet. Maybe there are other reasons why it needed to be exchanged, though.\n";
+        certobj.info += this.strings.getFormattedString("warn_notAfterGMT_notdue",[]) +"\n";
       } else if (td > 5182200000) {
 	certobj.threat ++;
-	certobj.info += "Info: This certificate still had over 2 months before it expires, but it's okay to replace it now.\n";
+        certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
       }
-      else if (td > 0) certobj.info = "Info: This certificate will expire in the next 2 months. Normal to replace it.\n";
+      else if (td > 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
+      if (certobj.moz.commonName != certobj.sql.commonName) {
+        certobj.info += this.strings.getFormattedString("warn_commonName",[]) +"\n";
+	certobj.threat += 2;
+      }
+      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+        certobj.info += this.strings.getFormattedString("warn_issuerCommonName",[]) +"\n";
+	certobj.threat ++;
+      }
+      // checking NEW certificate here
+      var td = this.timedelta(certobj.moz.notBeforeGMT);
+      if (td > 0) {
+        certobj.info += this.strings.getFormattedString("warn_notBeforeGMT",[]) +"\n";
+	certobj.threat += 2;
+      }
 
-      if (certobj.threat > 2)
-	 certobj.lang.changeEvent = "Reason to worry";
-      else if (certobj.threat > 1)
-	 certobj.lang.changeEvent = "Suspicious change?";
-      else if (certobj.threat > 0)
-	 certobj.lang.changeEvent = "A word of warning";
-      else
-	 certobj.lang.changeEvent = "Mostly harmless";
+      if (certobj.threat > 3) certobj.threat = 3;
+      certobj.lang.changeEvent = this.strings.getFormattedString("threatLevel_"+ certobj.threat,[]);
 
       certobj.sql.notBeforeGMT = this.isodate(certobj.sql.notBeforeGMT);
       certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT);

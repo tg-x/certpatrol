@@ -1,6 +1,7 @@
 content	certpatrol	content/
 
-locale	certpatrol	en	locale/en/
+# L10n validator doesn't like English. It has to be American English. *shrug*
+#ocale	certpatrol	en	locale/en/
 locale	certpatrol	en-US	locale/en/
 locale	certpatrol	de	locale/de/
 locale	certpatrol	de-DE	locale/de/
