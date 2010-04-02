@@ -106,7 +106,9 @@ var CertPatrol = {
   // helper functions for advanced patrol
   isodate: function(tim) {
     tim = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) /, "$3-$1-$2 ");
-    if (tim.length == 8) tim = "20"+ tim;
+    // upcoming Y3K bug, but you must delete this line before 2020
+    // there will be no more two digit year certs in existence hopefully
+    if (tim[0] != '2') tim = "20"+ tim;
     return tim;
   },
   timedelta: function(x509time) {
@@ -114,7 +116,13 @@ var CertPatrol = {
     // Y2K bug in X.509 and javascript...
     if (d.getFullYear() < 2000) d.setFullYear(100 + d.getFullYear());
     var now = new Date();
+    //alert("Now is "+ now.getTime() +" and cert is "+ d.getTime());
     return d.getTime() - now.getTime();
+  },
+  daysdelta: function(td) {
+    td = Math.round(td / 86400000);	// milliseconds per day
+    return " ("+ this.strings.getFormattedString(td < 0 ?
+	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
 
 
@@ -300,16 +308,16 @@ var CertPatrol = {
       }
 
       // Try to make some sense out of the certificate changes
-      var td = this.timedelta(certobj.sql.notAfterGMT);
-      if (td <= 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_expired",[]) +"\n";
-      else if (td > 10364400000) {
+      var natd = this.timedelta(certobj.sql.notAfterGMT);
+      if (natd <= 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_expired",[]) +"\n";
+      else if (natd > 10364400000) {
 	certobj.threat += 2;
         certobj.info += this.strings.getFormattedString("warn_notAfterGMT_notdue",[]) +"\n";
-      } else if (td > 5182200000) {
+      } else if (natd > 5182200000) {
 	certobj.threat ++;
         certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
       }
-      else if (td > 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
+      else if (natd > 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
       if (certobj.moz.commonName != certobj.sql.commonName) {
         certobj.info += this.strings.getFormattedString("warn_commonName",[]) +"\n";
 	certobj.threat += 2;
@@ -318,7 +326,7 @@ var CertPatrol = {
         certobj.info += this.strings.getFormattedString("warn_issuerCommonName",[]) +"\n";
 	certobj.threat ++;
       }
-      // checking NEW certificate here
+      // checking NEW certificate here.. further checks done by firefox before we even get here
       var td = this.timedelta(certobj.moz.notBeforeGMT);
       if (td > 0) {
         certobj.info += this.strings.getFormattedString("warn_notBeforeGMT",[]) +"\n";
@@ -328,10 +336,14 @@ var CertPatrol = {
       if (certobj.threat > 3) certobj.threat = 3;
       certobj.lang.changeEvent = this.strings.getFormattedString("threatLevel_"+ certobj.threat,[]);
 
-      certobj.sql.notBeforeGMT = this.isodate(certobj.sql.notBeforeGMT);
-      certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT);
-      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT);
-      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT);
+      certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
+				this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
+      certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT) +
+				this.daysdelta(natd);
+      certobj.moz.notBeforeGMT= this.isodate(certobj.moz.notBeforeGMT) +
+				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
+      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
+				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
       this.outchange(certobj);

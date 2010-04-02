@@ -2,7 +2,6 @@
 TODO / WISHLIST
 ====/----------
 
- + show number of days until expiry
  ? we could show expiry in locale text style
    but is it actually better than iso?
  + green/yellow/red threat level indicator
@@ -79,4 +78,9 @@ threat level.
 Also, validity dates are shown using ISO standard notation
 as the American mm/dd/yy order used by X.509 is quite
 confusing for everybody else.
+
+== VERSION 1.2.3 ==
+
+Expiration and issuance dates are also shown as number of
+days in the future or past from now.
 
