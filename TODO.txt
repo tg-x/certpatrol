@@ -2,7 +2,6 @@
 TODO / WISHLIST
 ====/----------
 
- - optimize unnecessary getFormattedString() into getString()
  ? we could show expiry in locale text style
    but is it actually better than iso?
  + green/yellow/red threat level indicator

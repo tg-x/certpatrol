@@ -334,7 +334,7 @@ var CertPatrol = {
       }
 
       if (certobj.threat > 3) certobj.threat = 3;
-      certobj.lang.changeEvent = this.strings.getString("threatLevel_"+ certobj.threat);
+      certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
 
       certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
@@ -374,8 +374,10 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
-      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT);
-      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT);
+      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
+				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
+      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
+				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
       this.outnew(certobj);
