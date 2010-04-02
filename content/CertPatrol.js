@@ -173,23 +173,23 @@ var CertPatrol = {
         sha1Fingerprint:""
       },
       lang:{
-        newEvent:this.strings.getFormattedString("newEvent",[]),
-        changeEvent:this.strings.getFormattedString("changeEvent",[]),
-        newCert:this.strings.getFormattedString("newCert",[]),
-        oldCert:this.strings.getFormattedString("oldCert",[]),
-        issuedTo:this.strings.getFormattedString("issuedTo",[]),
-        issuedBy:this.strings.getFormattedString("issuedBy",[]),
-        validity:this.strings.getFormattedString("validity",[]),
-        fingerprints:this.strings.getFormattedString("fingerprints",[]),
-        commonName:this.strings.getFormattedString("commonName",[]),
-        organization:this.strings.getFormattedString("organization",[]),
-        organizationalUnit:this.strings.getFormattedString("organizationalUnit",[]),
-        serialNumber:this.strings.getFormattedString("serialNumber",[]),
-        emailAddress:this.strings.getFormattedString("emailAddress",[]),
-        notBeforeGMT:this.strings.getFormattedString("notBeforeGMT",[]),
-        notAfterGMT:this.strings.getFormattedString("notAfterGMT",[]),
-        md5Fingerprint:this.strings.getFormattedString("md5Fingerprint",[]),
-        sha1Fingerprint:this.strings.getFormattedString("sha1Fingerprint",[])
+        newEvent:this.strings.getString("newEvent"),
+        changeEvent:this.strings.getString("changeEvent"),
+        newCert:this.strings.getString("newCert"),
+        oldCert:this.strings.getString("oldCert"),
+        issuedTo:this.strings.getString("issuedTo"),
+        issuedBy:this.strings.getString("issuedBy"),
+        validity:this.strings.getString("validity"),
+        fingerprints:this.strings.getString("fingerprints"),
+        commonName:this.strings.getString("commonName"),
+        organization:this.strings.getString("organization"),
+        organizationalUnit:this.strings.getString("organizationalUnit"),
+        serialNumber:this.strings.getString("serialNumber"),
+        emailAddress:this.strings.getString("emailAddress"),
+        notBeforeGMT:this.strings.getString("notBeforeGMT"),
+        notAfterGMT:this.strings.getString("notAfterGMT"),
+        md5Fingerprint:this.strings.getString("md5Fingerprint"),
+        sha1Fingerprint:this.strings.getString("sha1Fingerprint")
       }
     };
 
@@ -309,32 +309,32 @@ var CertPatrol = {
 
       // Try to make some sense out of the certificate changes
       var natd = this.timedelta(certobj.sql.notAfterGMT);
-      if (natd <= 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_expired",[]) +"\n";
+      if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
       else if (natd > 10364400000) {
 	certobj.threat += 2;
-        certobj.info += this.strings.getFormattedString("warn_notAfterGMT_notdue",[]) +"\n";
+        certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
       } else if (natd > 5182200000) {
 	certobj.threat ++;
-        certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
+        certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
       }
-      else if (natd > 0) certobj.info += this.strings.getFormattedString("warn_notAfterGMT_due",[]) +"\n";
+      else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
       if (certobj.moz.commonName != certobj.sql.commonName) {
-        certobj.info += this.strings.getFormattedString("warn_commonName",[]) +"\n";
+        certobj.info += this.strings.getString("warn_commonName") +"\n";
 	certobj.threat += 2;
       }
       if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
-        certobj.info += this.strings.getFormattedString("warn_issuerCommonName",[]) +"\n";
+        certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
       }
       // checking NEW certificate here.. further checks done by firefox before we even get here
       var td = this.timedelta(certobj.moz.notBeforeGMT);
       if (td > 0) {
-        certobj.info += this.strings.getFormattedString("warn_notBeforeGMT",[]) +"\n";
+        certobj.info += this.strings.getString("warn_notBeforeGMT") +"\n";
 	certobj.threat += 2;
       }
 
       if (certobj.threat > 3) certobj.threat = 3;
-      certobj.lang.changeEvent = this.strings.getFormattedString("threatLevel_"+ certobj.threat,[]);
+      certobj.lang.changeEvent = this.strings.getString("threatLevel_"+ certobj.threat);
 
       certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
