@@ -383,17 +383,32 @@ var CertPatrol = {
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
-/*      if (browser) try {
-	    alert("noboxing "+ certobj.host);
-	    var nobox = browser.getNotificationBox();
+/*	alert("b4");
+       if (browser) try {
+	    alert("noboxing");
+	    var notifyBox = browser.getNotificationBox();
+			|| gBrowser.getNotificationBox();
 	    // https://developer.mozilla.org/en/XUL/Method/appendNotification
 	    // http://gist.github.com/256554
 	    // using certobj.host as the id for the notification
-	    nobox.appendNotification("Fick dich, "+ certobj.host, certobj.host,
-		null, nobox.PRIORITY_INFO_LOW, null);
+//	    nobox.appendNotification("Fick dich, "+ certobj.host, certobj.host,
+//		null, nobox.PRIORITY_INFO_LOW, null);
+
+notifyBox.appendNotification(
+    "XULit say: NotificationBox is cool, isn't it?",
+    "notify-02", null,
+    notifyBox.PRIORITY_WARNING_MEDIUM, [
+        { accessKey: "O", label: "Ok",
+          callback: function(msg, btn) { alert("OK"); } },
+        { accessKey: "K", label: "KO", popup: null,
+          callback: function(msg, btn) { alert("KO"); } },
+    ]);
+
 	    return;
-      } catch() {}
-*/
+      } catch() {
+	alert("noboxing failed");
+      }
+	alert("b5"); */
       this.outnew(certobj);
     }
   },
