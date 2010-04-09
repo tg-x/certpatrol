@@ -105,11 +105,11 @@ var CertPatrol = {
 
   // helper functions for advanced patrol
   isodate: function(tim) {
-    tim = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) /, "$3-$1-$2 ");
+    var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) /, "$3-$1-$2 ");
     // upcoming Y3K bug, but you must delete this line before 2020
     // there will be no more two digit year certs in existence hopefully
-    if (tim[0] != '2') tim = "20"+ tim;
-    return tim;
+    if (iso != tim && iso[0] != '2') iso = "20"+ iso;
+    return iso;
   },
   timedelta: function(x509time) {
     var d = new Date(x509time);
@@ -326,12 +326,13 @@ var CertPatrol = {
         certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
       }
-      // checking NEW certificate here.. further checks done by firefox before we even get here
+      // checking NEW certificate here..
       var td = this.timedelta(certobj.moz.notBeforeGMT);
       if (td > 0) {
         certobj.info += this.strings.getString("warn_notBeforeGMT") +"\n";
 	certobj.threat += 2;
       }
+      // further checks done by firefox before we even get here
 
       if (certobj.threat > 3) certobj.threat = 3;
       certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
@@ -374,12 +375,25 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+      // checks are done by firefox before we even get here
+      // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
+/*      if (browser) try {
+	    alert("noboxing "+ certobj.host);
+	    var nobox = browser.getNotificationBox();
+	    // https://developer.mozilla.org/en/XUL/Method/appendNotification
+	    // http://gist.github.com/256554
+	    // using certobj.host as the id for the notification
+	    nobox.appendNotification("Fick dich, "+ certobj.host, certobj.host,
+		null, nobox.PRIORITY_INFO_LOW, null);
+	    return;
+      } catch() {}
+*/
       this.outnew(certobj);
     }
   },
