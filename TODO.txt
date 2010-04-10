@@ -2,10 +2,6 @@
 TODO / WISHLIST
 ====/----------
 
- - OK. The display of the dates for Issue and Expiry are displayed wrongly. CP will write it like this: '2008.01.2010 00:00:00 (NaN days ahead)' while the FF display of the certificate writes it this way: '08.01.2010'
- - 208/21/2009 0:00:00 AM (231 days ago)
-
- - warn if hostname != common name for new certs
  + green/yellow/red threat level indicator
  ? use window load hook instead of DOM?
  ? examine certificate chain somehow?
@@ -23,7 +19,6 @@ TODO / WISHLIST
 	     could avoid specifically that CA even if it tried to hide itself
 	     behind a hierarchy of subca with innocent names
  + preferences panel
-    ? option to suppress certificate-added popups?
     ? option to wildcard-excempt annoying domains?
  + support for other protocols than https:
     + currently certpatrol in messengers like thunderbird only
@@ -35,6 +30,7 @@ TODO / WISHLIST
    yet (= we haven't shown the certificate to our user yet)
  ? we could show expiry in locale text style
    but is it actually better than iso?
+   sometimes javascript can't parse mozilla's certificate date formats.. #fail
 
 
 
@@ -73,4 +69,14 @@ confusing for everybody else.
 
 Expiration and issuance dates are also shown as number of
 days in the future or past from now.
+
+== VERSION 1.2.4 ==
+
+Minor fix in date display.
+
+== VERSION 1.3 ==
+
+Display events of lesser importance using notification
+boxes. Allow to return to old behaviour using option
+switches in the new Preferences dialog.
 

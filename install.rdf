@@ -16,7 +16,7 @@
     <!-- em:contributor>...</em:contributor -->
     <em:homepageURL>http://patrol.psyced.org</em:homepageURL>
     <em:description>Monitor certificates the browser adopts for encrypted https websites.</em:description>
-    <!-- em:optionsURL>chrome://certpatrol/content/options.xul</em:optionsURL -->
+    <em:optionsURL>chrome://certpatrol/content/prefs.xul</em:optionsURL>
     <!-- em:updateURL>http://www.foo.com/update.cgi?id=%ITEM_ID%&amp;version=%ITEM_VERSION%</em:updateURL -->
     <!-- aboutURL, iconURL -->
 

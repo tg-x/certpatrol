@@ -88,6 +88,10 @@ var CertPatrol = {
 
   // Application trigger
   init: function() {
+    this.prefs = Cc["@mozilla.org/preferences-service;1"]
+                   .getService(Ci.nsIPrefService)
+                   .getBranch("certpatrol.")
+                   .QueryInterface(Ci.nsIPrefBranch2);
 
     // Firefox
     var content = document.getElementById("content");
@@ -190,16 +194,19 @@ var CertPatrol = {
         notBeforeGMT:this.strings.getString("notBeforeGMT"),
         notAfterGMT:this.strings.getString("notAfterGMT"),
         md5Fingerprint:this.strings.getString("md5Fingerprint"),
-        sha1Fingerprint:this.strings.getString("sha1Fingerprint")
-        viewDetails:this.strings.getString("viewDetails")
+        sha1Fingerprint:this.strings.getString("sha1Fingerprint"),
+        viewDetails:this.strings.getString("viewDetails")  // no comma
       }
     };
 
     // Find the right tab, that issued the event.
     // Load the corresponding securityUI for this event.
     var browser = gBrowser.getBrowserForDocument(doc);
-    if (!browser)
-      return;
+    if (!browser) {
+//	alert("Could not find browser for "+ doc.location);
+	browser = gBrowser;
+        //return;
+    }
 
     var ui = browser.securityUI;
     if (!ui)
@@ -245,13 +252,13 @@ var CertPatrol = {
       certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
       certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
 
-      this.certCheck(certobj);
+      this.certCheck(browser, certobj);
     }
   },
 
 
   // Certificate check
-  certCheck: function(certobj) {
+  certCheck: function(browser, certobj) {
     var found = false;
 
     // Get certificate
@@ -349,7 +356,7 @@ var CertPatrol = {
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
-      this.outchange(certobj);
+      this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
@@ -385,20 +392,22 @@ var CertPatrol = {
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
-      this.outnew(certobj);
+      this.outnew(browser, certobj);
     }
   },
 
-  outnew: function(certobj) {
-    // https://developer.mozilla.org/en/XUL/Method/appendNotification
-    // http://gist.github.com/256554
-    // using certobj.host as the id for the notification
+  outnew: function(browser, certobj) {
+    var forcePopup = this.prefs.getBoolPref("popup.new");
+    // would like to use document's browser here, but it doesn't work
     var notifyBox = gBrowser.getNotificationBox();
-    if (notifyBox == null) {
+    if (forcePopup || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			  "chrome,dialog,modal", certobj);
 	return;
     }
+    // https://developer.mozilla.org/en/XUL/Method/appendNotification
+    // http://gist.github.com/256554
+    // using certobj.host as the id for the notification
     notifyBox.appendNotification(
 	"(CertPatrol) "+ certobj.lang.newEvent
 	  +" "+ certobj.moz.commonName +". "+
@@ -415,9 +424,10 @@ var CertPatrol = {
   },
   
   
-  outchange: function(certobj) {
+  outchange: function(browser, certobj) {
+    var forcePopup = this.prefs.getBoolPref("popup.change");
     var notifyBox = gBrowser.getNotificationBox();
-    if (certobj.threat > 1 || notifyBox == null) {
+    if (forcePopup || certobj.threat > 1 || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
 			  "chrome,dialog,modal", certobj);
 	return;
