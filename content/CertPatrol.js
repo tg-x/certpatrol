@@ -105,7 +105,8 @@ var CertPatrol = {
 
   // helper functions for advanced patrol
   isodate: function(tim) {
-    var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+) /, "$3-$1-$2 ");
+    // i think i saw some cert dates without time info appended..
+    var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+)/, "$3-$1-$2");
     // upcoming Y3K bug, but you must delete this line before 2020
     // there will be no more two digit year certs in existence hopefully
     if (iso != tim && iso[0] != '2') iso = "20"+ iso;
@@ -190,6 +191,7 @@ var CertPatrol = {
         notAfterGMT:this.strings.getString("notAfterGMT"),
         md5Fingerprint:this.strings.getString("md5Fingerprint"),
         sha1Fingerprint:this.strings.getString("sha1Fingerprint")
+        viewDetails:this.strings.getString("viewDetails")
       }
     };
 
@@ -383,47 +385,58 @@ var CertPatrol = {
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
       // Output
-/*	alert("b4");
-       if (browser) try {
-	    alert("noboxing");
-	    var notifyBox = browser.getNotificationBox();
-			|| gBrowser.getNotificationBox();
-	    // https://developer.mozilla.org/en/XUL/Method/appendNotification
-	    // http://gist.github.com/256554
-	    // using certobj.host as the id for the notification
-//	    nobox.appendNotification("Fick dich, "+ certobj.host, certobj.host,
-//		null, nobox.PRIORITY_INFO_LOW, null);
-
-notifyBox.appendNotification(
-    "XULit say: NotificationBox is cool, isn't it?",
-    "notify-02", null,
-    notifyBox.PRIORITY_WARNING_MEDIUM, [
-        { accessKey: "O", label: "Ok",
-          callback: function(msg, btn) { alert("OK"); } },
-        { accessKey: "K", label: "KO", popup: null,
-          callback: function(msg, btn) { alert("KO"); } },
-    ]);
-
-	    return;
-      } catch() {
-	alert("noboxing failed");
-      }
-	alert("b5"); */
       this.outnew(certobj);
     }
   },
 
   outnew: function(certobj) {
-    window.openDialog("chrome://certpatrol/content/new.xul",
-		      /* "ssl-new" */ "_blank",
-                      "chrome,dialog,modal", certobj);
+    // https://developer.mozilla.org/en/XUL/Method/appendNotification
+    // http://gist.github.com/256554
+    // using certobj.host as the id for the notification
+    var notifyBox = gBrowser.getNotificationBox();
+    if (notifyBox == null) {
+	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.newEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	notifyBox.PRIORITY_INFO_HIGH, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
   },
   
   
   outchange: function(certobj) {
-    window.openDialog("chrome://certpatrol/content/change.xul",
-		      /* "ssl-change" */ "_blank",
-                      "chrome,dialog,modal", certobj);
+    var notifyBox = gBrowser.getNotificationBox();
+    if (certobj.threat > 1 || notifyBox == null) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.changeEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
+          + certobj.info,
+	certobj.host, null,
+	certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
+			    : notifyBox.PRIORITY_INFO_LOW, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
   },
   
   

@@ -5,12 +5,15 @@ it:
 	./build.sh
 	cp -p $N.xpi /dev/shm
 
-olddist:
-	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*
-	mv $N-$V.xpi /dev/shm
-	@echo About to copy the new version to the website.. yes?
-	@sleep 7
-	scp /dev/shm/$N-$V.xpi f:p/Xtra/$N.xpi
+pub:
+	scp $N.xpi l:/ve/l/mozilla
+
+#olddist:
+#	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*
+#	mv $N-$V.xpi /dev/shm
+#	@echo About to copy the new version to the website.. yes?
+#	@sleep 7
+#	scp /dev/shm/$N-$V.xpi f:p/Xtra/$N.xpi
 
 clean:
 	-rm *.xpi
