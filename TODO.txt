@@ -72,11 +72,13 @@ days in the future or past from now.
 
 == VERSION 1.2.4 ==
 
-Minor fix in date display.
+Attempted fix for the date display.
 
 == VERSION 1.3 ==
 
 Display events of lesser importance using notification
 boxes. Allow to return to old behaviour using option
 switches in the new Preferences dialog.
+
+Fix for the date display problem.
 

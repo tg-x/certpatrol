@@ -109,15 +109,34 @@ var CertPatrol = {
 
   // helper functions for advanced patrol
   isodate: function(tim) {
-    // i think i saw some cert dates without time info appended..
-    var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+)/, "$3-$1-$2");
-    // upcoming Y3K bug, but you must delete this line before 2020
-    // there will be no more two digit year certs in existence hopefully
-    if (iso != tim && iso[0] != '2') iso = "20"+ iso;
-    return iso;
+    if (isNaN(tim)) {
+      // this part of code can go when there are no more pre version 1.3
+      // Certpatrol.sqlite instances around..
+      //
+      // i think i saw some cert dates without time info appended..
+      var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+)/, "$3-$1-$2");
+      // upcoming Y3K bug, but you must delete this line before 2020
+      // there will be no more two digit year certs in existence hopefully
+      if (iso != tim) {
+	  if (iso[0] != '2') iso = "20"+ iso;
+	  return iso;
+      }
+    }
+    var d = new Date(tim / 1000);
+    // locale string is too verbose. we don't need weekdays and time zones here
+    //return d.toLocaleString();
+    // i was really afraid of having to do this. i love bad apis like Date().
+    return d.getFullYear() +"-"+
+	  (d.getMonth() < 10 ? "0"+ d.getMonth() : d.getMonth()) +"-"+
+	  (d.getDay() < 10 ? "0"+ d.getDay() : d.getDay()) +" "+
+	  (d.getHours() < 10 ? "0"+ d.getHours() : d.getHours()) +":"+
+	  (d.getMinutes() < 10 ? "0"+ d.getMinutes() : d.getMinutes());
+    // btw, this is not exactly ISO 8601 conformant but rather
+    // preserves its original intent.. universal readability (thus no 'T')
   },
-  timedelta: function(x509time) {
-    var d = new Date(x509time);
+  timedelta: function(tim) {
+    if (!isNaN(tim)) tim /= 1000;
+    var d = new Date(tim);
     // Y2K bug in X.509 and javascript...
     if (d.getFullYear() < 2000) d.setFullYear(100 + d.getFullYear());
     var now = new Date();
@@ -244,8 +263,13 @@ var CertPatrol = {
       certobj.moz.organizationalUnit = thiscert.organizationalUnit;
       certobj.moz.serialNumber = thiscert.serialNumber;
       certobj.moz.emailAddress = thiscert.emailAddress;
-      certobj.moz.notBeforeGMT = validity.notBeforeGMT;
-      certobj.moz.notAfterGMT = validity.notAfterGMT;
+      // "GMT" is a historic lie here.. before version 1.3 we used to work
+      // with notAfterGMT etc and try to parse the various renderings of it.
+      // now it is too late and pointless to change the name in the sqlite
+      // field. how i love SQL for its terrific flexibility...  ;)
+      // why do most web apps still use this 1970s legacy interface?
+      certobj.moz.notBeforeGMT = validity.notBefore;
+      certobj.moz.notAfterGMT = validity.notAfter;
       certobj.moz.issuerCommonName = thiscert.issuerCommonName;
       certobj.moz.issuerOrganization = thiscert.issuerOrganization;
       certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
