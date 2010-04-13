@@ -1,6 +1,8 @@
 <!ENTITY _title		"Einstellungen für Certificate Patrol">
 <!ENTITY _title_main	"Optionen">
-<!ENTITY _popup_new	"Immer Details anzeigen für neu angenommene Zertifikate">
-<!ENTITY _popup_change	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
+<!ENTITY _popup_new	"Details ausblenden für neu angenommene Zertifikate (beta)">
+<!ENTITY _popup_change	"Details ausblenden auch bei harmlosen Zertifikatsänderungen (beta)">
+<!ENTITY _popup_new2	"Immer Details anzeigen für neu angenommene Zertifikate">
+<!ENTITY _popup_change2	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">

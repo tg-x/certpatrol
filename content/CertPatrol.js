@@ -421,7 +421,7 @@ var CertPatrol = {
   },
 
   outnew: function(browser, certobj) {
-    var forcePopup = this.prefs.getBoolPref("popup.new");
+    var forcePopup = !this.prefs.getBoolPref("popup.new");
     // would like to use document's browser here, but it doesn't work
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || notifyBox == null) {
@@ -449,7 +449,7 @@ var CertPatrol = {
   
   
   outchange: function(browser, certobj) {
-    var forcePopup = this.prefs.getBoolPref("popup.change");
+    var forcePopup = !this.prefs.getBoolPref("popup.change");
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || certobj.threat > 1 || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",

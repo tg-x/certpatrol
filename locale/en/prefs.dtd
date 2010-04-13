@@ -1,6 +1,8 @@
 <!ENTITY _title		"Certificate Patrol Preferences">
 <!ENTITY _title_main	"Options">
-<!ENTITY _popup_new	"Newly accepted certificates are always shown in a pop-up by default">
-<!ENTITY _popup_change	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
+<!ENTITY _popup_new	"No detailed pop-up for newly accepted certificates (beta)">
+<!ENTITY _popup_change	"No detailed pop-up for mostly harmless certificate changes (beta)">
+<!ENTITY _popup_new2	"Newly accepted certificates are always shown in a pop-up by default">
+<!ENTITY _popup_change2	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
