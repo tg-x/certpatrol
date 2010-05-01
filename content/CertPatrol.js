@@ -90,6 +90,10 @@ var CertPatrol = {
 
   // Application trigger
   init: function() {
+    this.prefs = Cc["@mozilla.org/preferences-service;1"]
+                   .getService(Ci.nsIPrefService)
+                   .getBranch("certpatrol.")
+                   .QueryInterface(Ci.nsIPrefBranch2);
 
     // Firefox
     var content = document.getElementById("content");
@@ -420,14 +424,60 @@ var CertPatrol = {
   },
 
   outnew: function(browser, certobj) {
+    var forcePopup = false;
+    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.new");
+
+    // would like to use document's browser here, but it doesn't work
+    var notifyBox = gBrowser.getNotificationBox();
+    if (forcePopup || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			  "chrome,dialog,modal", certobj);
+	return;
+    }
+    // https://developer.mozilla.org/en/XUL/Method/appendNotification
+    // http://gist.github.com/256554
+    // using certobj.host as the id for the notification
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.newEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	notifyBox.PRIORITY_INFO_HIGH, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
   },
   
   
   outchange: function(browser, certobj) {
+    var forcePopup = false;
+    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.change");
+
+    var notifyBox = gBrowser.getNotificationBox();
+    if (forcePopup || certobj.threat > 1 || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
 			  "chrome,dialog,modal", certobj);
+	return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.changeEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
+          + certobj.info,
+	certobj.host, null,
+	certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
+			    : notifyBox.PRIORITY_INFO_LOW, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
   },
   
   
