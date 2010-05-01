@@ -2,7 +2,10 @@
 TODO / WISHLIST
 ====/----------
 
+ ? reorg groupbox
+ + use the patrol icon
  + green/yellow/red threat level indicator
+ + allow user to reject a new or changed certificate
  ? use window load hook instead of DOM?
  ? examine certificate chain somehow?
  + jmd says: a button to copy all the information about the cert so that you
@@ -11,7 +14,6 @@ TODO / WISHLIST
  ? jmd says: it would be the whole path of the certificate up to a root ca, so
 	     that expert could easily see from the content if a fake MITM
 	     certificate was involved or not
- + allow user to reject a new or changed certificate
  ? blacklist of untrustworthy CAs? (can't you just remove them?)
    jmd says: the possibility to configure a watch string wenever you access
 	     a site that uses a certification path where one of the CA
@@ -33,6 +35,7 @@ TODO / WISHLIST
  ? we could show expiry in locale text style
    but is it actually better than iso?
    sometimes javascript can't parse mozilla's certificate date formats.. #fail
+ + provide a preset sqlite database with most popular certificates
 
 
 
@@ -88,4 +91,11 @@ Fix for the date display problem.
 
 Sticking to old behaviour by default, making the
 notification boxes optional.
+
+== VERSION 1.2.5 ==
+
+Fix for the date display.
+Further enhancements postponed.
+## because of errors that only arise on other people's installations.
+## Very strange.
 

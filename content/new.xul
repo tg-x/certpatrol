@@ -6,7 +6,7 @@
 <dialog id="ssl-new"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="700" height="500"
+  persist="screenX screenY width height" width="700" height="600"
   buttons="accept"
   onload="return onLoad();"
   onDialogAccept="return doOK();">

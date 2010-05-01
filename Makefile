@@ -1,11 +1,17 @@
 #V=0.xx
 N=certpatrol
 
-it:
+.SUFFIXES: .pjs .js
+
+.pjs.js: Makefile
+	prep $*.pjs > $@
+
+it: *.js
+	-ln -f CertPatrol.js content
 	./build.sh
 	cp -p $N.xpi /dev/shm
 
-pub:
+up:
 	scp $N.xpi l:/ve/l/mozilla
 
 #olddist:
