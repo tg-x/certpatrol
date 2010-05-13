@@ -98,8 +98,7 @@ var CertPatrol = {
     // Firefox
     var content = document.getElementById("content");
     if(content) {
-      content.addEventListener("DOMContentLoaded", this.onPageLoad, true);
-      content.addEventListener("DOMFrameContentLoaded", this.onPageLoad, true);
+      content.addEventListener("load", this.onPageLoad, true);
     }
 
     // Thunderbird
@@ -112,35 +111,21 @@ var CertPatrol = {
   // helper functions for advanced patrol
   isodate: function(tim) {
     if (isNaN(tim)) {
-      // this part of code can go when there are no more pre version 1.3
-      // Certpatrol.sqlite instances around..
-      //
-      // i think i saw some cert dates without time info appended..
       var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+)/, "$3-$1-$2");
       // upcoming Y3K bug, but you must delete this line before 2020
-      // there will be no more two digit year certs in existence hopefully
       if (iso != tim) {
 	  if (iso[0] != '2') iso = "20"+ iso;
 	  return iso;
       }
     }
     var d = new Date(tim / 1000);
-    // locale string is too verbose. we don't need weekdays and time zones here
-    // i was really afraid of having to do this. i love bad apis like Date().
-//  return d.getFullYear() +"-"+
-//	  (d.getMonth() < 10 ? "0"+ d.getMonth() : d.getMonth()) +"-"+
-//	  (d.getDay() < 10 ? "0"+ d.getDay() : d.getDay()) +" "+
-//	  (d.getHours() < 10 ? "0"+ d.getHours() : d.getHours()) +":"+
-//	  (d.getMinutes() < 10 ? "0"+ d.getMinutes() : d.getMinutes());
     // mozilla has this nice strftime extension to Date called toLocaleFormat()
     return d.toLocaleFormat("%Y-%m-%d %H:%M:%S");
-    // btw, this is not exactly ISO 8601 conformant but rather
-    // preserves its original intent.. universal readability (thus no 'T')
   },
   timedelta: function(tim) {
     if (!isNaN(tim)) tim /= 1000;
     var d = new Date(tim);
-    // Y2K bug in X.509 and javascript...
+    // Y2K bug in Javascript...  :)
     if (d.getFullYear() < 2000) d.setFullYear(100 + d.getFullYear());
     var now = new Date();
     //alert("Now is "+ now.getTime() +" and cert is "+ d.getTime());
@@ -161,12 +146,19 @@ var CertPatrol = {
       CertPatrol.onSecurePageLoad(doc);
   },
 
-
   // SSL trigger
   onSecurePageLoad: function(doc) {
     const ci = Components.interfaces;
     var thiscert;
     var validity;
+
+    var browser = gBrowser.getBrowserForDocument(doc);
+    if (!browser) {
+//	alert("Could not find browser for "+ doc.location);
+	return;
+    }
+//  else alert("CertPatrol.onSecurePageLoad has browser for "+ doc.location);
+
     var certobj={
       threat:0,
       info:"",
@@ -221,15 +213,6 @@ var CertPatrol = {
       }
     };
 
-    // Find the right tab, that issued the event.
-    // Load the corresponding securityUI for this event.
-    var browser = gBrowser.getBrowserForDocument(doc);
-    if (!browser) {
-//	alert("Could not find browser for "+ doc.location);
-	browser = gBrowser;
-        //return;
-    }
-
     var ui = browser.securityUI;
     if (!ui)
       return;
@@ -257,30 +240,22 @@ var CertPatrol = {
       return;
 
     // The interesting part
-    if (thiscert && validity)
-    {
-      certobj.host = doc.location.host;
+    certobj.host = doc.location.host;
 
-      certobj.moz.commonName = thiscert.commonName;
-      certobj.moz.organization = thiscert.organization;
-      certobj.moz.organizationalUnit = thiscert.organizationalUnit;
-      certobj.moz.serialNumber = thiscert.serialNumber;
-      certobj.moz.emailAddress = thiscert.emailAddress;
-      // "GMT" is a historic lie here.. before version 1.3 we used to work
-      // with notAfterGMT etc and try to parse the various renderings of it.
-      // now it is too late and pointless to change the name in the sqlite
-      // field. how i love SQL for its terrific flexibility...  ;)
-      // why do most web apps still use this 1970s legacy interface?
-      certobj.moz.notBeforeGMT = validity.notBefore;
-      certobj.moz.notAfterGMT = validity.notAfter;
-      certobj.moz.issuerCommonName = thiscert.issuerCommonName;
-      certobj.moz.issuerOrganization = thiscert.issuerOrganization;
-      certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
-      certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
-      certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
+    certobj.moz.commonName = thiscert.commonName;
+    certobj.moz.organization = thiscert.organization;
+    certobj.moz.organizationalUnit = thiscert.organizationalUnit;
+    certobj.moz.serialNumber = thiscert.serialNumber;
+    certobj.moz.emailAddress = thiscert.emailAddress;
+    certobj.moz.notBeforeGMT = validity.notBefore;
+    certobj.moz.notAfterGMT = validity.notAfter;
+    certobj.moz.issuerCommonName = thiscert.issuerCommonName;
+    certobj.moz.issuerOrganization = thiscert.issuerOrganization;
+    certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
+    certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
+    certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
 
-      this.certCheck(browser, certobj);
-    }
+    this.certCheck(browser, certobj);
   },
 
 
@@ -362,13 +337,11 @@ var CertPatrol = {
         certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
       }
-      // checking NEW certificate here..
       var td = this.timedelta(certobj.moz.notBeforeGMT);
       if (td > 0) {
         certobj.info += this.strings.getString("warn_notBeforeGMT") +"\n";
 	certobj.threat += 2;
       }
-      // further checks done by firefox before we even get here
 
       if (certobj.threat > 3) certobj.threat = 3;
       certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
@@ -411,8 +384,6 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
-      // checks are done by firefox before we even get here
-      // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
@@ -427,16 +398,12 @@ var CertPatrol = {
     var forcePopup = false;
     if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.new");
 
-    // would like to use document's browser here, but it doesn't work
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || notifyBox == null) {
 	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			  "chrome,dialog,modal", certobj);
 	return;
     }
-    // https://developer.mozilla.org/en/XUL/Method/appendNotification
-    // http://gist.github.com/256554
-    // using certobj.host as the id for the notification
     notifyBox.appendNotification(
 	"(CertPatrol) "+ certobj.lang.newEvent
 	  +" "+ certobj.moz.commonName +". "+
@@ -468,7 +435,7 @@ var CertPatrol = {
 	  +" "+ certobj.moz.commonName +". "+
 	  certobj.lang.issuedBy +" "+
 	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
-          + certobj.info,
+          +" "+ certobj.info,
 	certobj.host, null,
 	certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
 			    : notifyBox.PRIORITY_INFO_LOW, [
