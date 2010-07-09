@@ -1,8 +1,7 @@
 <!ENTITY _title		"Certificate Patrol Preferences">
 <!ENTITY _title_main	"Options">
-<!ENTITY _popup_new	"Detailed pop-up for newly accepted certificates">
-<!ENTITY _popup_change	"Detailed pop-up for mostly harmless certificate changes">
-<!ENTITY _popup_new2	"Newly accepted certificates are always shown in a pop-up by default">
-<!ENTITY _popup_change2	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
+<!ENTITY _popup_new	"Newly accepted certificates are always shown in a pop-up by default">
+<!ENTITY _popup_change	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
+<!ENTITY _popup_wild	"Show already accepted wildcard certificates again when they match a new hostname">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">

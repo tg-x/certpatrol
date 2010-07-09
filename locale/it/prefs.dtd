@@ -1,8 +1,7 @@
 <!ENTITY _title		"Preferenze riguardo a Certificate Patrol">
 <!ENTITY _title_main	"Opzioni">
-<!ENTITY _popup_new	"Mostra i dettagli per certificati nuovamente adottati">
-<!ENTITY _popup_change	"Mostra i dettagli per cambiamenti di certificato innocui">
-<!ENTITY _popup_new2	"Mostra sempre i dettagli per certificati nuovamente adottati">
-<!ENTITY _popup_change2	"Mostra immediatamente i dettagli anche per cambiamenti di certificato innocui">
+<!ENTITY _popup_new	"Mostra sempre i dettagli per certificati nuovamente adottati">
+<!ENTITY _popup_change	"Mostra immediatamente i dettagli anche per cambiamenti di certificato innocui">
+<!ENTITY _popup_wild	"Mostra certificati wildcard gia` accettati ogni volta che si presentano per un host diverso">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
