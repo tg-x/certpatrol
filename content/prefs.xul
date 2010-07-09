@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://certpatrol/locale/prefs.dtd">
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
+
+<prefwindow id="CertPatrol-prefs" title="&_title;"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<prefpane id="main" label="&_title_main;">
+  <preferences> 
+    <preference id="_popup_new"
+	name="certpatrol.popup.new"
+	type="bool" />
+    <preference id="_popup_change"
+	name="certpatrol.popup.change"
+	type="bool" />
+  </preferences>
+  <dialogheader title="&_title;" />
+  <groupbox>
+    <caption label="&_title_main;" />
+    <checkbox label="&_popup_new;"
+	    preference="_popup_new" 
+	    checked="false" />
+    <checkbox label="&_popup_change;"
+	    preference="_popup_change" 
+	    checked="false" />
+  </groupbox> 
+
+  <!-- hbox>
+      <button id="_home" label="&_home;"
+	 onClick="gBrowser.location='http://patrol.psyced.org/';" />
+      <button id="_close" label="&_close;" command="closeCmd" />
+  </hbox -->
+
+</prefpane>
+
+</prefwindow> 

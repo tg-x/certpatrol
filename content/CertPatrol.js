@@ -32,6 +32,7 @@
  *                              
  * ***** END LICENSE BLOCK ***** */
 
+
 var CertPatrol = {
 
   // Main
@@ -136,7 +137,6 @@ var CertPatrol = {
     return " ("+ this.strings.getFormattedString(td < 0 ?
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
-
 
   // Event trigger
   onPageLoad: function(aEvent) {
@@ -294,7 +294,7 @@ var CertPatrol = {
          certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
          certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
        )) {
-      
+
       // DB update
       stmt = this.dbupdate;
       try {
@@ -318,22 +318,23 @@ var CertPatrol = {
         stmt.reset();
       }
 
-      // Try to make some sense out of the certificate changes
-      var natd = this.timedelta(certobj.sql.notAfterGMT);
-      if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
-      else if (natd > 10364400000) {
-	certobj.threat += 2;
-        certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
-      } else if (natd > 5182200000) {
-	certobj.threat ++;
-        certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
-      }
-      else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
-      if (certobj.moz.commonName != certobj.sql.commonName) {
-        certobj.info += this.strings.getString("warn_commonName") +"\n";
-	certobj.threat += 2;
-      }
-      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+	  // Try to make some sense out of the certificate changes
+	  var natd = this.timedelta(certobj.sql.notAfterGMT);
+	  if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
+	  else if (natd > 10364400000) {
+	    certobj.threat += 2;
+	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
+	  } else if (natd > 5182200000) {
+	    certobj.threat ++;
+	    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	  }
+	  else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	  if (certobj.moz.commonName != certobj.sql.commonName) {
+	    certobj.info += this.strings.getString("warn_commonName") +"\n";
+	    certobj.threat += 2;
+	  }
+
+      if (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization) {
         certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
       }
@@ -355,12 +356,11 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output
       this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
-      
+
       // Store data
       stmt = this.dbinsert;
       try {
@@ -389,14 +389,14 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output
       this.outnew(browser, certobj);
     }
   },
 
+
   outnew: function(browser, certobj) {
     var forcePopup = false;
-    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.new");
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || notifyBox == null) {
@@ -418,11 +418,11 @@ var CertPatrol = {
 	} },
     ]);
   },
-  
+
   
   outchange: function(browser, certobj) {
     var forcePopup = false;
-    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.change");
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.change");
 
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || certobj.threat > 1 || notifyBox == null) {

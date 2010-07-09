@@ -1,8 +1,13 @@
+### vim:syntax=js
+###
 ### PREP SOURCE.. not in the mood for jaggler.. maybe i'll have to port later
 ### The following warning isn't for you if you can read this.
 // This file has been generated using prep.   http://perl.pages.de
 ###
+## versions 1.3*beta and 1.4
 #define P
+## versions 1.5*beta and 1.6
+##efine J
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -35,6 +40,10 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *                              
  * ***** END LICENSE BLOCK ***** */
+
+## The original Certificate Patrol code was slightly adapted by Georg Koppen, 
+## JonDos GmbH 2010. The wildcard certificate functionality was developed by 
+## Georg Koppen, JonDos GmbH 2010.
 
 var CertPatrol = {
 
@@ -81,6 +90,10 @@ var CertPatrol = {
       // Prepared statements
       this.dbselect = this.dbh.createStatement(
       "SELECT * FROM certificates where host=?1");
+#if J
+      this.dbselectWild = this.dbh.createStatement(
+      "SELECT * FROM certificates where sha1Fingerprint=?13");
+#endif
       this.dbinsert = this.dbh.createStatement(
       "INSERT INTO certificates (host, commonName, organization, organizationalUnit,serialNumber, emailAddress, notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint) values (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
       this.dbupdate = this.dbh.createStatement(
@@ -158,7 +171,46 @@ var CertPatrol = {
     return " ("+ this.strings.getFormattedString(td < 0 ?
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
-
+##
+#if J
+// wildcardCertCheck contributed by Georg Koppen, JonDos GmbH 2010. Thanks!
+// We are using it differently, though. The JonDos version is less paranoid.
+//
+  wildcardCertCheck: function(commonName, sha1Fingerprint) {
+    var stmt;
+    // First, we check whether we have a wildcard certificate at all. If not
+    // just return false and the new cert dialog will be schown. But even if
+    // we have one but no SHA1 fingerprint we should show it for security's
+    // sake...
+    if (commonName.charAt(0) === '*' && sha1Fingerprint) {
+      // We got one, check now if we have it already. If not, return false and
+      // the certificate will be shown. Otherwise, return yes and the new cert
+      // dialog will be omitted. 
+      try {
+        stmt = this.dbselectWildcard;
+        stmt.bindUTF8StringParameter(12, sha1Fingerprint);
+        if (stmt.executeStep()) {
+          return true;
+        } else {
+          // This case could occur as well if we have *.example.com and 
+          // foo.example.com with SHA1(1) saved and we find a cert with
+          // *.example.com and bar.example.com and SHA1(2): We would show
+          // the dialog even if we have already saved the wildcard cert. But
+          // that's okay due to the changed SHA1 fingerprint, thus prioritizing
+          // security and not convenience...
+          return false;
+        }
+      } catch (err) {
+        this.warn("Error trying to check wildcardcertificate "+commonName+
+                  ": "+err);
+      } finally {
+        stmt.reset();
+      }
+    } else {
+      return false;
+    }
+  },
+#endif
 
   // Event trigger
   onPageLoad: function(aEvent) {
@@ -327,7 +379,11 @@ var CertPatrol = {
          certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
          certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
        )) {
-      
+#if J
+      var wild = this.wildcardCertCheck(certobj.moz.commonName,
+					certobj.moz.sha1Fingerprint);
+#endif
+
       // DB update
       stmt = this.dbupdate;
       try {
@@ -351,22 +407,30 @@ var CertPatrol = {
         stmt.reset();
       }
 
-      // Try to make some sense out of the certificate changes
-      var natd = this.timedelta(certobj.sql.notAfterGMT);
-      if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
-      else if (natd > 10364400000) {
-	certobj.threat += 2;
-        certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
-      } else if (natd > 5182200000) {
-	certobj.threat ++;
-        certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+#if J
+      if (!wild) {
+#endif
+	  // Try to make some sense out of the certificate changes
+	  var natd = this.timedelta(certobj.sql.notAfterGMT);
+	  if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
+	  else if (natd > 10364400000) {
+	    certobj.threat += 2;
+	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
+	  } else if (natd > 5182200000) {
+	    certobj.threat ++;
+	    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	  }
+	  else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	  if (certobj.moz.commonName != certobj.sql.commonName) {
+	    certobj.info += this.strings.getString("warn_commonName") +"\n";
+	    certobj.threat += 2;
+	  }
+#if J
       }
-      else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
-      if (certobj.moz.commonName != certobj.sql.commonName) {
-        certobj.info += this.strings.getString("warn_commonName") +"\n";
-	certobj.threat += 2;
-      }
-      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+#endif
+
+## VeriSign case suggests i should compare issuerOrganization instead...
+      if (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization) {
         certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
       }
@@ -390,12 +454,17 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output
+#if J
+      if (wild && certobj.threat == 0)
+	  certobj.info += this.strings.getString("warn_wildcard") +"\n";
+	  return this.outwild(browser, certobj);
+      }
+#endif
       this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
-      
+
       // Store data
       stmt = this.dbinsert;
       try {
@@ -426,15 +495,15 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output
       this.outnew(browser, certobj);
     }
   },
 
+
   outnew: function(browser, certobj) {
 #if P
     var forcePopup = false;
-    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.new");
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 
 ##  // would like to use document's browser here, but it doesn't work
     var notifyBox = gBrowser.getNotificationBox();
@@ -463,12 +532,45 @@ var CertPatrol = {
     ]);
 #endif
   },
-  
+
+#if J
+  outwild: function(browser, certobj) {
+# if P
+    var forcePopup = false;
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.wild");
+
+    var notifyBox = gBrowser.getNotificationBox();
+    if (forcePopup || notifyBox == null) {
+# endif
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+# if P
+	return;
+    }
+##  // https://developer.mozilla.org/en/XUL/Method/appendNotification
+##  // http://gist.github.com/256554
+##  // using certobj.host as the id for the notification
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.wildEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	notifyBox.PRIORITY_INFO_HIGH, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
+# endif
+  },
+#endif
   
   outchange: function(browser, certobj) {
 #if P
     var forcePopup = false;
-    if (this.prefs) forcePopup = !this.prefs.getBoolPref("popup.change");
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.change");
 
     var notifyBox = gBrowser.getNotificationBox();
     if (forcePopup || certobj.threat > 1 || notifyBox == null) {

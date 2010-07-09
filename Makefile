@@ -12,7 +12,7 @@ it: *.js
 	cp -p $N.xpi /dev/shm
 
 up:
-	scp $N.xpi l:/ve/l/mozilla
+	scp -P 2222 $N.xpi f:psyc/psyced.org/world/mozilla
 
 #olddist:
 #	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*
