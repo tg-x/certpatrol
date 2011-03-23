@@ -32,7 +32,6 @@
  *                              
  * ***** END LICENSE BLOCK ***** */
 
-
 var CertPatrol = {
 
   // Main
@@ -78,6 +77,8 @@ var CertPatrol = {
       // Prepared statements
       this.dbselect = this.dbh.createStatement(
       "SELECT * FROM certificates where host=?1");
+      this.dbselectWild = this.dbh.createStatement(
+      "SELECT * FROM certificates where sha1Fingerprint=?13");
       this.dbinsert = this.dbh.createStatement(
       "INSERT INTO certificates (host, commonName, organization, organizationalUnit,serialNumber, emailAddress, notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint) values (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
       this.dbupdate = this.dbh.createStatement(
@@ -136,6 +137,46 @@ var CertPatrol = {
     td = Math.round(td / 86400000);	// milliseconds per day
     return " ("+ this.strings.getFormattedString(td < 0 ?
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
+  },
+
+// wildcardCertCheck contributed by Georg Koppen, JonDos GmbH 2010. Thanks!
+// We are using it differently, though. The JonDos version is less paranoid.
+//
+  wildcardCertCheck: function(commonName, sha1Fingerprint) {
+    var stmt;
+
+    // First, we check whether we have a wildcard certificate at all. If not
+    // just return false and the new cert dialog will be schown. But even if
+    // we have one but no SHA1 fingerprint we should show it for security's
+    // sake...
+    if (commonName.charAt(0) === '*' && sha1Fingerprint) {
+      // We got one, check now if we have it already. If not, return false and
+      // the certificate will be shown. Otherwise, return yes and the new cert
+      // dialog will be omitted. 
+      try {
+        stmt = this.dbselectWild;
+	// starts counting from 0, so ?13 is 12 here. you gotta love it.
+        stmt.bindUTF8StringParameter(12, sha1Fingerprint);
+        if (stmt.executeStep()) {
+          return true;
+        } else {
+          // This case could occur as well if we have *.example.com and 
+          // foo.example.com with SHA1(1) saved and we find a cert with
+          // *.example.com and bar.example.com and SHA1(2): We would show
+          // the dialog even if we have already saved the wildcard cert. But
+          // that's okay due to the changed SHA1 fingerprint, thus prioritizing
+          // security and not convenience...
+          return false;
+        }
+      } catch (err) {
+        this.warn("Error trying to check wildcard certificate "+ commonName
+		    +": "+ err);
+      } finally {
+        stmt.reset();
+      }
+    } else {
+      return false;
+    }
   },
 
   // Event trigger
@@ -263,6 +304,13 @@ var CertPatrol = {
   certCheck: function(browser, certobj) {
     var found = false;
 
+    // memory cache of last seen SHA1 - useful for private browsing
+    if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
+    else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
+
+    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+    var pbm = pbs.privateBrowsingEnabled;
+
     // Get certificate
     var stmt = this.dbselect;
     try {
@@ -288,13 +336,15 @@ var CertPatrol = {
       stmt.reset();
     }
 
-
     // The certificate changed 
     if ( found && (
          certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
          certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
        )) {
+      var wild = this.wildcardCertCheck(certobj.moz.commonName,
+					certobj.moz.sha1Fingerprint);
 
+      if (!pbm) {
       // DB update
       stmt = this.dbupdate;
       try {
@@ -317,22 +367,28 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+      }
 
+      if (!wild) {
 	  // Try to make some sense out of the certificate changes
 	  var natd = this.timedelta(certobj.sql.notAfterGMT);
 	  if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
-	  else if (natd > 10364400000) {
-	    certobj.threat += 2;
-	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
-	  } else if (natd > 5182200000) {
+	  else if (natd > 7777777777) {
 	    certobj.threat ++;
-	    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
+	    if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+		certobj.threat ++;
+	        if (certobj.moz.issuerOrganization == certobj.sql.issuerOrganization) {
+		    certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
+		}
+	    }
 	  }
 	  else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
 	  if (certobj.moz.commonName != certobj.sql.commonName) {
 	    certobj.info += this.strings.getString("warn_commonName") +"\n";
 	    certobj.threat += 2;
 	  }
+      }
 
       if (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization) {
         certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
@@ -356,11 +412,16 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
+      if (wild && certobj.threat == 0) {
+	  certobj.info += this.strings.getString("warn_wildcard") +"\n";
+	  this.outwild(browser, certobj);
+	  return;
+      }
       this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
-
+      if (!pbm) {
       // Store data
       stmt = this.dbinsert;
       try {
@@ -383,6 +444,7 @@ var CertPatrol = {
                   ": "+err);
       } finally {
         stmt.reset();
+      }
       }
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
@@ -419,6 +481,30 @@ var CertPatrol = {
     ]);
   },
 
+  outwild: function(browser, certobj) {
+    var forcePopup = false;
+    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.wild");
+
+    var notifyBox = gBrowser.getNotificationBox();
+    if (forcePopup || notifyBox == null) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.wildEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	notifyBox.PRIORITY_INFO_HIGH, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			  "chrome,dialog,modal", certobj);
+	} },
+    ]);
+  },
   
   outchange: function(browser, certobj) {
     var forcePopup = false;

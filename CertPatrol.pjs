@@ -7,7 +7,10 @@
 ## versions 1.3*beta and 1.4
 #define P
 ## versions 1.5*beta and 1.6
-##efine J
+#define J
+## versions 1.7*beta and 1.8
+#define V
+## TODO: GeKo sagt: I mean you are not saving a cert but saying so at the moment...
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -40,7 +43,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *                              
  * ***** END LICENSE BLOCK ***** */
-
+##
 ## The original Certificate Patrol code was slightly adapted by Georg Koppen, 
 ## JonDos GmbH 2010. The wildcard certificate functionality was developed by 
 ## Georg Koppen, JonDos GmbH 2010.
@@ -171,23 +174,26 @@ var CertPatrol = {
     return " ("+ this.strings.getFormattedString(td < 0 ?
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
-##
+
 #if J
 // wildcardCertCheck contributed by Georg Koppen, JonDos GmbH 2010. Thanks!
 // We are using it differently, though. The JonDos version is less paranoid.
 //
   wildcardCertCheck: function(commonName, sha1Fingerprint) {
     var stmt;
+
     // First, we check whether we have a wildcard certificate at all. If not
     // just return false and the new cert dialog will be schown. But even if
     // we have one but no SHA1 fingerprint we should show it for security's
     // sake...
+##  alert("doing wildcardCertCheck for "+ sha1Fingerprint);
     if (commonName.charAt(0) === '*' && sha1Fingerprint) {
       // We got one, check now if we have it already. If not, return false and
       // the certificate will be shown. Otherwise, return yes and the new cert
       // dialog will be omitted. 
       try {
-        stmt = this.dbselectWildcard;
+        stmt = this.dbselectWild;
+	// starts counting from 0, so ?13 is 12 here. you gotta love it.
         stmt.bindUTF8StringParameter(12, sha1Fingerprint);
         if (stmt.executeStep()) {
           return true;
@@ -201,8 +207,8 @@ var CertPatrol = {
           return false;
         }
       } catch (err) {
-        this.warn("Error trying to check wildcardcertificate "+commonName+
-                  ": "+err);
+        this.warn("Error trying to check wildcard certificate "+ commonName
+		    +": "+ err);
       } finally {
         stmt.reset();
       }
@@ -210,8 +216,8 @@ var CertPatrol = {
       return false;
     }
   },
-#endif
 
+#endif
   // Event trigger
   onPageLoad: function(aEvent) {
     var doc = aEvent.originalTarget;
@@ -348,6 +354,15 @@ var CertPatrol = {
   certCheck: function(browser, certobj) {
     var found = false;
 
+#if V
+    // memory cache of last seen SHA1 - useful for private browsing
+    if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
+    else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
+
+    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+    var pbm = pbs.privateBrowsingEnabled;
+#endif
+
     // Get certificate
     var stmt = this.dbselect;
     try {
@@ -373,7 +388,6 @@ var CertPatrol = {
       stmt.reset();
     }
 
-
     // The certificate changed 
     if ( found && (
          certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
@@ -384,6 +398,9 @@ var CertPatrol = {
 					certobj.moz.sha1Fingerprint);
 #endif
 
+#if V
+      if (!pbm) {
+#endif
       // DB update
       stmt = this.dbupdate;
       try {
@@ -406,6 +423,9 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+#if V
+      }
+#endif
 
 #if J
       if (!wild) {
@@ -413,12 +433,23 @@ var CertPatrol = {
 	  // Try to make some sense out of the certificate changes
 	  var natd = this.timedelta(certobj.sql.notAfterGMT);
 	  if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
-	  else if (natd > 10364400000) {
-	    certobj.threat += 2;
-	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
-	  } else if (natd > 5182200000) {
+	  else if (natd > 7777777777) {
+##	  else if (natd > 10364400000) {
 	    certobj.threat ++;
-	    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+	    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
+##	    // used to make it += 2 here, but in cases where server farms
+##	    // use several valid certificates for the same host name that's
+##	    // just too strict. we expect them to have identical issuer
+##	    // in that case, though!
+	    if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+		certobj.threat ++;
+	        if (certobj.moz.issuerOrganization == certobj.sql.issuerOrganization) {
+		    certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
+		}
+	    }
+##	  } else if (natd > 5182200000) {
+##	    certobj.threat ++;
+##	    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
 	  }
 	  else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
 	  if (certobj.moz.commonName != certobj.sql.commonName) {
@@ -455,16 +486,19 @@ var CertPatrol = {
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
 #if J
-      if (wild && certobj.threat == 0)
+      if (wild && certobj.threat == 0) {
 	  certobj.info += this.strings.getString("warn_wildcard") +"\n";
-	  return this.outwild(browser, certobj);
+	  this.outwild(browser, certobj);
+	  return;
       }
 #endif
       this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
-
+#if V
+      if (!pbm) {
+#endif
       // Store data
       stmt = this.dbinsert;
       try {
@@ -488,6 +522,9 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+#if J
+      }
+#endif
 ##    // checks are done by firefox before we even get here
 ##    // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +

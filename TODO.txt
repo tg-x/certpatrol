@@ -58,6 +58,12 @@ CTING  flag, and then finally once with the STATE_STOP flag."
 kevin8t8 sagt: Wonder if we can do document.defaultView.QueryInterface(Components.interfaces.nsIHttpChannel)
 kevin8t8 sagt: and if that's at all similar to the channel proprety from the previous url
 
+stfn sagt: lynX: hi, I've recently started using certpatrol in FF 3.6.  When I open a URL like https://code.google.com/p/bitstring/ in a new tab by middle clicking a link on a page like http://news.ycombinator.com/item?id=2315564 I get the certpatrol info bar (with the view details button, etc.) on tab with the link, not the tab where I loaded that certificate.
+stfn fragt: lynX: if I'm not going to read that page until I'm done with the current one then it's a distraction.  If I open multiple tabs in the background, what happens to the info bar for subsequent links?
+tg sagt: lynX: try passing a browser param to getNotificationBox
+tg sagt: in outchange & outnew
+tg sagt: as i see you already have that browser var there, just pass it on..
+
 == VERSION 0.6 ==
 
 This version has been improved to show and store the complete information about certificates, which makes it a lot more useful when a certificate is updated: You can now decide for yourself if expiry was due, if a change of issuer is acceptable, or if a phone call to the affected company is appropriate to get a voice confirmation of such a new certificate. We have tentatively added support for Thunderbird, Songbird, SeaMonkey, Mozilla and Fennec. Concerning Firefox, this version is a release candidate for Certificate Patrol 1.0 as this version implements all we expect from a 1.0.
@@ -148,7 +154,13 @@ to run into this problem. Coralietab was there, too.
 1.3.7beta upgraded to 1.4.
 Preferences inverted: No pop-ups by default.
 
+Sorry should this annoy any users that got used to the old behaviour,
+but there has been so much criticism about so-called 'false positives'
+that it should better be the default not to show pop-ups for unimportant
+events. Just change the preferences if you're paranoid like me.
+
 == VERSION 1.5beta ==
 
-Trying out a wildcard matching approach from Georg Koppen.
+Adding a wildcard certificate recognition approach from Georg Koppen.
+Also trying out new threat policy to handle confused server farms.
 

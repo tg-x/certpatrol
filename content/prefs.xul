@@ -25,6 +25,9 @@
     <checkbox label="&_popup_change;"
 	    preference="_popup_change" 
 	    checked="false" />
+    <checkbox label="&_popup_wild;"
+	    preference="_popup_wild" 
+	    checked="false" />
   </groupbox> 
 
   <!-- hbox>
