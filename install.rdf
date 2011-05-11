@@ -7,7 +7,8 @@
     <em:id>CertPatrol@PSYC.EU</em:id>
     <em:type>2</em:type>    <!-- Extension -->
     <em:name>Certificate Patrol</em:name>
-    <em:version>1.8</em:version>
+    <em:version>1.8.2</em:version>
+    <em:unpack>true</em:unpack>
     <em:creator>Aiko Barz, 20after4 and symlynX</em:creator>
     <em:developer>Aiko Barz</em:developer>
     <em:developer>Mukunda Modell</em:developer>
@@ -46,13 +47,15 @@
       </Description>
     </em:targetApplication>
 
+ <!-- Mobile (formerly known as Fennec)
     <em:targetApplication>
       <Description>
-        <em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id> <!-- Mobile -->
+        <em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id>
         <em:minVersion>0.1</em:minVersion>
         <em:maxVersion>4.1a1pre</em:maxVersion>
       </Description>
     </em:targetApplication>
+ -->
 
     <em:targetApplication>
       <Description>
@@ -67,14 +70,6 @@
         <em:id>{718e30fb-e89b-41dd-9da7-e25a45638b28}</em:id> <!-- Sunbird -->
         <em:minVersion>0.5</em:minVersion>
         <em:maxVersion>1.0pre</em:maxVersion>
-      </Description>
-    </em:targetApplication>
-
-   <em:targetApplication>
-      <Description>
-        <em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id> <!-- Fennec -->
-        <em:minVersion>0.7</em:minVersion>
-        <em:maxVersion>2.0a1pre</em:maxVersion>
       </Description>
     </em:targetApplication>
 

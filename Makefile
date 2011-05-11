@@ -1,6 +1,8 @@
 #V=0.xx
 N=certpatrol
 
+# firefox 4 recommends no longer using jar files.. TODO
+
 .SUFFIXES: .pjs .js
 
 .pjs.js: Makefile
