@@ -308,8 +308,11 @@ var CertPatrol = {
     if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
     else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
 
-    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
-    var pbm = pbs.privateBrowsingEnabled;
+    var pbm = false;
+    if (Components.classes["@mozilla.org/privatebrowsing;1"])
+	var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+	pbm = pbs.privateBrowsingEnabled;
+    }
 
     // Get certificate
     var stmt = this.dbselect;

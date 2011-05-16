@@ -49,6 +49,9 @@ TODO / WISHLIST
 
 === FEEDBACK ===
 
+by Kevin Jacobs on April 25, 2011 #
+    I like it, but one suggestion would be to make the dropdown notifications specific to the tab they were generated from - using something like gBrowser.getNotificationBox(gBrowser.getBrowserForDocument(aDocument)); -- It's a little annoying getting the notifications when I open a bunch of new tabs (when I'm not looking at those tabs yet)
+
     https://developer.mozilla.org/En/How_to_check_the_security_state_of_an_XMLHTTPRequest_over_SSL
 
 kevin8t8 sagt: https://developer.mozilla.org/en/nsIWebProgressListener talks about the states the listener goes through
