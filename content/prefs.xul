@@ -15,6 +15,9 @@
     <preference id="_popup_change"
 	name="certpatrol.popup.change"
 	type="bool" />
+    <preference id="_popup_wild"
+	name="certpatrol.popup.wild"
+	type="bool" />
   </preferences>
   <dialogheader title="&_title;" />
   <groupbox>
