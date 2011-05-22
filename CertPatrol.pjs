@@ -406,17 +406,19 @@ var CertPatrol = {
 	    }
 
 	    if (!wild) {
-		// Try to make some sense out of the certificate changes
+		// try to make some sense out of the certificate changes
 		var natd = this.timedelta(certobj.sql.notAfterGMT);
+		// certificate has expired
 		if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
+		// certificate still a long way to go
 		else if (natd > 7777777777) {
 ##       	else if (natd > 10364400000) {
 		    certobj.threat ++;
 		    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
 ##		    // used to make it += 2 here, but in cases where server farms
 ##		    // use several valid certificates for the same host name that's
-##		    // just too strict. we expect them to have identical issuer
-##		    // in that case, though!
+##		    // just too strict.
+		    // do they at least have the same issuer?
 		    if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
 			certobj.threat ++;
 			if (certobj.moz.issuerOrganization == certobj.sql.issuerOrganization) {
@@ -427,7 +429,9 @@ var CertPatrol = {
 ##		    certobj.threat ++;
 ##		    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
 		}
+		// certificate due sometime soonish
 		else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+		// has the certificated hostname changed?
 		if (certobj.moz.commonName != certobj.sql.commonName) {
 		    certobj.info += this.strings.getString("warn_commonName") +"\n";
 		    certobj.threat += 2;
@@ -435,21 +439,25 @@ var CertPatrol = {
 	    }
 
 ## VeriSign case suggests i should compare issuerOrganization instead...
+	    // again, check if they have the same issuer
 	    if (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization) {
 		certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
 		certobj.threat ++;
 	    }
-##	    // checking NEW certificate here..
+	    // now looking into the NEW certificate
 	    var td = this.timedelta(certobj.moz.notBeforeGMT);
 	    if (td > 0) {
+		// new certificate isn't valid yet
 		certobj.info += this.strings.getString("warn_notBeforeGMT") +"\n";
 		certobj.threat += 2;
 	    }
-##	    // further checks done by firefox before we even get here
+	    // further checks done by agent before we even get here
 
+	    // fetch suitable scare message
 	    if (certobj.threat > 3) certobj.threat = 3;
 	    certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
 
+	    // produce human readable expiration dates
 	    certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
 	      this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
 	    certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT) +
