@@ -1,4 +1,4 @@
-See also https://psyced.org/@patrol?scratchpad
+See also http://psyced.org:33333/@patrol?scratchpad
 
 http://thedropbox.acmetoy.com/documents/BHUSA09-Sotirov-AttackExtSSL-PAPER.pdf
 
@@ -48,6 +48,10 @@ TODO / WISHLIST
  + provide a preset sqlite database with most popular certificates
 
 === FEEDBACK ===
+
+PeterPS: Using CertPatrol v1.8.2, the Option "Show already accepted wildcard certificates again when they match a new hostname" won't stay enabled, no matter what other options I select.
+PeterPS: P.S. Tried to download "the latest experimental version available at https://psyced.org/mozilla/certpatrol.xpi" but keep getting "Firefox can't establish a connection to the server at psyced.org."  Ditto for accessing "known bugs: https://psyced.org/@patrol".
+... Can't find where Peter found those links!?
 
 by Kevin Jacobs on April 25, 2011 #
     I like it, but one suggestion would be to make the dropdown notifications specific to the tab they were generated from - using something like gBrowser.getNotificationBox(gBrowser.getBrowserForDocument(aDocument)); -- It's a little annoying getting the notifications when I open a bunch of new tabs (when I'm not looking at those tabs yet)

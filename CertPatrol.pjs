@@ -360,8 +360,9 @@ var CertPatrol = {
     else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
 
     var pbm = false;
-    if (Components.classes["@mozilla.org/privatebrowsing;1"])
-	var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"];
+    if (pbs) {
+	pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
 	pbm = pbs.privateBrowsingEnabled;
     }
 #endif

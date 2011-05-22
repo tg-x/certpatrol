@@ -27,7 +27,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
         <em:minVersion>2.0a1</em:minVersion>
-        <em:maxVersion>4.2a1pre</em:maxVersion>
+        <em:maxVersion>6.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -61,7 +61,7 @@
       <Description>
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id> <!-- SeaMonkey -->
         <em:minVersion>1.1</em:minVersion>
-        <em:maxVersion>2.1b3</em:maxVersion>
+        <em:maxVersion>2.2a1pre</em:maxVersion>
       </Description>
     </em:targetApplication>
 
