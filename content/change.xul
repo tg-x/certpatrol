@@ -11,91 +11,84 @@
   onload="return onLoad();"
   onDialogAccept="return doOK();">
   <script>
+    var certobj = window.arguments[0];
+    var CertPatrol = window.arguments[1];
+    var $ = document.getElementById.bind(document);
+
     function onLoad() {
       /* host information in brackets is pretty important.. isn't it? */
-      document.getElementById("cmdiag").setAttribute("description", 
-        "("+window.arguments[0].host+")");
-      document.getElementById("cmdiag").setAttribute("title", 
-        window.arguments[0].lang.changeEvent);
+      $("cmdiag").setAttribute("description", "("+certobj.host+")");
+      $("cmdiag").setAttribute("title", certobj.lang.changeEvent);
       
-      document.getElementById("cmold").value = window.arguments[0].lang.oldCert;
-      document.getElementById("cmnew").value = window.arguments[0].lang.newCert;
+      $("cmold").value = certobj.lang.oldCert;
+      $("cmnew").value = certobj.lang.newCert;
       
-      document.getElementById("cmissto").setAttribute("label",
-        window.arguments[0].lang.issuedTo);
-      document.getElementById("cmissby").setAttribute("label",
-        window.arguments[0].lang.issuedBy);
-      document.getElementById("cmvalid").setAttribute("label",
-        window.arguments[0].lang.validity);
-      document.getElementById("cmfinger").setAttribute("label",
-        window.arguments[0].lang.fingerprints);
+      $("cmissto").setAttribute("label", certobj.lang.issuedTo);
+      $("cmissby").setAttribute("label", certobj.lang.issuedBy);
+      $("cmvalid").setAttribute("label", certobj.lang.validity);
+      $("cmfinger").setAttribute("label", certobj.lang.fingerprints);
 
-      document.getElementById("cmdetailso").setAttribute("label",
-        window.arguments[0].lang.viewDetails);
-      document.getElementById("cmdetailsn").setAttribute("label",
-        window.arguments[0].lang.viewDetails);
-      if (!window.arguments[0].sql.cert)
-          document.getElementById("cmdetailso").setAttribute("disabled", true);
+      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
+      $("cmdetailso").setAttribute("label", certobj.lang.viewDetails);
+      $("cmdetailsn").setAttribute("label", certobj.lang.viewDetails);
+      if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
-      document.getElementById("cmcnl").value = window.arguments[0].lang.commonName;
-      document.getElementById("cmol").value = window.arguments[0].lang.organization;
-      document.getElementById("cmoul").value = window.arguments[0].lang.organizationalUnit;
-      document.getElementById("cmsnl").value = window.arguments[0].lang.serialNumber;
-      document.getElementById("cmeml").value = window.arguments[0].lang.emailAddress;
+      $("cmcnl").value = certobj.lang.commonName;
+      $("cmol").value = certobj.lang.organization;
+      $("cmoul").value = certobj.lang.organizationalUnit;
+      $("cmsnl").value = certobj.lang.serialNumber;
+      $("cmeml").value = certobj.lang.emailAddress;
       
-      document.getElementById("cmicnl").value = window.arguments[0].lang.commonName;
-      document.getElementById("cmiol").value = window.arguments[0].lang.organization;
-      document.getElementById("cmioul").value = window.arguments[0].lang.organizationalUnit;
+      $("cmicnl").value = certobj.lang.commonName;
+      $("cmiol").value = certobj.lang.organization;
+      $("cmioul").value = certobj.lang.organizationalUnit;
 
-      document.getElementById("cmimd5l").value = window.arguments[0].lang.md5Fingerprint;
-      document.getElementById("cmisha1l").value = window.arguments[0].lang.sha1Fingerprint;
+      $("cmimd5l").value = certobj.lang.md5Fingerprint;
+      $("cmisha1l").value = certobj.lang.sha1Fingerprint;
       
-      document.getElementById("cmnbl").value = window.arguments[0].lang.notBefore;
-      document.getElementById("cmnal").value = window.arguments[0].lang.notAfter;
+      $("cmnbl").value = certobj.lang.notBefore;
+      $("cmnal").value = certobj.lang.notAfter;
 
-      document.getElementById("cmmd5l").value = window.arguments[0].lang.md5Fingerprint;
-      document.getElementById("cmsha1l").value = window.arguments[0].lang.sha1Fingerprint;
+      $("cmmd5l").value = certobj.lang.md5Fingerprint;
+      $("cmsha1l").value = certobj.lang.sha1Fingerprint;
 
-      document.getElementById("cmcno").value = window.arguments[0].sql.commonName;
-      document.getElementById("cmcnn").value = window.arguments[0].moz.commonName;
-      document.getElementById("cmoo").value = window.arguments[0].sql.organization;
-      document.getElementById("cmon").value = window.arguments[0].moz.organization;
-      document.getElementById("cmouo").value = window.arguments[0].sql.organizationalUnit;
-      document.getElementById("cmoun").value = window.arguments[0].moz.organizationalUnit;
-      document.getElementById("cmsno").value = window.arguments[0].sql.serialNumber;
-      document.getElementById("cmsnn").value = window.arguments[0].moz.serialNumber;
-      document.getElementById("cmemo").value = window.arguments[0].sql.emailAddress;
-      document.getElementById("cmemn").value = window.arguments[0].moz.emailAddress;
+      $("cmcno").value = certobj.sql.commonName;
+      $("cmcnn").value = certobj.moz.commonName;
+      $("cmoo").value = certobj.sql.organization;
+      $("cmon").value = certobj.moz.organization;
+      $("cmouo").value = certobj.sql.organizationalUnit;
+      $("cmoun").value = certobj.moz.organizationalUnit;
+      $("cmsno").value = certobj.sql.serialNumber;
+      $("cmsnn").value = certobj.moz.serialNumber;
+      $("cmemo").value = certobj.sql.emailAddress;
+      $("cmemn").value = certobj.moz.emailAddress;
 
-      document.getElementById("cmicno").value = window.arguments[0].sql.issuerCommonName;
-      document.getElementById("cmicnn").value = window.arguments[0].moz.issuerCommonName;
-      document.getElementById("cmioo").value = window.arguments[0].sql.issuerOrganization;
-      document.getElementById("cmion").value = window.arguments[0].moz.issuerOrganization;
-      document.getElementById("cmiouo").value = window.arguments[0].sql.issuerOrganizationUnit;
-      document.getElementById("cmioun").value = window.arguments[0].moz.issuerOrganizationUnit;
+      $("cmicno").value = certobj.sql.issuerCommonName;
+      $("cmicnn").value = certobj.moz.issuerCommonName;
+      $("cmioo").value = certobj.sql.issuerOrganization;
+      $("cmion").value = certobj.moz.issuerOrganization;
+      $("cmiouo").value = certobj.sql.issuerOrganizationUnit;
+      $("cmioun").value = certobj.moz.issuerOrganizationUnit;
 
-      document.getElementById("cmimd5o").value = window.arguments[0].sql.issuerMd5Fingerprint;
-      document.getElementById("cmimd5n").value = window.arguments[0].moz.issuerMd5Fingerprint;
-      document.getElementById("cmisha1o").value = window.arguments[0].sql.issuerSha1Fingerprint;
-      document.getElementById("cmisha1n").value = window.arguments[0].moz.issuerSha1Fingerprint;
+      $("cmimd5o").value = certobj.sql.issuerMd5Fingerprint;
+      $("cmimd5n").value = certobj.moz.issuerMd5Fingerprint;
+      $("cmisha1o").value = certobj.sql.issuerSha1Fingerprint;
+      $("cmisha1n").value = certobj.moz.issuerSha1Fingerprint;
       
-      document.getElementById("cmnbo").value = window.arguments[0].sql.notBefore;
-      document.getElementById("cmnbn").value = window.arguments[0].moz.notBefore;
-      document.getElementById("cmnao").value = window.arguments[0].sql.notAfter;
-      document.getElementById("cmnan").value = window.arguments[0].moz.notAfter;
+      $("cmnbo").value = certobj.sql.notBefore;
+      $("cmnbn").value = certobj.moz.notBefore;
+      $("cmnao").value = certobj.sql.notAfter;
+      $("cmnan").value = certobj.moz.notAfter;
       
-      document.getElementById("cmmd5o").value = window.arguments[0].sql.md5Fingerprint;
-      document.getElementById("cmmd5n").value = window.arguments[0].moz.md5Fingerprint;
-      document.getElementById("cmsha1o").value = window.arguments[0].sql.sha1Fingerprint;
-      document.getElementById("cmsha1n").value = window.arguments[0].moz.sha1Fingerprint;
+      $("cmmd5o").value = certobj.sql.md5Fingerprint;
+      $("cmmd5n").value = certobj.moz.md5Fingerprint;
+      $("cmsha1o").value = certobj.sql.sha1Fingerprint;
+      $("cmsha1n").value = certobj.moz.sha1Fingerprint;
 
-      document.getElementById("cminfo").value = window.arguments[0].info;
-    }
+      $("cminfo").value = certobj.info;
 
-    function viewCert(cert) {
-      Components.classes["@mozilla.org/nsCertificateDialogs;1"]
-        .getService(Components.interfaces.nsICertificateDialogs)
-	.viewCert(null, cert);
+      CertPatrol.addCertChain($("cmchaino"), certobj.sql.cert);
+      CertPatrol.addCertChain($("cmchainn"), certobj.moz.cert);
     }
   </script>
   <dialogheader id="cmdiag" />
@@ -199,10 +192,18 @@
           <textbox class="plain" readonly="true" width="64" id="cmsha1o" />
           <textbox class="plain" readonly="true" width="64" id="cmsha1n" />
         </row>
+        <groupbox>
+          <caption id="cmhierarchy" />
+        </groupbox>
 	<row>
 	  <label />
-	  <button id="cmdetailso" oncommand="viewCert(window.arguments[0].sql.cert)" />
-	  <button id="cmdetailsn" oncommand="viewCert(window.arguments[0].moz.cert)" />
+	  <textbox id="cmchaino" multiline="true" readonly="true" />
+	  <textbox id="cmchainn" multiline="true" readonly="true" />
+	</row>
+	<row>
+	  <label />
+	  <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" />
+	  <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" />
 	</row>
       </rows>
     </grid>

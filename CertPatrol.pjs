@@ -326,6 +326,7 @@ var CertPatrol = {
 		  md5Fingerprint:this.strings.getString("md5Fingerprint"),
 		  sha1Fingerprint:this.strings.getString("sha1Fingerprint"),
 		  viewDetails:this.strings.getString("viewDetails"),
+		  hierarchy:this.strings.getString("hierarchy"),
 	    },
 	};
 
@@ -581,7 +582,7 @@ var CertPatrol = {
 	var notifyBox = gBrowser.getNotificationBox();
 	if (forcePopup || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
-	      "chrome,dialog,modal", certobj);
+			      "chrome,dialog,modal", certobj, CertPatrol);
 	    return;
 	}
 ##      // https://developer.mozilla.org/en/XUL/Method/appendNotification
@@ -598,7 +599,7 @@ var CertPatrol = {
 	      label: certobj.lang.viewDetails,
 	      callback: function(msg, btn) {
 		  window.openDialog("chrome://certpatrol/content/new.xul",
-		    "_blank", "chrome,dialog,modal", certobj);
+				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
 	      }
 	}, ]);
     },
@@ -610,7 +611,7 @@ var CertPatrol = {
 	var notifyBox = gBrowser.getNotificationBox();
 	if (forcePopup || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/change.xul",
-	      "_blank", "chrome,dialog,modal", certobj);
+			      "_blank", "chrome,dialog,modal", certobj, CertPatrol);
 	    return;
 	}
 	notifyBox.appendNotification(
@@ -624,7 +625,7 @@ var CertPatrol = {
 	      label: certobj.lang.viewDetails,
 	      callback: function(msg, btn) {
 		  window.openDialog("chrome://certpatrol/content/change.xul",
-		    "_blank", "chrome,dialog,modal", certobj);
+				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
 	      }
 	}, ]);
     },
@@ -636,7 +637,7 @@ var CertPatrol = {
 	var notifyBox = gBrowser.getNotificationBox();
 	if (forcePopup || certobj.threat > 1 || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
-	      "chrome,dialog,modal", certobj);
+			      "chrome,dialog,modal", certobj, CertPatrol);
 	    return;
 	}
 	notifyBox.appendNotification(
@@ -652,7 +653,7 @@ var CertPatrol = {
 	      label: certobj.lang.viewDetails,
 	      callback: function(msg, btn) {
 		  window.openDialog("chrome://certpatrol/content/change.xul",
-		    "_blank", "chrome,dialog,modal", certobj);
+				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
 	      }
 	}, ]);
     },
@@ -660,6 +661,26 @@ var CertPatrol = {
     warn: function(result) {
 	window.openDialog("chrome://certpatrol/content/warning.xul",
 	  /* "ssl-warning" */ "_blank", "chrome,dialog,modal", result);
+    },
+
+    // functions for the new & change dialogs
+
+    addCertChain: function(node, cert) {
+	var chain = cert.getChain();
+	var text = '';
+	for (var i = chain.length - 1; i >= 0; i--) {
+            var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
+	    text += Array((chain.length - i - 1) * 2 + 1).join(' ') + '- ' + (cert.commonName || cert.windowTitle) + (i > 0 ? '\n' : '');
+	}
+	node.value = text;
+	node.clickSelectsAll = true;
+	node.setAttribute("rows", chain.length);
+    },
+
+    viewCert: function(cert) {
+	Components.classes["@mozilla.org/nsCertificateDialogs;1"]
+            .getService(Components.interfaces.nsICertificateDialogs)
+	    .viewCert(null, cert);
     },
 };
 
