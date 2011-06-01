@@ -25,6 +25,9 @@
         window.arguments[0].lang.validity);
       document.getElementById("cmfinger").setAttribute("label",
         window.arguments[0].lang.fingerprints);
+
+      document.getElementById("cmdetails").setAttribute("label",
+        window.arguments[0].lang.viewDetails);
       
       document.getElementById("cmcnl").value = window.arguments[0].lang.commonName;
       document.getElementById("cmol").value = window.arguments[0].lang.organization;
@@ -35,9 +38,12 @@
       document.getElementById("cmicnl").value = window.arguments[0].lang.commonName;
       document.getElementById("cmiol").value = window.arguments[0].lang.organization;
       document.getElementById("cmioul").value = window.arguments[0].lang.organizationalUnit;
+
+      document.getElementById("cmimd5l").value = window.arguments[0].lang.md5Fingerprint;
+      document.getElementById("cmisha1l").value = window.arguments[0].lang.sha1Fingerprint;
       
-      document.getElementById("cmnbl").value = window.arguments[0].lang.notBeforeGMT;
-      document.getElementById("cmnal").value = window.arguments[0].lang.notAfterGMT;
+      document.getElementById("cmnbl").value = window.arguments[0].lang.notBefore;
+      document.getElementById("cmnal").value = window.arguments[0].lang.notAfter;
 
       document.getElementById("cmmd5l").value = window.arguments[0].lang.md5Fingerprint;
       document.getElementById("cmsha1l").value = window.arguments[0].lang.sha1Fingerprint;
@@ -51,12 +57,21 @@
       document.getElementById("cmicnv").value = window.arguments[0].moz.issuerCommonName;
       document.getElementById("cmiov").value = window.arguments[0].moz.issuerOrganization;
       document.getElementById("cmiouv").value = window.arguments[0].moz.issuerOrganizationUnit;
+
+      document.getElementById("cmimd5v").value = window.arguments[0].moz.issuerMd5Fingerprint;
+      document.getElementById("cmisha1v").value = window.arguments[0].moz.issuerSha1Fingerprint;
       
-      document.getElementById("cmnbv").value = window.arguments[0].moz.notBeforeGMT;
-      document.getElementById("cmnav").value = window.arguments[0].moz.notAfterGMT;
+      document.getElementById("cmnbv").value = window.arguments[0].moz.notBefore;
+      document.getElementById("cmnav").value = window.arguments[0].moz.notAfter;
       
       document.getElementById("cmmd5v").value = window.arguments[0].moz.md5Fingerprint;
       document.getElementById("cmsha1v").value = window.arguments[0].moz.sha1Fingerprint;
+    }
+
+    function viewCert(cert) {
+      Components.classes["@mozilla.org/nsCertificateDialogs;1"]
+        .getService(Components.interfaces.nsICertificateDialogs)
+	.viewCert(null, cert);
     }
   </script>
   <dialogheader id="cmdiag" />
@@ -108,6 +123,14 @@
           <label id="cmioul" />
           <textbox class="plain" readonly="true" id="cmiouv" />
         </row>
+        <row>
+          <label id="cmimd5l" />
+          <textbox class="plain" readonly="true" size="64" id="cmimd5v" />
+        </row>
+        <row>
+          <label id="cmisha1l" />
+          <textbox class="plain" readonly="true" size="64" id="cmisha1v" />
+        </row>
         <groupbox>
           <caption id="cmvalid" />
         </groupbox>
@@ -130,6 +153,10 @@
           <label id="cmsha1l" />
           <textbox class="plain" readonly="true" size="64" id="cmsha1v" />
         </row>
+	<row>
+	  <label />
+	  <button id="cmdetails" oncommand="viewCert(window.arguments[0].moz.cert)" />
+	</row>
       </rows>
     </grid>
 

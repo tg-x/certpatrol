@@ -83,18 +83,46 @@ var CertPatrol = {
 		this.dbh.executeSimpleSQL(
 		  "INSERT INTO version (version) VALUES (1)");
 		this.dbh.executeSimpleSQL(
-		  "CREATE TABLE certificates (host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR)");
+		  "CREATE TABLE certificates ("+
+		    "host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, "+
+		    "serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, "+
+		    "issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, "+
+		    "md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
+		    "issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, cert BLOB)");
+	    } else {
+		var stmt = this.dbh.createStatement("SELECT version FROM version WHERE version < 2");
+		try {
+		    var old = stmt.executeStep();
+		} catch (err) {
+		    this.warn("Error trying to check SQL schema version: "+ err);
+		} finally {
+		    stmt.reset();
+		}
+		if (old) {
+		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerMd5Fingerprint VARCHAR");
+		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerSha1Fingerprint VARCHAR");
+		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN cert BLOB");
+		    this.dbh.executeSimpleSQL("UPDATE version SET version = 2");
+		}
 	    }
 
 	    // Prepared statements
 	    this.dbselect = this.dbh.createStatement(
-	      "SELECT * FROM certificates where host=?1");
+	      "SELECT * FROM certificates WHERE host=?1");
 	    this.dbselectWild = this.dbh.createStatement(
-	      "SELECT * FROM certificates where sha1Fingerprint=?13");
+	      "SELECT * FROM certificates WHERE sha1Fingerprint=?13");
 	    this.dbinsert = this.dbh.createStatement(
-	      "INSERT INTO certificates (host, commonName, organization, organizationalUnit,serialNumber, emailAddress, notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint) values (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
+	      "INSERT INTO certificates ("+
+		"host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
+		"notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
+		"md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert) "+
+	      "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
 	    this.dbupdate = this.dbh.createStatement(
-	      "UPDATE certificates set commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, md5Fingerprint=?12, sha1Fingerprint=?13 where host=?1");
+	      "UPDATE certificates SET "+
+		"commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
+		"notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
+		"md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16 "+
+	      "WHERE host=?1");
 	}
 	catch(err) {
 	    this.warn("Error initializing SQLite operations: "+ err);
@@ -163,6 +191,13 @@ var CertPatrol = {
 	td = Math.round(td / 86400000);	// milliseconds per day
 	return " ("+ this.strings.getFormattedString(td < 0 ?
 	  "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
+    },
+
+    byteArrayToString: function(ba) {
+	var s = '';
+	for (var i = 0; i < ba.length; i++)
+            s += String.fromCharCode(ba[i]);
+	return s;
     },
 
     // wildcardCertCheck contributed by Georg Koppen, JonDos GmbH 2010. Thanks!
@@ -243,13 +278,16 @@ var CertPatrol = {
 		  organizationalUnit:"",
 		  serialNumber:"",
 		  emailAddress:"",
-		  notBeforeGMT:"",
-		  notAfterGMT:"",
+		  notBefore:"",
+		  notAfter:"",
 		  issuerCommonName:"",
 		  issuerOrganization:"",
 		  issuerOrganizationUnit:"",
 		  md5Fingerprint:"",
-		  sha1Fingerprint:""
+		  sha1Fingerprint:"",
+		  issuerMd5Fingerprint:"",
+		  issuerSha1Fingerprint:"",
+		  cert:null,
 	    },
 	    sql:{
 		  commonName:"",
@@ -257,16 +295,20 @@ var CertPatrol = {
 		  organizationalUnit:"",
 		  serialNumber:"",
 		  emailAddress:"",
-		  notBeforeGMT:"",
-		  notAfterGMT:"",
+		  notBefore:"",
+		  notAfter:"",
 		  issuerCommonName:"",
 		  issuerOrganization:"",
 		  issuerOrganizationUnit:"",
 		  md5Fingerprint:"",
-		  sha1Fingerprint:""
+		  sha1Fingerprint:"",
+		  issuerMd5Fingerprint:"",
+		  issuerSha1Fingerprint:"",
+		  cert:null,
 	    },
 	    lang:{
 		  newEvent:this.strings.getString("newEvent"),
+		  wildEvent:this.strings.getString("newEvent"),
 		  changeEvent:this.strings.getString("changeEvent"),
 		  newCert:this.strings.getString("newCert"),
 		  oldCert:this.strings.getString("oldCert"),
@@ -279,12 +321,12 @@ var CertPatrol = {
 		  organizationalUnit:this.strings.getString("organizationalUnit"),
 		  serialNumber:this.strings.getString("serialNumber"),
 		  emailAddress:this.strings.getString("emailAddress"),
-		  notBeforeGMT:this.strings.getString("notBeforeGMT"),
-		  notAfterGMT:this.strings.getString("notAfterGMT"),
+		  notBefore:this.strings.getString("notBefore"),
+		  notAfter:this.strings.getString("notAfter"),
 		  md5Fingerprint:this.strings.getString("md5Fingerprint"),
 		  sha1Fingerprint:this.strings.getString("sha1Fingerprint"),
-		  viewDetails:this.strings.getString("viewDetails")  // no comma
-	    }
+		  viewDetails:this.strings.getString("viewDetails"),
+	    },
 	};
 
 	var ui = browser.securityUI;
@@ -310,6 +352,8 @@ var CertPatrol = {
 	// The interesting part
 	certobj.host = doc.location.host;
 
+	certobj.moz.cert = thiscert;
+
 	certobj.moz.commonName = thiscert.commonName;
 	certobj.moz.organization = thiscert.organization;
 	certobj.moz.organizationalUnit = thiscert.organizationalUnit;
@@ -320,17 +364,19 @@ var CertPatrol = {
 ##	// now it is too late and pointless to change the name in the sqlite
 ##	// field. how i love SQL for its terrific flexibility...  ;)
 ##	// why do most web apps still use this 1970s legacy interface?
-	certobj.moz.notBeforeGMT = validity.notBefore;
-	certobj.moz.notAfterGMT = validity.notAfter;
+##	// - now it's renamed everywhere except for the DB
+	certobj.moz.notBefore = validity.notBefore;
+	certobj.moz.notAfter = validity.notAfter;
 	certobj.moz.issuerCommonName = thiscert.issuerCommonName;
 	certobj.moz.issuerOrganization = thiscert.issuerOrganization;
 	certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
 	certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
 	certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
+	certobj.moz.issuerMd5Fingerprint = thiscert.issuer.md5Fingerprint;
+	certobj.moz.issuerSha1Fingerprint = thiscert.issuer.sha1Fingerprint;
 
 	this.certCheck(browser, certobj);
     },
-
 
     // Certificate check
     certCheck: function(browser, certobj) {
@@ -346,25 +392,32 @@ var CertPatrol = {
 	    pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
 	    pbm = pbs.privateBrowsingEnabled;
 	}
+	var certdb = Components.classes["@mozilla.org/security/x509certdb;1"].getService(Components.interfaces.nsIX509CertDB);
 	// Get certificate
 	var stmt = this.dbselect;
 	try {
 	    stmt.bindUTF8StringParameter(0, certobj.host);
 	    if (stmt.executeStep()) {
-		found=true;
+		found = true;
 
 		certobj.sql.commonName = stmt.getUTF8String(1);
 		certobj.sql.organization = stmt.getUTF8String(2);
 		certobj.sql.organizationalUnit = stmt.getUTF8String(3);
 		certobj.sql.serialNumber = stmt.getUTF8String(4);
 		certobj.sql.emailAddress = stmt.getUTF8String(5);
-		certobj.sql.notBeforeGMT = stmt.getUTF8String(6);
-		certobj.sql.notAfterGMT = stmt.getUTF8String(7);
+		certobj.sql.notBefore = stmt.getUTF8String(6);
+		certobj.sql.notAfter = stmt.getUTF8String(7);
 		certobj.sql.issuerCommonName = stmt.getUTF8String(8);
 		certobj.sql.issuerOrganization = stmt.getUTF8String(9);
 		certobj.sql.issuerOrganizationUnit = stmt.getUTF8String(10);
 		certobj.sql.md5Fingerprint = stmt.getUTF8String(11);
 		certobj.sql.sha1Fingerprint = stmt.getUTF8String(12);
+		certobj.sql.issuerMd5Fingerprint = stmt.getUTF8String(13);
+		certobj.sql.issuerSha1Fingerprint = stmt.getUTF8String(14);
+		var blob = {};
+		stmt.getBlob(15, {}, blob);
+		if (blob.value.length)
+		    certobj.sql.cert = certdb.constructX509FromBase64(window.btoa(this.byteArrayToString(blob.value)));
 	    }
 	} catch(err) {
 	    this.warn("Error trying to check certificate: "+ err);
@@ -373,10 +426,7 @@ var CertPatrol = {
 	}
 
 	// The certificate changed 
-	if ( found && (
-	  certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
-	  certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
-	  )) {
+	if (found && (!certobj.sql.cert || !certobj.moz.cert.equals(certobj.sql.cert))) {
 	    var wild = this.wildcardCertCheck(certobj.moz.commonName,
 	      certobj.moz.sha1Fingerprint);
 
@@ -390,13 +440,17 @@ var CertPatrol = {
 		    stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
 		    stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
 		    stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-		    stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-		    stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
+		    stmt.bindUTF8StringParameter( 6, certobj.moz.notBefore);
+		    stmt.bindUTF8StringParameter( 7, certobj.moz.notAfter);
 		    stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
 		    stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
 		    stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
 		    stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
 		    stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+		    stmt.bindUTF8StringParameter(13, certobj.moz.issuerMd5Fingerprint);
+		    stmt.bindUTF8StringParameter(14, certobj.moz.issuerSha1Fingerprint);
+		    var der = certobj.moz.cert.getRawDER({});
+		    stmt.bindBlobParameter(15, der, der.length);
 		    stmt.execute();
 		} catch(err) {
 		    this.warn("Error trying to update certificate: "+ err);
@@ -405,32 +459,33 @@ var CertPatrol = {
 		}
 	    }
 
+	    // If the cert info was stored in the previous version of CertPatrol
+	    // we don't have the full cert yet, so we just store it in the DB
+	    // and return if everything looks fine.
+	    if (!certobj.sql.cert &&
+		certobj.sql.sha1Fingerprint == certobj.moz.sha1Fingerprint &&
+		certobj.sql.md5Fingerprint == certobj.moz.md5Fingerprint)
+		    return;
+
 	    if (!wild) {
 		// try to make some sense out of the certificate changes
-		var natd = this.timedelta(certobj.sql.notAfterGMT);
+		var natd = this.timedelta(certobj.sql.notAfter);
 		// certificate has expired
-		if (natd <= 0) certobj.info += this.strings.getString("warn_notAfterGMT_expired") +"\n";
+		if (natd <= 0) certobj.info += this.strings.getString("warn_notAfter_expired") +"\n";
 		// certificate still a long way to go
 		else if (natd > 7777777777) {
-##       	else if (natd > 10364400000) {
+##       	//else if (natd > 10364400000) {
 		    certobj.threat ++;
-		    certobj.info += this.strings.getString("warn_notAfterGMT_notdue") +"\n";
+		    certobj.info += this.strings.getString("warn_notAfter_notdue") +"\n";
 ##		    // used to make it += 2 here, but in cases where server farms
 ##		    // use several valid certificates for the same host name that's
 ##		    // just too strict.
-		    // do they at least have the same issuer?
-		    if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
-			certobj.threat ++;
-			if (certobj.moz.issuerOrganization == certobj.sql.issuerOrganization) {
-			    certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
-			}
-		    }
 ##		} else if (natd > 5182200000) {
 ##		    certobj.threat ++;
-##		    certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+##		    certobj.info += this.strings.getString("warn_notAfter_due") +"\n";
 		}
 		// certificate due sometime soonish
-		else if (natd > 0) certobj.info += this.strings.getString("warn_notAfterGMT_due") +"\n";
+		else if (natd > 0) certobj.info += this.strings.getString("warn_notAfter_due") +"\n";
 		// has the certificated hostname changed?
 		if (certobj.moz.commonName != certobj.sql.commonName) {
 		    certobj.info += this.strings.getString("warn_commonName") +"\n";
@@ -440,15 +495,17 @@ var CertPatrol = {
 
 ## VeriSign case suggests i should compare issuerOrganization instead...
 	    // again, check if they have the same issuer
-	    if (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization) {
+	    if (certobj.sql.cert && !certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer) || // new
+		!certobj.sql.cert && (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization || // old
+				      certobj.moz.issuerCommonName != certobj.sql.issuerCommonName)) {
 		certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
-		certobj.threat ++;
+		certobj.threat += 2;
 	    }
 	    // now looking into the NEW certificate
-	    var td = this.timedelta(certobj.moz.notBeforeGMT);
+	    var td = this.timedelta(certobj.moz.notBefore);
 	    if (td > 0) {
 		// new certificate isn't valid yet
-		certobj.info += this.strings.getString("warn_notBeforeGMT") +"\n";
+		certobj.info += this.strings.getString("warn_notBefore") +"\n";
 		certobj.threat += 2;
 	    }
 	    // further checks done by agent before we even get here
@@ -458,14 +515,14 @@ var CertPatrol = {
 	    certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
 
 	    // produce human readable expiration dates
-	    certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
-	      this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
-	    certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT) +
+	    certobj.sql.notBefore = this.isodate(certobj.sql.notBefore) +
+	      this.daysdelta(this.timedelta(certobj.sql.notBefore));
+	    certobj.sql.notAfter = this.isodate(certobj.sql.notAfter) +
 	      this.daysdelta(natd);
-	    certobj.moz.notBeforeGMT= this.isodate(certobj.moz.notBeforeGMT) +
-	      this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
-	    certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
-	      this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+	    certobj.moz.notBefore = this.isodate(certobj.moz.notBefore) +
+	      this.daysdelta(this.timedelta(certobj.moz.notBefore));
+	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
+	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
 
 	    if (wild && certobj.threat == 0) {
 		certobj.info += this.strings.getString("warn_wildcard") +"\n";
@@ -486,13 +543,17 @@ var CertPatrol = {
 		    stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
 		    stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
 		    stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-		    stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-		    stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
+		    stmt.bindUTF8StringParameter( 6, certobj.moz.notBefore);
+		    stmt.bindUTF8StringParameter( 7, certobj.moz.notAfter);
 		    stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
 		    stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
 		    stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
 		    stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
 		    stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+		    stmt.bindUTF8StringParameter(13, certobj.moz.issuerMd5Fingerprint);
+		    stmt.bindUTF8StringParameter(14, certobj.moz.issuerSha1Fingerprint);
+		    var der = certobj.moz.cert.getRawDER({});
+		    stmt.bindBlobParameter(15, der, der.length);
 		    stmt.execute();
 		} catch(err) {
 		    this.warn("Error trying to insert certificate for "+certobj.host+
@@ -503,10 +564,10 @@ var CertPatrol = {
 	    }
 ##	    // checks are done by firefox before we even get here
 ##	    // that's why we don't complain about host != common name etc.
-	    certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
-	      this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
-	    certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
-	      this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+	    certobj.moz.notBefore = this.isodate(certobj.moz.notBefore) +
+	      this.daysdelta(this.timedelta(certobj.moz.notBefore));
+	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
+	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
 
 	    this.outnew(browser, certobj);
 	}
@@ -603,3 +664,4 @@ var CertPatrol = {
 };
 
 window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
+

@@ -6,10 +6,10 @@ N=certpatrol
 .SUFFIXES: .pjs .js
 
 .pjs.js: Makefile
-	prep $*.pjs > $@
+	prep $*.pjs > content/$@
 
 it: *.js
-	-ln -f CertPatrol.js content
+#	-ln -f CertPatrol.js content
 	./build.sh
 	cp -p $N.xpi /dev/shm
 
