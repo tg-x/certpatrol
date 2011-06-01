@@ -10,7 +10,7 @@
     <RDF:Description about="urn:mozilla:package:CertPatrol"
         chrome:name="CertPatrol"
         chrome:displayName="CertPatrol"
-        chrome:author="Aiko Barz, 20after4 and symlynX"
+        chrome:author="Aiko Barz, tg, 20after4 and symlynX"
         chrome:authorURL="http://patrol.psyced.org"
         chrome:description="Monitor certificates the browser adopts for encrypted https websites."
         chrome:xpcNativeWrappers="no"
