@@ -23,6 +23,9 @@
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
 
+      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
+      $("cmdetailso").setAttribute("label", certobj.lang.viewHierarchy);
+      $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
       var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber', 'emailAddress',

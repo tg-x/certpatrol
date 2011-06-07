@@ -19,6 +19,33 @@
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
       
+      $("cmissto").setAttribute("label", certobj.lang.issuedTo);
+      $("cmissby").setAttribute("label", certobj.lang.issuedBy);
+      $("cmvalid").setAttribute("label", certobj.lang.validity);
+      $("cmfinger").setAttribute("label", certobj.lang.fingerprints);
+
+      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
+      $("cmdetails").setAttribute("label", certobj.lang.viewHierarchy);
+      
+      $("cmcnl").value = certobj.lang.commonName;
+      $("cmol").value = certobj.lang.organization;
+      $("cmoul").value = certobj.lang.organizationalUnit;
+      $("cmsnl").value = certobj.lang.serialNumber;
+      $("cmeml").value = certobj.lang.emailAddress;
+      
+      $("cmicnl").value = certobj.lang.commonName;
+      $("cmiol").value = certobj.lang.organization;
+      $("cmioul").value = certobj.lang.organizationalUnit;
+
+      $("cmimd5l").value = certobj.lang.md5Fingerprint;
+      $("cmisha1l").value = certobj.lang.sha1Fingerprint;
+      
+      $("cmnbl").value = certobj.lang.notBefore;
+      $("cmnal").value = certobj.lang.notAfter;
+
+      $("cmmd5l").value = certobj.lang.md5Fingerprint;
+      $("cmsha1l").value = certobj.lang.sha1Fingerprint;
+
       $("cmcnv").value = certobj.moz.commonName;
       $("cmov").value = certobj.moz.organization;
       $("cmouv").value = certobj.moz.organizationalUnit;
