@@ -177,3 +177,7 @@ events. Just change the preferences if you're paranoid like me.
 Adding a wildcard certificate recognition approach from Georg Koppen.
 Also trying out new threat policy to handle confused server farms.
 
+== VERSION 1.9beta ==
+
+Show and store certification hierarchy of certificates.
+
