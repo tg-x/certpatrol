@@ -1,20 +1,27 @@
 #V=0.xx
 N=certpatrol
 
-# firefox 4 recommends no longer using jar files.. TODO
-
 .SUFFIXES: .pjs .js
 
-.pjs.js: Makefile
-	prep $*.pjs > content/$@
-
-it: *.js
-#	-ln -f CertPatrol.js content
+all: it
+it: content/CertPatrol.js
 	./build.sh
+shm:
 	cp -p $N.xpi /dev/shm
+
+content/CertPatrol.js: CertPatrol.pjs
+	@rm -f $@
+	prep CertPatrol.pjs > $@
+	@chmod a-w $@
 
 up:
 	scp -P 2222 $N.xpi f:psyc/psyced.org/world/mozilla
+
+clean:
+	-rm *.xpi
+
+reset:
+	git reset --hard
 
 #olddist:
 #	zip -9r $N-$V.xpi chrome defaults *.* Makefile -x \*/CVS/\*
@@ -22,12 +29,6 @@ up:
 #	@echo About to copy the new version to the website.. yes?
 #	@sleep 7
 #	scp /dev/shm/$N-$V.xpi f:p/Xtra/$N.xpi
-
-clean:
-	-rm *.xpi
-
-reset:
-	git reset --hard
 
 # Some things to look at when doing extensions.
 #

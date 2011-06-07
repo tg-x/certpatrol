@@ -71,9 +71,9 @@ for CHROME_SUBDIR in $CHROME_PROVIDERS; do
   find $CHROME_SUBDIR -path '*.svn*' -prune -o -type f -print | grep -v \~ >> files
 done
 
-zip -0 -r $JAR_FILE `cat files`
+#zip -0 -r $JAR_FILE `cat files`
 # The following statement should be used instead if you don't wish to use the JAR file
-#cp --verbose --parents `cat files` $TMP_DIR/chrome
+cp --verbose --parents `cat files` $TMP_DIR/chrome
 
 # prepare components and defaults
 echo "Copying various files to $TMP_DIR folder..."
