@@ -114,7 +114,7 @@ var CertPatrol = {
 	    this.dbselect = this.dbh.createStatement(
 	      "SELECT * FROM certificates WHERE host=?1");
 	    this.dbselectWild = this.dbh.createStatement(
-	      "SELECT * FROM certificates WHERE sha1Fingerprint=?13");
+	      "SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13");
 	    this.dbinsert = this.dbh.createStatement(
 	      "INSERT INTO certificates ("+
 		"host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
@@ -135,6 +135,7 @@ var CertPatrol = {
 
     // Application trigger
     init: function() {
+	var Cc = Components.classes, Ci = Components.interfaces;
 	this.prefs = Cc["@mozilla.org/preferences-service;1"]
 	  .getService(Ci.nsIPrefService)
 	  .getBranch("certpatrol.")
@@ -231,28 +232,8 @@ var CertPatrol = {
 		  issuerSha1Fingerprint:"",
 		  cert:null,
 	    },
-	    lang:{
-		  newEvent:this.strings.getString("newEvent"),
-		  wildEvent:this.strings.getString("newEvent"),
-		  changeEvent:this.strings.getString("changeEvent"),
-		  newCert:this.strings.getString("newCert"),
-		  oldCert:this.strings.getString("oldCert"),
-		  issuedTo:this.strings.getString("issuedTo"),
-		  issuedBy:this.strings.getString("issuedBy"),
-		  validity:this.strings.getString("validity"),
-		  fingerprints:this.strings.getString("fingerprints"),
-		  commonName:this.strings.getString("commonName"),
-		  organization:this.strings.getString("organization"),
-		  organizationalUnit:this.strings.getString("organizationalUnit"),
-		  serialNumber:this.strings.getString("serialNumber"),
-		  emailAddress:this.strings.getString("emailAddress"),
-		  notBefore:this.strings.getString("notBefore"),
-		  notAfter:this.strings.getString("notAfter"),
-		  md5Fingerprint:this.strings.getString("md5Fingerprint"),
-		  sha1Fingerprint:this.strings.getString("sha1Fingerprint"),
-		  viewDetails:this.strings.getString("viewDetails"),
-		  hierarchy:this.strings.getString("hierarchy"),
-	    },
+	    threatLevel: '',
+	    warn: {},
 	};
     },
 
@@ -285,7 +266,7 @@ var CertPatrol = {
 
     observe: function(channel, topic, data) {
 ##	this.log('>> observe:', [channel, topic, data]);
-	const Ci = Components.interfaces;
+	var Ci = Components.interfaces;
 
 	channel.QueryInterface(Ci.nsIHttpChannel);
 	var host = channel.URI.hostPort;
@@ -344,19 +325,20 @@ var CertPatrol = {
 
     // Certificate check
     certCheck: function(browser, certobj) {
-	this.log('>> certCheck: '+ certobj.host);
+##	this.log('>> certCheck: '+ certobj.host);
+	var Cc = Components.classes, Ci = Components.interfaces;
 	var found = false;
 
-	if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
-	else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
+##	//if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
+##	//else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
 
 	var pbm = false;
-	var pbs = Components.classes["@mozilla.org/privatebrowsing;1"];
+	var pbs = Cc["@mozilla.org/privatebrowsing;1"];
 	if (pbs) {
-	    pbs = Components.classes["@mozilla.org/privatebrowsing;1"].getService(Components.interfaces.nsIPrivateBrowsingService);
+	    pbs = Cc["@mozilla.org/privatebrowsing;1"].getService(Ci.nsIPrivateBrowsingService);
 	    pbm = pbs.privateBrowsingEnabled;
 	}
-	var certdb = Components.classes["@mozilla.org/security/x509certdb;1"].getService(Components.interfaces.nsIX509CertDB);
+	var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
 	// Get certificate
 	var stmt = this.dbselect;
 	try {
@@ -391,68 +373,37 @@ var CertPatrol = {
 
 	// The certificate changed 
 	if (found && (!certobj.sql.cert || !certobj.moz.cert.equals(certobj.sql.cert))) {
-	    var wild = this.wildcardCertCheck(certobj.moz.commonName,
-	      certobj.moz.sha1Fingerprint);
-
-	    if (!pbm) {
-		// DB update
-		stmt = this.dbupdate;
-		try {
-		    stmt.bindUTF8StringParameter( 0, certobj.host);
-		    stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
-		    stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
-		    stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
-		    stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
-		    stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-		    stmt.bindUTF8StringParameter( 6, certobj.moz.notBefore);
-		    stmt.bindUTF8StringParameter( 7, certobj.moz.notAfter);
-		    stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
-		    stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
-		    stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
-		    stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
-		    stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
-		    stmt.bindUTF8StringParameter(13, certobj.moz.issuerMd5Fingerprint);
-		    stmt.bindUTF8StringParameter(14, certobj.moz.issuerSha1Fingerprint);
-		    var der = certobj.moz.cert.getRawDER({});
-		    stmt.bindBlobParameter(15, der, der.length);
-		    stmt.execute();
-		} catch(err) {
-		    this.warn("Error trying to update certificate: "+ err);
-		} finally {
-		    stmt.reset();
-		}
-	    }
-
 	    // If the cert info was stored in the previous version of CertPatrol
 	    // we don't have the full cert yet, so we just store it in the DB
 	    // and return if everything looks fine.
 	    if (!certobj.sql.cert &&
 		certobj.sql.sha1Fingerprint == certobj.moz.sha1Fingerprint &&
 		certobj.sql.md5Fingerprint == certobj.moz.md5Fingerprint)
-		    return;
+		    return this.saveCert(certobj);
 
+	    var wild = this.wildcardCertCheck(certobj.moz.cert);
 	    if (!wild) {
 		// try to make some sense out of the certificate changes
 		var natd = this.timedelta(certobj.sql.notAfter);
 		// certificate has expired
-		if (natd <= 0) certobj.info += this.strings.getString("warn_notAfter_expired") +"\n";
+		if (natd <= 0) certobj.warn.notAfter_expired = true;
 		// certificate still a long way to go
 		else if (natd > 7777777777) {
 ##       	//else if (natd > 10364400000) {
 		    certobj.threat ++;
-		    certobj.info += this.strings.getString("warn_notAfter_notdue") +"\n";
+		    certobj.warn.notAfter_notdue = true;
 ##		    // used to make it += 2 here, but in cases where server farms
 ##		    // use several valid certificates for the same host name that's
 ##		    // just too strict.
 ##		} else if (natd > 5182200000) {
 ##		    certobj.threat ++;
-##		    certobj.info += this.strings.getString("warn_notAfter_due") +"\n";
+##		    certobj.warn.notAfter_due = true;
 		}
 		// certificate due sometime soonish
-		else if (natd > 0) certobj.info += this.strings.getString("warn_notAfter_due") +"\n";
+		else if (natd > 0) certobj.warn.notAfter_due = true;
 		// has the certificated hostname changed?
 		if (certobj.moz.commonName != certobj.sql.commonName) {
-		    certobj.info += this.strings.getString("warn_commonName") +"\n";
+		    certobj.warn.commonName = true;
 		    certobj.threat += 2;
 		}
 	    }
@@ -462,21 +413,20 @@ var CertPatrol = {
 	    if (certobj.sql.cert && !certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer) || // new
 		!certobj.sql.cert && (certobj.moz.issuerOrganization != certobj.sql.issuerOrganization || // old
 				      certobj.moz.issuerCommonName != certobj.sql.issuerCommonName)) {
-		certobj.info += this.strings.getString("warn_issuerCommonName") +"\n";
+		certobj.warn.issuerCommonName = true;
 		certobj.threat += 2;
 	    }
 	    // now looking into the NEW certificate
 	    var td = this.timedelta(certobj.moz.notBefore);
 	    if (td > 0) {
 		// new certificate isn't valid yet
-		certobj.info += this.strings.getString("warn_notBefore") +"\n";
+		certobj.warn.notBefore = true;
 		certobj.threat += 2;
 	    }
 	    // further checks done by agent before we even get here
 
 	    // fetch suitable scare message
 	    if (certobj.threat > 3) certobj.threat = 3;
-	    certobj.lang.changeEvent += " "+ this.strings.getString("threatLevel_"+ certobj.threat);
 
 	    // produce human readable expiration dates
 	    certobj.sql.notBefore = this.isodate(certobj.sql.notBefore) +
@@ -489,10 +439,14 @@ var CertPatrol = {
 	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
 
 	    if (wild && certobj.threat == 0) {
-		certobj.info += this.strings.getString("warn_wildcard") +"\n";
+		certobj.warn.wildcard = true;
+		certobj.event = this.strings.getString("wildEvent");
 		this.outwild(browser, certobj);
 		return;
 	    }
+
+	    certobj.event = this.strings.getString("changeEvent") +" "+
+	                    this.strings.getString("threatLevel_"+ certobj.threat);
 	    this.outchange(browser, certobj);
 
 	    // New certificate
@@ -533,6 +487,8 @@ var CertPatrol = {
 	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
 	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
 
+	    certobj.event = this.strings.getString("newEvent");
+
 	    this.outnew(browser, certobj);
 	}
     },
@@ -540,7 +496,7 @@ var CertPatrol = {
     // wildcardCertCheck contributed by Georg Koppen, JonDos GmbH 2010. Thanks!
     // We are using it differently, though. The JonDos version is less paranoid.
     //
-    wildcardCertCheck: function(commonName, sha1Fingerprint) {
+    wildcardCertCheck: function(cert) {
 	var stmt;
 
 	// First, we check whether we have a wildcard certificate at all. If not
@@ -548,14 +504,15 @@ var CertPatrol = {
 	// we have one but no SHA1 fingerprint we should show it for security's
 	// sake...
 ##  alert("doing wildcardCertCheck for "+ sha1Fingerprint);
-	if (commonName.charAt(0) === '*' && sha1Fingerprint) {
+	if (cert.commonName.charAt(0) === '*' && cert.md5Fingerprint && cert.sha1Fingerprint) {
 	    // We got one, check now if we have it already. If not, return false and
 	    // the certificate will be shown. Otherwise, return yes and the new cert
 	    // dialog will be omitted.
 	    try {
 		stmt = this.dbselectWild;
 		// starts counting from 0, so ?13 is 12 here. you gotta love it.
-		stmt.bindUTF8StringParameter(12, sha1Fingerprint);
+		stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
+		stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
 		if (stmt.executeStep()) {
 		    return true;
 		} else {
@@ -568,7 +525,7 @@ var CertPatrol = {
 		    return false;
 		}
 	    } catch (err) {
-		this.warn("Error trying to check wildcard certificate "+ commonName
+		this.warn("Error trying to check wildcard certificate "+ cert.commonName
 		  +": "+ err);
 	    } finally {
 		stmt.reset();
@@ -578,11 +535,41 @@ var CertPatrol = {
 	}
     },
 
+    saveCert: function(certobj) {
+##	this.log('>> saveCert: '+ certobj.host);
+	var stmt = this.dbupdate;
+	var cert = certobj.moz.cert;
+	try {
+	    stmt.bindUTF8StringParameter( 0, certobj.host);
+	    stmt.bindUTF8StringParameter( 1, cert.commonName);
+	    stmt.bindUTF8StringParameter( 2, cert.organization);
+	    stmt.bindUTF8StringParameter( 3, cert.organizationalUnit);
+	    stmt.bindUTF8StringParameter( 4, cert.serialNumber);
+	    stmt.bindUTF8StringParameter( 5, cert.emailAddress);
+	    stmt.bindUTF8StringParameter( 6, cert.validity.notBefore);
+	    stmt.bindUTF8StringParameter( 7, cert.validity.notAfter);
+	    stmt.bindUTF8StringParameter( 8, cert.issuerCommonName);
+	    stmt.bindUTF8StringParameter( 9, cert.issuerOrganization);
+	    stmt.bindUTF8StringParameter(10, cert.issuerOrganizationUnit);
+	    stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
+	    stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
+	    stmt.bindUTF8StringParameter(13, cert.issuer.md5Fingerprint);
+	    stmt.bindUTF8StringParameter(14, cert.issuer.sha1Fingerprint);
+	    var der = cert.getRawDER({});
+	    stmt.bindBlobParameter(15, der, der.length);
+	    stmt.execute();
+	} catch(err) {
+	    this.warn("Error trying to update certificate: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+	return true;
+    },
+
     outnew: function(browser, certobj) {
 	var forcePopup = false;
 	if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 
-##	// would like to use document's browser here, but it doesn't work
 	var notifyBox = gBrowser.getNotificationBox(browser);
 	if (forcePopup || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
@@ -592,18 +579,19 @@ var CertPatrol = {
 ##      // https://developer.mozilla.org/en/XUL/Method/appendNotification
 ##      // http://gist.github.com/256554
 ##      // using certobj.host as the id for the notification
-	notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.lang.newEvent
-	  +" "+ certobj.moz.commonName +". "+
-	  certobj.lang.issuedBy +" "+
+	var n = notifyBox.appendNotification(
+	  "(CertPatrol) "+ certobj.event +" "+
+	  certobj.moz.commonName +". "+
+	  this.strings.getString("issuedBy") +" "+
 	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
 	  certobj.host, null,
 	  notifyBox.PRIORITY_INFO_HIGH, [ {
-	      accessKey: "D",
-	      label: certobj.lang.viewDetails,
+	      label: this.strings.getString("viewDetails"),
+	      accessKey: this.strings.getString("viewDetails_key"),
 	      callback: function(msg, btn) {
 		  window.openDialog("chrome://certpatrol/content/new.xul",
 				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
+		  notifyBox.removeNotification(n);
 	      }
 	}, ]);
     },
@@ -618,18 +606,19 @@ var CertPatrol = {
 			      "_blank", "chrome,dialog,modal", certobj, CertPatrol);
 	    return;
 	}
-	notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.lang.wildEvent
-	  +" "+ certobj.moz.commonName +". "+
-	  certobj.lang.issuedBy +" "+
+	var n = notifyBox.appendNotification(
+	  "(CertPatrol) "+ certobj.event +" "+
+	  certobj.moz.commonName +". "+
+	  this.strings.getString("issuedBy") +" "+
 	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
 	  certobj.host, null,
 	  notifyBox.PRIORITY_INFO_HIGH, [ {
-	      accessKey: "D",
-	      label: certobj.lang.viewDetails,
+	      label: this.strings.getString("viewDetails"),
+	      accessKey: this.strings.getString("viewDetails_key"),
 	      callback: function(msg, btn) {
-		  window.openDialog("chrome://certpatrol/content/change.xul",
+		  window.openDialog("chrome://certpatrol/content/new.xul",
 				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
+		  notifyBox.removeNotification(n);
 	      }
 	}, ]);
     },
@@ -644,22 +633,47 @@ var CertPatrol = {
 			      "chrome,dialog,modal", certobj, CertPatrol);
 	    return;
 	}
-	notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.lang.changeEvent
-	  +" "+ certobj.moz.commonName +". "+
-	  certobj.lang.issuedBy +" "+
+
+	var priority = [
+	    notifyBox.PRIORITY_INFO_LOW,
+	    notifyBox.PRIORITY_INFO_HIGH,
+	    notifyBox.PRIORITY_WARNING_HIGH,
+	    notifyBox.PRIORITY_CRITICAL_HIGH
+	];
+
+	var n = notifyBox.appendNotification(
+	  "(CertPatrol) "+ certobj.event +" "+
+	  certobj.moz.commonName +". "+
+	  this.strings.getString("issuedBy") +" "+
 	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
 	  +" "+ certobj.info,
 	  certobj.host, null,
-	  certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
-	  : notifyBox.PRIORITY_INFO_LOW, [ {
-	      accessKey: "D",
-	      label: certobj.lang.viewDetails,
+	  priority[certobj.threat], [
+	    {
+	      label: this.strings.getString("rejectChange"),
+	      accessKey: this.strings.getString("rejectChange_key"),
+	      callback: function(msg, btn) {
+		  notifyBox.removeNotification(n);
+	      },
+	    },
+	    {
+	      label: this.strings.getString("acceptChange"),
+	      accessKey: this.strings.getString("acceptChange_key"),
+	      callback: function(msg, btn) {
+		  CertPatrol.saveCert(certobj);
+		  notifyBox.removeNotification(n);
+	      },
+	    },
+	    {
+	      label: this.strings.getString("viewDetails"),
+	      accessKey: this.strings.getString("viewDetails_key"),
 	      callback: function(msg, btn) {
 		  window.openDialog("chrome://certpatrol/content/change.xul",
-				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
-	      }
-	}, ]);
+				    "_blank", "chrome,dialog,modal", certobj, CertPatrol, n);
+		  notifyBox.removeNotification(n);
+	      },
+	    },
+	  ]);
     },
 
     warn: function(result) {

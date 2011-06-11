@@ -15,6 +15,21 @@
 	border: none;
 }
 
-
-
-
+.old {
+  color: darkred;
+}
+.old:before {
+  width: 12px;
+  float: left;
+  text-align: center;
+  content: "\002013";
+}
+.new {
+  color: darkgreen;
+}
+.new:before {
+  width: 12px;
+  float: left;
+  text-align: center;
+  content: "+";
+}

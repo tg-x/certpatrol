@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE dialog PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<!DOCTYPE dialog SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd">
 
 <?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
 
@@ -7,9 +7,12 @@
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   persist="screenX screenY width height" width="800" height="555"
-  buttons="accept"
-  onload="return onLoad();"
-  onDialogAccept="return doOK();">
+  buttons="accept,cancel"
+  onload="return onLoad()"
+  buttonlabelaccept="&acceptChange;"
+  buttonlabelcancel="&rejectChange;"
+  ondialogaccept="return CertPatrol.saveCert(certobj)"
+  ondialogcancel="return true">
   <script>
     var certobj = window.arguments[0];
     var CertPatrol = window.arguments[1];
@@ -18,74 +21,31 @@
     function onLoad() {
       /* host information in brackets is pretty important.. isn't it? */
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
-      $("cmdiag").setAttribute("title", certobj.lang.changeEvent);
-      
-      $("cmold").value = certobj.lang.oldCert;
-      $("cmnew").value = certobj.lang.newCert;
-      
-      $("cmissto").setAttribute("label", certobj.lang.issuedTo);
-      $("cmissby").setAttribute("label", certobj.lang.issuedBy);
-      $("cmvalid").setAttribute("label", certobj.lang.validity);
-      $("cmfinger").setAttribute("label", certobj.lang.fingerprints);
+      $("cmdiag").setAttribute("title", certobj.event);
 
-      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
-      $("cmdetailso").setAttribute("label", certobj.lang.viewDetails);
-      $("cmdetailsn").setAttribute("label", certobj.lang.viewDetails);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
-      $("cmcnl").value = certobj.lang.commonName;
-      $("cmol").value = certobj.lang.organization;
-      $("cmoul").value = certobj.lang.organizationalUnit;
-      $("cmsnl").value = certobj.lang.serialNumber;
-      $("cmeml").value = certobj.lang.emailAddress;
-      
-      $("cmicnl").value = certobj.lang.commonName;
-      $("cmiol").value = certobj.lang.organization;
-      $("cmioul").value = certobj.lang.organizationalUnit;
+      var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber', 'emailAddress',
+                  'issuerCommonName', 'issuerOrganization', 'issuerOrganizationUnit',
+		  'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
+                  'md5Fingerprint', 'sha1Fingerprint', 'notBefore', 'notAfter'];
+      for (var i in keys) {
+        var key = keys[i];
+        if (certobj.moz[key] == certobj.sql[key]) {
+         $(key).value = certobj.sql[key];
+         $(key+2).hidden = true;
+        } else {
+          $(key).value = certobj.sql[key];
+          $(key+2).value = certobj.moz[key];
+          $(key).className += ' old';
+          $(key+2).className += ' new';
+          $(key+2).hidden = false;
+        }
+      }
 
-      $("cmimd5l").value = certobj.lang.md5Fingerprint;
-      $("cmisha1l").value = certobj.lang.sha1Fingerprint;
-      
-      $("cmnbl").value = certobj.lang.notBefore;
-      $("cmnal").value = certobj.lang.notAfter;
-
-      $("cmmd5l").value = certobj.lang.md5Fingerprint;
-      $("cmsha1l").value = certobj.lang.sha1Fingerprint;
-
-      $("cmcno").value = certobj.sql.commonName;
-      $("cmcnn").value = certobj.moz.commonName;
-      $("cmoo").value = certobj.sql.organization;
-      $("cmon").value = certobj.moz.organization;
-      $("cmouo").value = certobj.sql.organizationalUnit;
-      $("cmoun").value = certobj.moz.organizationalUnit;
-      $("cmsno").value = certobj.sql.serialNumber;
-      $("cmsnn").value = certobj.moz.serialNumber;
-      $("cmemo").value = certobj.sql.emailAddress;
-      $("cmemn").value = certobj.moz.emailAddress;
-
-      $("cmicno").value = certobj.sql.issuerCommonName;
-      $("cmicnn").value = certobj.moz.issuerCommonName;
-      $("cmioo").value = certobj.sql.issuerOrganization;
-      $("cmion").value = certobj.moz.issuerOrganization;
-      $("cmiouo").value = certobj.sql.issuerOrganizationUnit;
-      $("cmioun").value = certobj.moz.issuerOrganizationUnit;
-
-      $("cmimd5o").value = certobj.sql.issuerMd5Fingerprint;
-      $("cmimd5n").value = certobj.moz.issuerMd5Fingerprint;
-      $("cmisha1o").value = certobj.sql.issuerSha1Fingerprint;
-      $("cmisha1n").value = certobj.moz.issuerSha1Fingerprint;
-      
-      $("cmnbo").value = certobj.sql.notBefore;
-      $("cmnbn").value = certobj.moz.notBefore;
-      $("cmnao").value = certobj.sql.notAfter;
-      $("cmnan").value = certobj.moz.notAfter;
-      
-      $("cmmd5o").value = certobj.sql.md5Fingerprint;
-      $("cmmd5n").value = certobj.moz.md5Fingerprint;
-      $("cmsha1o").value = certobj.sql.sha1Fingerprint;
-      $("cmsha1n").value = certobj.moz.sha1Fingerprint;
-
-      $("cminfo").value = certobj.info;
+      for (var k in certobj.warn)
+        if (certobj.warn[k])
+          $('warn_'+k).hidden = false;
 
       CertPatrol.addCertChain($("cmchaino"), certobj.sql.cert);
       CertPatrol.addCertChain($("cmchainn"), certobj.moz.cert);
@@ -93,117 +53,156 @@
   </script>
   <dialogheader id="cmdiag" />
 
-  <textbox class="infoCP" id="cminfo" flex="1" multiline="true" readonly="true" />
+  <vbox style="font-weight: bold">
+    <description hidden="true" style="font-weight: bold" id="warn_wildcard">&warn_wildcard;</description>
+    <description hidden="true" id="warn_commonName">&warn_commonName;</description>
+    <description hidden="true" id="warn_issuerCommonName">&warn_issuerCommonName;</description>
+    <description hidden="true" id="warn_notBefore">&warn_notBefore;</description>
+    <description hidden="true" id="warn_notAfter_expired">&warn_notAfter_expired;</description>
+    <description hidden="true" id="warn_notAfter_notdue">&warn_notAfter_notdue;</description>
+    <description hidden="true" id="warn_notAfter_due">&warn_notAfter_due;</description>
+  </vbox>
 
   <vbox flex="1" style="overflow: auto">
 
     <grid>
       <columns>
-        <column/>
-        <column flex="1" />
-        <column flex="1" />
+        <column flex="1"/>
+        <column flex="2"/>
       </columns>
     
       <rows>
-        <row>
+        <!--row>
           <label value="" />
-          <textbox class="plain" readonly="true" id="cmold" />
-          <textbox class="plain" readonly="true" id="cmnew" />
-        </row>
+          <caption id="cmold" label="&oldCert;" />
+          <caption id="cmnew" label="&newCert;" />
+        </row-->
         <groupbox>
-          <caption id="cmissto" />
+          <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
         <row>
-          <label id="cmcnl" />
-          <textbox class="plain" readonly="true" id="cmcno" />
-          <textbox class="plain" readonly="true" id="cmcnn" />
+          <label id="cmcnl" value="&commonName;" />
+	  <vbox flex="1">
+            <textbox class="plain" readonly="true" id="commonName" />
+            <textbox class="plain" readonly="true" id="commonName2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmol" />
-          <textbox class="plain" readonly="true" id="cmoo" />
-          <textbox class="plain" readonly="true" id="cmon" />
+          <label id="cmol" value="&organization;" />
+	  <vbox flex="1">
+            <textbox class="plain" readonly="true" id="organization" />
+            <textbox class="plain" readonly="true" id="organization2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmoul" />
-          <textbox class="plain" readonly="true" id="cmouo" />
-          <textbox class="plain" readonly="true" id="cmoun" />
+          <label id="cmoul" value="&organizationalUnit;" />
+	  <vbox flex="1">
+            <textbox class="plain" readonly="true" id="organizationalUnit" />
+            <textbox class="plain" readonly="true" id="organizationalUnit2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmsnl" />
-          <textbox class="plain" readonly="true" id="cmsno" />
-          <textbox class="plain" readonly="true" id="cmsnn" />
+          <label id="cmsnl" value="&serialNumber;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="serialNumber" />
+	    <textbox class="plain" readonly="true" id="serialNumber2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmeml" />
-          <textbox class="plain" readonly="true" id="cmemo" />
-          <textbox class="plain" readonly="true" id="cmemn" />
+          <label id="cmeml" value="&emailAddress;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="emailAddress" />
+	    <textbox class="plain" readonly="true" id="emailAddress2" />
+	  </vbox>
         </row>
         <groupbox>
-          <caption id="cmissby" />
+          <caption id="cmissby" label="&issuedBy;" />
         </groupbox>
         <row>
-          <label id="cmicnl" />
-          <textbox class="plain" readonly="true" id="cmicno" />
-          <textbox class="plain" readonly="true" id="cmicnn" />
+          <label id="cmicnl" value="&commonName;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="issuerCommonName" />
+	    <textbox class="plain" readonly="true" id="issuerCommonName2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmiol" />
-          <textbox class="plain" readonly="true" id="cmioo" />
-          <textbox class="plain" readonly="true" id="cmion" />
+          <label id="cmiol" value="&organization;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="issuerOrganization" />
+	    <textbox class="plain" readonly="true" id="issuerOrganization2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmioul" />
-          <textbox class="plain" readonly="true" id="cmiouo" />
-          <textbox class="plain" readonly="true" id="cmioun" />
+          <label id="cmioul" value="&organizationalUnit;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="issuerOrganizationUnit" />
+	    <textbox class="plain" readonly="true" id="issuerOrganizationUnit2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmimd5l" />
-          <textbox class="plain" readonly="true" width="64" id="cmimd5o" />
-          <textbox class="plain" readonly="true" width="64" id="cmimd5n" />
+          <label id="cmimd5l" value="&md5Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="issuerMd5Fingerprint" />
+	    <textbox class="plain" readonly="true" id="issuerMd5Fingerprint2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmisha1l" />
-          <textbox class="plain" readonly="true" width="64" id="cmisha1o" />
-          <textbox class="plain" readonly="true" width="64" id="cmisha1n" />
+          <label id="cmisha1l" value="&sha1Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="issuerSha1Fingerprint" />
+	    <textbox class="plain" readonly="true" id="issuerSha1Fingerprint2" />
+	  </vbox>
         </row>
         <groupbox>
-          <caption id="cmvalid" />
+          <caption id="cmvalid" label="&validity;" />
         </groupbox>
         <row>
-          <label id="cmnbl" />
-          <textbox class="plain" readonly="true" id="cmnbo" />
-          <textbox class="plain" readonly="true" id="cmnbn" />
+          <label id="cmnbl" value="&notBefore;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="notBefore" />
+	    <textbox class="plain" readonly="true" id="notBefore2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmnal" />
-          <textbox class="plain" readonly="true" id="cmnao" />
-          <textbox class="plain" readonly="true" id="cmnan" />
+          <label id="cmnal" value="&notAfter;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="notAfter" />
+	    <textbox class="plain" readonly="true" id="notAfter2" />
+	  </vbox>
         </row>
         <groupbox>
-          <caption id="cmfinger" />
+          <caption id="cmfinger" label="&fingerprints;" />
         </groupbox>
         <row>
-          <label id="cmmd5l" />
-          <textbox class="plain" readonly="true" width="64" id="cmmd5o" />
-          <textbox class="plain" readonly="true" width="64" id="cmmd5n" />
+          <label id="cmmd5l" value="&md5Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="md5Fingerprint" />
+	    <textbox class="plain" readonly="true" id="md5Fingerprint2" />
+	  </vbox>
         </row>
         <row>
-          <label id="cmsha1l" />
-          <textbox class="plain" readonly="true" width="64" id="cmsha1o" />
-          <textbox class="plain" readonly="true" width="64" id="cmsha1n" />
+          <label id="cmsha1l" value="&sha1Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="sha1Fingerprint" />
+	    <textbox class="plain" readonly="true" id="sha1Fingerprint2" />
+	  </vbox>
         </row>
         <groupbox>
-          <caption id="cmhierarchy" />
+          <caption id="cmhierarchy" label="&hierarchy;" />
         </groupbox>
 	<row>
-	  <label />
-	  <textbox id="cmchaino" multiline="true" readonly="true" />
-	  <textbox id="cmchainn" multiline="true" readonly="true" />
+	  <label value="&oldCert;" />
+	  <hbox>
+	    <textbox flex="6" id="cmchaino" multiline="true" readonly="true" />
+	    <button  flex="1" id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewDetails;" />
+	  </hbox>
 	</row>
 	<row>
-	  <label />
-	  <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" />
-	  <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" />
+	  <label value="&newCert;" />
+	  <hbox>
+	    <textbox flex="6" id="cmchainn" multiline="true" readonly="true" />
+	    <button  flex="1" id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" />
+	  </hbox>
 	</row>
       </rows>
     </grid>

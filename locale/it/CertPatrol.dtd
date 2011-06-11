@@ -1,0 +1,29 @@
+<!ENTITY oldCert		"Vecchio certificato:">
+<!ENTITY newCert		"Nuovo certificato:">
+
+<!ENTITY issuedTo		"Rilasciato a:">
+<!ENTITY issuedBy		"Rilasciato da:">
+<!ENTITY validity		"Validita`:">
+<!ENTITY fingerprints		"Impronte:">
+<!ENTITY commonName		"Nome comune (CN):">
+<!ENTITY organization		"Organizzazione (O):">
+<!ENTITY organizationalUnit	"Compartimento (OU):">
+<!ENTITY serialNumber		"Numero di serie:">
+<!ENTITY emailAddress		"Contatto:">
+<!ENTITY notBefore		"Data di rilascio:">
+<!ENTITY notAfter		"Data di scadenza:">
+<!ENTITY md5Fingerprint		"Impronta MD5:">
+<!ENTITY sha1Fingerprint	"Impronta SHA1:">
+<!ENTITY hierarchy		"Gerarchia certificato">
+
+<!ENTITY viewDetails		"Vedi Dettagli">
+<!ENTITY acceptChange		"">
+<!ENTITY rejectChange		"">
+
+<!ENTITY warn_wildcard		"Info: Questo certificato e` stato applicato anche ad altri siti di questo dominio.">
+<!ENTITY warn_commonName	"Attenzione: E` cambiato il nome del sito. Controlla se va bene cosi`">
+<!ENTITY warn_issuerCommonName	"Attenzione: E` cambiata l'autorita` di certificazione.">
+<!ENTITY warn_notBefore		"Errore: Questo certificato non e` ancora valido!">
+<!ENTITY warn_notAfter_expired	"Info: Il vecchio certificato e` scaduto. Era necessario cambiarlo.">
+<!ENTITY warn_notAfter_notdue	"Attenzione: Il vecchio certificato non era ancora scaduto, ma forse c'erano altre ragioni per cambiarlo.">
+<!ENTITY warn_notAfter_due	"Info: Il vecchio certificato scade prossimamente. E` normale cambiarlo.">
