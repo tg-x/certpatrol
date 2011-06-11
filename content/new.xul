@@ -18,52 +18,17 @@
     function onLoad() {
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
-      
-      $("cmissto").setAttribute("label", certobj.lang.issuedTo);
-      $("cmissby").setAttribute("label", certobj.lang.issuedBy);
-      $("cmvalid").setAttribute("label", certobj.lang.validity);
-      $("cmfinger").setAttribute("label", certobj.lang.fingerprints);
 
-      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
-      $("cmdetails").setAttribute("label", certobj.lang.viewHierarchy);
-      
-      $("cmcnl").value = certobj.lang.commonName;
-      $("cmol").value = certobj.lang.organization;
-      $("cmoul").value = certobj.lang.organizationalUnit;
-      $("cmsnl").value = certobj.lang.serialNumber;
-      $("cmeml").value = certobj.lang.emailAddress;
-      
-      $("cmicnl").value = certobj.lang.commonName;
-      $("cmiol").value = certobj.lang.organization;
-      $("cmioul").value = certobj.lang.organizationalUnit;
-
-      $("cmimd5l").value = certobj.lang.md5Fingerprint;
-      $("cmisha1l").value = certobj.lang.sha1Fingerprint;
-      
-      $("cmnbl").value = certobj.lang.notBefore;
-      $("cmnal").value = certobj.lang.notAfter;
-
-      $("cmmd5l").value = certobj.lang.md5Fingerprint;
-      $("cmsha1l").value = certobj.lang.sha1Fingerprint;
-
-      $("cmcnv").value = certobj.moz.commonName;
-      $("cmov").value = certobj.moz.organization;
-      $("cmouv").value = certobj.moz.organizationalUnit;
-      $("cmsnv").value = certobj.moz.serialNumber;
-      $("cmemv").value = certobj.moz.emailAddress;
-
-      $("cmicnv").value = certobj.moz.issuerCommonName;
-      $("cmiov").value = certobj.moz.issuerOrganization;
-      $("cmiouv").value = certobj.moz.issuerOrganizationUnit;
-
-      $("cmimd5v").value = certobj.moz.issuerMd5Fingerprint;
-      $("cmisha1v").value = certobj.moz.issuerSha1Fingerprint;
-      
-      $("cmnbv").value = certobj.moz.notBefore;
-      $("cmnav").value = certobj.moz.notAfter;
-      
-      $("cmmd5v").value = certobj.moz.md5Fingerprint;
-      $("cmsha1v").value = certobj.moz.sha1Fingerprint;
+      var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber',
+                  'emailAddress', 'notBefore', 'notAfter',
+                  'issuerCommonName', 'issuerOrganization', 'issuerOrganizationUnit',
+                  'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
+                  'md5Fingerprint', 'sha1Fingerprint'];
+      for (var i in keys) {
+        var key = keys[i];
+	CertPatrol.log('key: '+key);
+        $(key).value = certobj.moz[key];
+      }
 
       CertPatrol.addCertChain($("cmchain"), certobj.moz.cert);
     }
@@ -84,68 +49,68 @@
         </groupbox>
         <row>
           <label id="cmcnl" value="&commonName;" />
-          <textbox class="plain" readonly="true" id="cmcnv" />
+          <textbox class="plain" readonly="true" id="commonName" />
         </row>
         <row>
           <label id="cmol" value="&organization;" />
-          <textbox class="plain" readonly="true" id="cmov" />
+          <textbox class="plain" readonly="true" id="organization" />
         </row>
         <row>
           <label id="cmoul" value="&organizationalUnit;" />
-          <textbox class="plain" readonly="true" id="cmouv" />
+          <textbox class="plain" readonly="true" id="organizationalUnit" />
         </row>
         <row>
           <label id="cmsnl" value="&serialNumber;" />
-          <textbox class="plain" readonly="true" id="cmsnv" />
+          <textbox class="plain" readonly="true" id="serialNumber" />
         </row>
         <row>
           <label id="cmeml" value="&emailAddress;" />
-          <textbox class="plain" readonly="true" id="cmemv" />
+          <textbox class="plain" readonly="true" id="emailAddress" />
         </row>
         <groupbox>
           <caption id="cmissby" label="&issuedBy;" />
         </groupbox>
         <row>
           <label id="cmicnl" value="&commonName;" />
-          <textbox class="plain" readonly="true" id="cmicnv" />
+          <textbox class="plain" readonly="true" id="issuerCommonName" />
         </row>
         <row>
           <label id="cmiol" value="&organization;" />
-          <textbox class="plain" readonly="true" id="cmiov" />
+          <textbox class="plain" readonly="true" id="issuerOrganization" />
         </row>
         <row>
           <label id="cmioul" value="&organizationalUnit;" />
-          <textbox class="plain" readonly="true" id="cmiouv" />
+          <textbox class="plain" readonly="true" id="issuerOrganizationUnit" />
         </row>
         <row>
           <label id="cmimd5l" value="&md5Fingerprint;" />
-          <textbox class="plain" readonly="true" size="64" id="cmimd5v" />
+          <textbox class="plain" readonly="true" size="64" id="issuerMd5Fingerprint" />
         </row>
         <row>
           <label id="cmisha1l" value="&sha1Fingerprint;" />
-          <textbox class="plain" readonly="true" size="64" id="cmisha1v" />
+          <textbox class="plain" readonly="true" size="64" id="issuerSha1Fingerprint" />
         </row>
         <groupbox>
           <caption id="cmvalid" label="&validity;" />
         </groupbox>
         <row>
           <label id="cmnbl" value="&notBefore;" />
-          <textbox class="plain" readonly="true" id="cmnbv" />
+          <textbox class="plain" readonly="true" id="notBefore" />
         </row>
         <row>
           <label id="cmnal" value="&notAfter;" />
-          <textbox class="plain" readonly="true" id="cmnav" />
+          <textbox class="plain" readonly="true" id="notAfter" />
         </row>
         <groupbox>
           <caption id="cmfinger" label="&fingerprints;" />
         </groupbox>
         <row>
           <label id="cmmd5l" value="&md5Fingerprint;" />
-          <textbox class="plain" readonly="true" size="64" id="cmmd5v" />
+          <textbox class="plain" readonly="true" size="64" id="md5Fingerprint" />
         </row>
         <row>
           <label id="cmsha1l" value="&sha1Fingerprint;" />
-          <textbox class="plain" readonly="true" size="64" id="cmsha1v" />
+          <textbox class="plain" readonly="true" size="64" id="sha1Fingerprint" />
         </row>
         <groupbox>
           <caption id="cmhierarchy" label="&hierarchy;" />
