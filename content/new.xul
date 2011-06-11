@@ -26,7 +26,6 @@
                   'md5Fingerprint', 'sha1Fingerprint'];
       for (var i in keys) {
         var key = keys[i];
-	CertPatrol.log('key: '+key);
         $(key).value = certobj.moz[key];
       }
 
