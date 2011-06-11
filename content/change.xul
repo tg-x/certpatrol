@@ -28,7 +28,7 @@
       $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
-      var keys = ['commonName', 'organization', 'organizationUnit', 'serialNumber',
+      var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber',
                   'emailAddress', 'notBefore', 'notAfter',
                   'issuerCommonName', 'issuerOrganization', 'issuerOrganizationUnit',
                   'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
