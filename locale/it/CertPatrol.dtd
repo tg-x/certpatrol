@@ -14,7 +14,9 @@
 <!ENTITY notAfter		"Data di scadenza:">
 <!ENTITY md5Fingerprint		"Impronta MD5:">
 <!ENTITY sha1Fingerprint	"Impronta SHA1:">
-<!ENTITY hierarchy		"Gerarchia certificato">
+
+<!ENTITY hierarchy		"Gerarchia di certificazione:">
+<!ENTITY viewHierarchy		"Vedi gerarchia di certificazione">
 
 <!ENTITY viewDetails		"Vedi Dettagli">
 <!ENTITY acceptChange		"">

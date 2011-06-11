@@ -14,7 +14,9 @@
 <!ENTITY notAfter		"G\u00FCltig bis:">
 <!ENTITY md5Fingerprint		"MD5 Fingerprint:">
 <!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
-<!ENTITY hierarchy		"Zertifikatshierarchie">
+
+<!ENTITY hierarchy		"Zertifikatshierarchie:">
+<!ENTITY viewHierarchy		"Zertifikatshierarchie betrachten">
 
 <!ENTITY viewDetails		"Details anschauen">
 <!ENTITY acceptChange		"TODO">

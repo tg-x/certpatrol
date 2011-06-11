@@ -6,7 +6,7 @@
 <dialog id="ssl-change"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="800" height="555"
+  persist="screenX screenY width height" width="800" height="600"
   buttons="accept,cancel"
   onload="return onLoad()"
   buttonlabelaccept="&acceptChange;"
@@ -195,17 +195,17 @@
         </groupbox>
 	<row>
 	  <label value="&oldCert;" />
-	  <hbox>
-	    <textbox flex="6" id="cmchaino" multiline="true" readonly="true" />
-	    <button  flex="1" id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewDetails;" />
-	  </hbox>
+	  <vbox>
+	    <textbox id="cmchaino" multiline="true" readonly="true" />
+	    <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewHierarchy;" />
+	  </vbox>
 	</row>
 	<row>
 	  <label value="&newCert;" />
-	  <hbox>
-	    <textbox flex="6" id="cmchainn" multiline="true" readonly="true" />
-	    <button  flex="1" id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" />
-	  </hbox>
+	  <vbox>
+	    <textbox id="cmchainn" multiline="true" readonly="true" />
+	    <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewHierarchy;" />
+	  </vbox>
 	</row>
       </rows>
     </grid>

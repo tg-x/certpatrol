@@ -14,7 +14,9 @@
 <!ENTITY notAfter		"Expires On:">
 <!ENTITY md5Fingerprint		"MD5 Fingerprint:">
 <!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
-<!ENTITY hierarchy		"Certificate Hierarchy">
+
+<!ENTITY hierarchy		"Certification Hierarchy:">
+<!ENTITY viewHierarchy		"View Certification Hierarchy">
 
 <!ENTITY viewDetails		"View Details">
 <!ENTITY acceptChange		"Accept">
