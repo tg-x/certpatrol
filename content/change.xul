@@ -16,7 +16,8 @@
   <script>
     var certobj = window.arguments[0];
     var CertPatrol = window.arguments[1];
-    var $ = document.getElementById.bind(document);
+    //var $ = document.getElementById.bind(document); // TB does not have bind()
+    function $() { return document.getElementById.apply(document, arguments); }
 
     function onLoad() {
       /* host information in brackets is pretty important.. isn't it? */

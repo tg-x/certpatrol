@@ -85,7 +85,7 @@ var CertPatrol = {
 		this.dbh.executeSimpleSQL(
 		  "CREATE TABLE version (version INT)");
 		this.dbh.executeSimpleSQL(
-		  "INSERT INTO version (version) VALUES (1)");
+		  "INSERT INTO version (version) VALUES (2)");
 		this.dbh.executeSimpleSQL(
 		  "CREATE TABLE certificates ("+
 		    "host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, "+
@@ -127,8 +127,7 @@ var CertPatrol = {
 		"notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
 		"md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16 "+
 	      "WHERE host=?1");
-	}
-	catch(err) {
+	} catch (err) {
 	    this.warn("Error initializing SQLite operations: "+ err);
 	}
     },
@@ -288,7 +287,7 @@ var CertPatrol = {
 
     observe: function(channel, topic, data) {
 ##	this.log('>> observe:', [channel, topic, data]);
-	var Ci = Components.interfaces;
+	var Cc = Components.classes, Ci = Components.interfaces;
 
 	channel.QueryInterface(Ci.nsIHttpChannel);
 	var host = channel.URI.hostPort;
@@ -311,14 +310,16 @@ var CertPatrol = {
 	if (!win.document)
 	    return;
 
-	var browser = gBrowser.getBrowserForDocument(win.top.document);
-	if (!browser)
-	    return; // no browser for e.g. favicons
+	var browser;
+	if (typeof gBrowser != 'undefined') // thunderbird has no gBrowser
+	    browser = gBrowser.getBrowserForDocument(win.top.document);
+##	//if (!browser) return; // no browser for e.g. favicons
 
 	var wpl = Ci.nsIWebProgressListener;
-	// proceed only if the page is considered secure,
-	if (!(browser.securityUI.state & wpl.STATE_IS_SECURE))
+	// proceed only if the page is considered secure or browser is null
+	if (browser && !(browser.securityUI.state & wpl.STATE_IS_SECURE))
 	    return;
+
 	var sp = si.QueryInterface(Ci.nsISSLStatusProvider);
 	if (!sp) return;
 
@@ -331,12 +332,14 @@ var CertPatrol = {
 	var cert = stati.serverCert;
 	if (!cert) return;
 
+	var obj = browser || win.top;
 	// store certs in the browser object so we can
 	// show only one notification per host for a browser tab
-	if (browser.__certs && browser.__certs[host] && cert.equals(browser.__certs[host]))
+	var key = [host, cert.md5Fingerprint, cert.sha1Fingerprint].join('|');
+	if (obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key]))
 	    return;
-	browser.__certs = browser.__certs || {};
-	browser.__certs[host] = cert;
+	obj.__certs = obj.__certs || {};
+	obj.__certs[key] = cert;
 
 	// The interesting part
 	var certobj = this.newCertObj();
@@ -601,7 +604,7 @@ var CertPatrol = {
 	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 	} catch (err) {}
 
-	var notifyBox = gBrowser.getNotificationBox(browser);
+	var notifyBox = this.getNotificationBox(browser);
 	if (forcePopup || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			      "chrome,dialog,modal", certobj, CertPatrol);
@@ -633,7 +636,7 @@ var CertPatrol = {
 	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.wild");
 	} catch (err) {}
 
-	var notifyBox = gBrowser.getNotificationBox(browser);
+	var notifyBox = this.getNotificationBox(browser);
 	if (forcePopup || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/change.xul",
 			      "_blank", "chrome,dialog,modal", certobj, CertPatrol);
@@ -662,7 +665,7 @@ var CertPatrol = {
 	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.change");
 	} catch (err) {}
 
-	var notifyBox = gBrowser.getNotificationBox(browser);
+	var notifyBox = this.getNotificationBox(browser);
 	if (forcePopup || certobj.threat > 1 || notifyBox == null) {
 	    window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
 			      "chrome,dialog,modal", certobj, CertPatrol);
@@ -740,6 +743,14 @@ var CertPatrol = {
 	Components.classes["@mozilla.org/nsCertificateDialogs;1"]
             .getService(Components.interfaces.nsICertificateDialogs)
 	    .viewCert(null, cert);
+    },
+
+    getNotificationBox: function (win) {
+	if (typeof gBrowser != 'undefined')
+	    return gBrowser.getNotificationBox(win);
+
+	if (window.getNotificationBox)
+	    return window.getNotificationBox(); // does not seem to work
     },
 };
 
