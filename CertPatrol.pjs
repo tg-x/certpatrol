@@ -371,6 +371,8 @@ var CertPatrol = {
 	    stmt.reset();
 	}
 
+	var wild = this.wildcardCertCheck(certobj.moz.cert);
+
 	// The certificate changed 
 	if (found && (!certobj.sql.cert || !certobj.moz.cert.equals(certobj.sql.cert))) {
 	    // If the cert info was stored in the previous version of CertPatrol
@@ -381,7 +383,6 @@ var CertPatrol = {
 		certobj.sql.md5Fingerprint == certobj.moz.md5Fingerprint)
 		    return this.saveCert(certobj);
 
-	    var wild = this.wildcardCertCheck(certobj.moz.cert);
 	    if (!wild) {
 		// try to make some sense out of the certificate changes
 		var natd = this.timedelta(certobj.sql.notAfter);
@@ -487,8 +488,14 @@ var CertPatrol = {
 	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
 	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
 
-	    certobj.event = this.strings.getString("newEvent");
+	    if (wild) {
+		certobj.warn.wildcard = true;
+		certobj.event = this.strings.getString("wildEvent");
+		this.outwild(browser, certobj);
+		return;
+	    }
 
+	    certobj.event = this.strings.getString("newEvent");
 	    this.outnew(browser, certobj);
 	}
     },
@@ -568,7 +575,9 @@ var CertPatrol = {
 
     outnew: function(browser, certobj) {
 	var forcePopup = false;
-	if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
+	try {
+	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
+	} catch (err) {}
 
 	var notifyBox = gBrowser.getNotificationBox(browser);
 	if (forcePopup || notifyBox == null) {
@@ -598,7 +607,9 @@ var CertPatrol = {
 
     outwild: function(browser, certobj) {
 	var forcePopup = false;
-	if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.wild");
+	try {
+	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.wild");
+	} catch (err) {}
 
 	var notifyBox = gBrowser.getNotificationBox(browser);
 	if (forcePopup || notifyBox == null) {
@@ -625,7 +636,9 @@ var CertPatrol = {
 
     outchange: function(browser, certobj) {
 	var forcePopup = false;
-	if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.change");
+	try {
+	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.change");
+	} catch (err) {}
 
 	var notifyBox = gBrowser.getNotificationBox(browser);
 	if (forcePopup || certobj.threat > 1 || notifyBox == null) {
