@@ -83,68 +83,68 @@
           <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
         <row>
-          <label id="cmcnl" label="&commonName;" />
+          <label id="cmcnl" value="&commonName;" />
           <textbox class="plain" readonly="true" id="cmcnv" />
         </row>
         <row>
-          <label id="cmol" label="&organization;" />
+          <label id="cmol" value="&organization;" />
           <textbox class="plain" readonly="true" id="cmov" />
         </row>
         <row>
-          <label id="cmoul" label="&organizationalUnit;" />
+          <label id="cmoul" value="&organizationalUnit;" />
           <textbox class="plain" readonly="true" id="cmouv" />
         </row>
         <row>
-          <label id="cmsnl" label="&serialNumber;" />
+          <label id="cmsnl" value="&serialNumber;" />
           <textbox class="plain" readonly="true" id="cmsnv" />
         </row>
         <row>
-          <label id="cmeml" label="&emailAddress;" />
+          <label id="cmeml" value="&emailAddress;" />
           <textbox class="plain" readonly="true" id="cmemv" />
         </row>
         <groupbox>
           <caption id="cmissby" label="&issuedBy;" />
         </groupbox>
         <row>
-          <label id="cmicnl" label="&commonName;" />
+          <label id="cmicnl" value="&commonName;" />
           <textbox class="plain" readonly="true" id="cmicnv" />
         </row>
         <row>
-          <label id="cmiol" label="&organization;" />
+          <label id="cmiol" value="&organization;" />
           <textbox class="plain" readonly="true" id="cmiov" />
         </row>
         <row>
-          <label id="cmioul" label="&organizationalUnit;" />
+          <label id="cmioul" value="&organizationalUnit;" />
           <textbox class="plain" readonly="true" id="cmiouv" />
         </row>
         <row>
-          <label id="cmimd5l" label="&md5Fingerprint;" />
+          <label id="cmimd5l" value="&md5Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="cmimd5v" />
         </row>
         <row>
-          <label id="cmisha1l" label="&sha1Fingerprint;" />
+          <label id="cmisha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="cmisha1v" />
         </row>
         <groupbox>
           <caption id="cmvalid" label="&validity;" />
         </groupbox>
         <row>
-          <label id="cmnbl" label="&notBefore;" />
+          <label id="cmnbl" value="&notBefore;" />
           <textbox class="plain" readonly="true" id="cmnbv" />
         </row>
         <row>
-          <label id="cmnal" label="&notAfter;" />
+          <label id="cmnal" value="&notAfter;" />
           <textbox class="plain" readonly="true" id="cmnav" />
         </row>
         <groupbox>
           <caption id="cmfinger" label="&fingerprints;" />
         </groupbox>
         <row>
-          <label id="cmmd5l" label="&md5Fingerprint;" />
+          <label id="cmmd5l" value="&md5Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="cmmd5v" />
         </row>
         <row>
-          <label id="cmsha1l" label="&sha1Fingerprint;" />
+          <label id="cmsha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="cmsha1v" />
         </row>
         <groupbox>

@@ -3,7 +3,7 @@
 
 <!ENTITY issuedTo		"Rilasciato a:">
 <!ENTITY issuedBy		"Rilasciato da:">
-<!ENTITY validity		"Validita`:">
+<!ENTITY validity		"Validita:">
 <!ENTITY fingerprints		"Impronte:">
 <!ENTITY commonName		"Nome comune (CN):">
 <!ENTITY organization		"Organizzazione (O):">
