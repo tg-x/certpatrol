@@ -1,4 +1,3 @@
-<!-- TODO: fix accents -->
 <!ENTITY oldCert		"Vecchio certificato:">
 <!ENTITY newCert		"Nuovo certificato:">
 
@@ -22,12 +21,12 @@
 <!ENTITY viewDetails		"Vedi Dettagli">
 <!ENTITY acceptChange		"Accetta">
 <!ENTITY rejectChange		"Ignora">
-<!ENTITY issuerOnly		"Controlla solo l'autorità di certificazione">
+<!ENTITY issuerOnly		"Controlla solo l'autoritÃ  di certificazione">
 
-<!ENTITY warn_wildcard		"Info: Questo certificato è stato applicato anche ad altri siti di questo dominio.">
-<!ENTITY warn_commonName	"Attenzione: È cambiato il nome del sito. Controlla se va bene così">
-<!ENTITY warn_issuerCommonName	"Attenzione: È cambiata l'autorità di certificazione.">
-<!ENTITY warn_notBefore		"Errore: Questo certificato non è ancora valido!">
-<!ENTITY warn_notAfter_expired	"Info: Il vecchio certificato è scaduto. Era necessario cambiarlo.">
+<!ENTITY warn_wildcard		"Info: Questo certificato Ã¨ stato applicato anche ad altri siti di questo dominio.">
+<!ENTITY warn_commonName	"Attenzione: Ãˆ cambiato il nome del sito. Controlla se va bene cosÃ¬">
+<!ENTITY warn_issuerCommonName	"Attenzione: Ãˆ cambiata l'autoritÃ  di certificazione.">
+<!ENTITY warn_notBefore		"Errore: Questo certificato non Ã¨ ancora valido!">
+<!ENTITY warn_notAfter_expired	"Info: Il vecchio certificato Ã¨ scaduto. Era necessario cambiarlo.">
 <!ENTITY warn_notAfter_notdue	"Attenzione: Il vecchio certificato non era ancora scaduto, ma forse c'erano altre ragioni per cambiarlo.">
-<!ENTITY warn_notAfter_due	"Info: Il vecchio certificato scade prossimamente. È normale cambiarlo.">
+<!ENTITY warn_notAfter_due	"Info: Il vecchio certificato scade prossimamente. Ãˆ normale cambiarlo.">
