@@ -20,6 +20,13 @@
     function $() { return document.getElementById.apply(document, arguments); }
 
     function onLoad() {
+      $("ssl-change").getButton("accept").disabled = true;
+      $("ssl-change").getButton("cancel").disabled = true;
+      setTimeout(function() {
+        $("ssl-change").getButton("accept").disabled = false;
+        $("ssl-change").getButton("cancel").disabled = false;
+      }, 2000);
+
       /* host information in brackets is pretty important.. isn't it? */
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
@@ -29,11 +36,11 @@
       $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
-      var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber',
-                  'emailAddress', 'notBefore', 'notAfter',
-                  'issuerCommonName', 'issuerOrganization', 'issuerOrganizationUnit',
-                  'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
-                  'md5Fingerprint', 'sha1Fingerprint'];
+      var keys = ["commonName", "organization", "organizationalUnit", "serialNumber",
+                  "emailAddress", "notBefore", "notAfter",
+                  "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
+                  "issuerMd5Fingerprint", "issuerSha1Fingerprint",
+                  "md5Fingerprint", "sha1Fingerprint"];
       for (var i in keys) {
         var key = keys[i];
         if (certobj.moz[key] == certobj.sql[key]) {
@@ -42,18 +49,22 @@
         } else {
           $(key).value = certobj.sql[key];
           $(key+2).value = certobj.moz[key];
-          $(key).className += ' old';
-          $(key+2).className += ' new';
+          $(key).className += " old";
+          $(key+2).className += " new";
           $(key+2).hidden = false;
         }
       }
 
       for (var k in certobj.warn)
         if (certobj.warn[k])
-          $('warn_'+k).hidden = false;
+          $("warn_"+k).hidden = false;
 
       CertPatrol.addCertChain($("cmchaino"), certobj.sql.cert);
       CertPatrol.addCertChain($("cmchainn"), certobj.moz.cert);
+      if ($("cmchaino").value != $("cmchainn").value) {
+          $("cmchaino").className += " old";
+          $("cmchainn").className += " new";
+      }
 
       $("cmissueronly").checked = certobj.flags &amp; CertPatrol.CHECK_ISSUER_ONLY;
     }

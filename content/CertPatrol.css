@@ -18,7 +18,7 @@
 .old {
   color: darkred;
 }
-.old:before {
+.old.plain:before {
   width: 12px;
   float: left;
   text-align: center;
@@ -27,7 +27,7 @@
 .new {
   color: darkgreen;
 }
-.new:before {
+.new.plain:before {
   width: 12px;
   float: left;
   text-align: center;

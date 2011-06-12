@@ -622,29 +622,30 @@ var CertPatrol = {
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
-	if (forcePopup || notifyBox == null) {
-	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
-			      "chrome,dialog,modal", certobj, CertPatrol);
-	    return;
-	}
+	var popup = forcePopup || !notifyBox;
 ##      // https://developer.mozilla.org/en/XUL/Method/appendNotification
 ##      // http://gist.github.com/256554
 ##      // using certobj.host as the id for the notification
-	var n = notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.event +" "+
-	  certobj.moz.commonName +". "+
-	  this.strings.getString("issuedBy") +" "+
-	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
-	  certobj.host, null,
-	  notifyBox.PRIORITY_INFO_HIGH, [ {
-	      label: this.strings.getString("viewDetails"),
-	      accessKey: this.strings.getString("viewDetails_key"),
-	      callback: function(msg, btn) {
-		  window.openDialog("chrome://certpatrol/content/new.xul",
-				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
-		  notifyBox.removeNotification(n);
-	      }
-	}, ]);
+	if (notifyBox && !popup) {
+	    notifyBox.appendNotification(
+		"(CertPatrol) "+ certobj.event +" "+
+		    certobj.moz.commonName +". "+
+		    this.strings.getString("issuedBy") +" "+
+		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+		certobj.host, null, notifyBox.PRIORITY_INFO_HIGH,
+		[{
+		    label: this.strings.getString("viewDetails"),
+		    accessKey: this.strings.getString("viewDetails_key"),
+		    callback: function(msg, btn) {
+			window.openDialog("chrome://certpatrol/content/new.xul",
+					  "_blank", "chrome,dialog,modal",
+					  certobj, CertPatrol);
+		    }
+		}]);
+	}
+	if (popup)
+	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+			      "chrome,dialog,modal", certobj, CertPatrol);
     },
 
     outwild: function(browser, certobj) {
@@ -654,26 +655,27 @@ var CertPatrol = {
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
-	if (forcePopup || notifyBox == null) {
+	var popup = forcePopup || !notifyBox;
+	if (notifyBox && !popup) {
+	    notifyBox.appendNotification(
+		"(CertPatrol) "+ certobj.event +" "+
+		    certobj.moz.commonName +". "+
+		    this.strings.getString("issuedBy") +" "+
+		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+		certobj.host, null, notifyBox.PRIORITY_INFO_HIGH,
+		[{
+		    label: this.strings.getString("viewDetails"),
+		    accessKey: this.strings.getString("viewDetails_key"),
+		    callback: function(msg, btn) {
+			window.openDialog("chrome://certpatrol/content/new.xul",
+					  "_blank", "chrome,dialog,modal",
+					  certobj, CertPatrol);
+		    }
+		}]);
+	}
+	if (popup)
 	    window.openDialog("chrome://certpatrol/content/change.xul",
 			      "_blank", "chrome,dialog,modal", certobj, CertPatrol);
-	    return;
-	}
-	var n = notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.event +" "+
-	  certobj.moz.commonName +". "+
-	  this.strings.getString("issuedBy") +" "+
-	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
-	  certobj.host, null,
-	  notifyBox.PRIORITY_INFO_HIGH, [ {
-	      label: this.strings.getString("viewDetails"),
-	      accessKey: this.strings.getString("viewDetails_key"),
-	      callback: function(msg, btn) {
-		  window.openDialog("chrome://certpatrol/content/new.xul",
-				    "_blank", "chrome,dialog,modal", certobj, CertPatrol);
-		  notifyBox.removeNotification(n);
-	      }
-	}, ]);
     },
 
     outchange: function(browser, certobj) {
@@ -683,52 +685,40 @@ var CertPatrol = {
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
-	if (forcePopup || certobj.threat > 1 || notifyBox == null) {
+	var popup = forcePopup || certobj.threat > 1 || !notifyBox;
+	if (notifyBox && !popup) {
+	    var priority = [
+		notifyBox.PRIORITY_INFO_LOW,
+		notifyBox.PRIORITY_INFO_HIGH,
+		notifyBox.PRIORITY_WARNING_HIGH,
+		notifyBox.PRIORITY_CRITICAL_HIGH
+	    ];
+	    notifyBox.appendNotification(
+		"(CertPatrol) "+ certobj.event +" "+
+		    certobj.moz.commonName +". "+
+		    this.strings.getString("issuedBy") +" "+
+		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
+		    +" "+ certobj.info,
+		certobj.host, null, priority[certobj.threat],
+		[{
+		    label: this.strings.getString("acceptChange"),
+		    accessKey: this.strings.getString("acceptChange_key"),
+		    callback: function(msg, btn) {
+			CertPatrol.saveCert(certobj);
+		    }
+		}, {
+		    label: this.strings.getString("viewDetails"),
+		    accessKey: this.strings.getString("viewDetails_key"),
+		    callback: function(msg, btn) {
+			window.openDialog("chrome://certpatrol/content/change.xul",
+					  "_blank", "chrome,dialog,modal",
+					  certobj, CertPatrol);
+		    }
+		}]);
+	}
+	if (popup)
 	    window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
 			      "chrome,dialog,modal", certobj, CertPatrol);
-	    return;
-	}
-
-	var priority = [
-	    notifyBox.PRIORITY_INFO_LOW,
-	    notifyBox.PRIORITY_INFO_HIGH,
-	    notifyBox.PRIORITY_WARNING_HIGH,
-	    notifyBox.PRIORITY_CRITICAL_HIGH
-	];
-
-	var n = notifyBox.appendNotification(
-	  "(CertPatrol) "+ certobj.event +" "+
-	  certobj.moz.commonName +". "+
-	  this.strings.getString("issuedBy") +" "+
-	  (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
-	  +" "+ certobj.info,
-	  certobj.host, null,
-	  priority[certobj.threat], [
-	    {
-	      label: this.strings.getString("rejectChange"),
-	      accessKey: this.strings.getString("rejectChange_key"),
-	      callback: function(msg, btn) {
-		  notifyBox.removeNotification(n);
-	      },
-	    },
-	    {
-	      label: this.strings.getString("acceptChange"),
-	      accessKey: this.strings.getString("acceptChange_key"),
-	      callback: function(msg, btn) {
-		  CertPatrol.saveCert(certobj);
-		  notifyBox.removeNotification(n);
-	      },
-	    },
-	    {
-	      label: this.strings.getString("viewDetails"),
-	      accessKey: this.strings.getString("viewDetails_key"),
-	      callback: function(msg, btn) {
-		  window.openDialog("chrome://certpatrol/content/change.xul",
-				    "_blank", "chrome,dialog,modal", certobj, CertPatrol, n);
-		  notifyBox.removeNotification(n);
-	      },
-	    },
-	  ]);
     },
 
     warn: function(result) {
@@ -745,6 +735,8 @@ var CertPatrol = {
     // functions for the new & change dialogs
 
     addCertChain: function(node, cert) {
+	if (!cert)
+	    return;
 	var chain = cert.getChain();
 	var text = "";
 	for (var i = chain.length - 1; i >= 0; i--) {
