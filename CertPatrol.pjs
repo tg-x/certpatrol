@@ -92,7 +92,8 @@ var CertPatrol = {
 		    "serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, "+
 		    "issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, "+
 		    "md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
-		    "issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, cert BLOB)");
+		    "issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
+		    "cert BLOB, flags INT, stored INT)");
 	    } else {
 		var stmt = this.dbh.createStatement("SELECT version FROM version WHERE version < 2");
 		try {
