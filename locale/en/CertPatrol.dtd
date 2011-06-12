@@ -21,7 +21,7 @@
 <!ENTITY viewDetails		"View Details">
 <!ENTITY acceptChange		"Accept">
 <!ENTITY rejectChange		"Reject">
-<!ENTITY issuerOnly		"Check issuer &amp; CN only">
+<!ENTITY issuerOnly		"Check certification authority only">
 
 <!ENTITY warn_wildcard		"Info: This certificate has a wildcard for several hostnames.">
 <!ENTITY warn_commonName	"Alert: Hostname has changed. Take a look if that's okay.">

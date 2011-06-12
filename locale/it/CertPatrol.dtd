@@ -20,9 +20,9 @@
 <!ENTITY viewHierarchy		"Vedi gerarchia di certificazione">
 
 <!ENTITY viewDetails		"Vedi Dettagli">
-<!ENTITY acceptChange		"TODO: Accept">
-<!ENTITY rejectChange		"TODO: Reject">
-<!ENTITY issuerOnly		"TODO: Check issuer &amp; CN only">
+<!ENTITY acceptChange		"Accetta">
+<!ENTITY rejectChange		"Ignora">
+<!ENTITY issuerOnly		"Controlla solo l'autorita` di certificazione">
 
 <!ENTITY warn_wildcard		"Info: Questo certificato e` stato applicato anche ad altri siti di questo dominio.">
 <!ENTITY warn_commonName	"Attenzione: E` cambiato il nome del sito. Controlla se va bene cosi`">

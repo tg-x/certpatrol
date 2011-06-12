@@ -19,9 +19,9 @@
 <!ENTITY viewHierarchy		"Zertifikatshierarchie betrachten">
 
 <!ENTITY viewDetails		"Details anschauen">
-<!ENTITY acceptChange		"TODO: Accept">
-<!ENTITY rejectChange		"TODO: Reject">
-<!ENTITY issuerOnly		"TODO: Check issuer &amp; CN only">
+<!ENTITY acceptChange		"Annehmen">
+<!ENTITY rejectChange		"Verwerfen">
+<!ENTITY issuerOnly		"Nur Zertifizierungsstelle beachten">
 
 <!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch für andere Sites dieser Domain eingesetzt.">
 <!ENTITY warn_commonName	"Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">
