@@ -30,3 +30,5 @@
 <!ENTITY warn_notAfter_expired	"Info: Old certificate had expired. It needed to be replaced.">
 <!ENTITY warn_notAfter_notdue	"Warning: This certificate wasn't due yet. Maybe there are other reasons why it needed to be exchanged, though.">
 <!ENTITY warn_notAfter_due	"Info: This certificate will expire soon. It is normal to replace it now.">
+
+<!ENTITY sanitizer.itemLabel	"Certificates stored by CertPatrol">

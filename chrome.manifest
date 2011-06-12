@@ -10,6 +10,7 @@ locale	certpatrol	it-IT	locale/it/
 
 # Firefox, Iceweasel, Flock
 overlay	chrome://browser/content/browser.xul chrome://certpatrol/content/overlay.xul
+overlay	chrome://browser/content/sanitize.xul chrome://certpatrol/content/sanitize.xul
 
 # Thunderbird, Mozilla Mail
 overlay chrome://messenger/content/messenger.xul chrome://certpatrol/content/overlay.xul

@@ -30,3 +30,5 @@
 <!ENTITY warn_notAfter_expired	"Info: Altes Zertifikat ist abgelaufen. Es muss ersetzt werden.">
 <!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig, aber vielleicht gab es andere Gründe es zu ersetzen.">
 <!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
+
+<!ENTITY sanitizer.itemLabel	"TODO: Certificates stored by CertPatrol">

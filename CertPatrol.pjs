@@ -143,8 +143,19 @@ var CertPatrol = {
 		"notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
 		"md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
 	      "WHERE host=?1");
+	    this.dbdel = this.dbh.createStatement(
+	      "DELETE FROM certificates WHERE stored >= ?18");
+	    this.dbdelall = this.dbh.createStatement(
+	      "DELETE FROM certificates");
 	} catch (err) {
 	    this.warn("Error initializing SQLite operations: "+ err);
+	}
+    },
+
+    dbclose: function() {
+	if (this.dbh) {
+	    this.dbh.close();
+	    this.dbh = null;
 	}
     },
 
@@ -721,6 +732,14 @@ var CertPatrol = {
 			      "chrome,dialog,modal", certobj, CertPatrol);
     },
 
+    getNotificationBox: function (win) {
+	if (typeof gBrowser != "undefined")
+	    return gBrowser.getNotificationBox(win);
+
+	if (window.getNotificationBox)
+	    return window.getNotificationBox(); // does not seem to work
+    },
+
     warn: function(result) {
 	window.openDialog("chrome://certpatrol/content/warning.xul",
 	  /* "ssl-warning" */ "_blank", "chrome,dialog,modal", result);
@@ -754,13 +773,22 @@ var CertPatrol = {
 	    .viewCert(null, cert);
     },
 
-    getNotificationBox: function (win) {
-	if (typeof gBrowser != "undefined")
-	    return gBrowser.getNotificationBox(win);
-
-	if (window.getNotificationBox)
-	    return window.getNotificationBox(); // does not seem to work
-    },
+    // sanitizer - clear recent history
+    delCerts: function(range) {
+	var stmt;
+	try {
+	    if (range) {
+		stmt = this.dbdel;
+		stmt.bindInt64Parameter(17, range[0] / 1000000);
+	    } else {
+		stmt = this.dbdelall;
+	    }
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to remove certificates: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+    }
 };
 
-window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);

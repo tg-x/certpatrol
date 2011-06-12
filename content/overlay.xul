@@ -5,6 +5,9 @@
 <overlay id="CertPatrol-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="CertPatrol.js"/>
+  <script>
+    window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
+  </script>
   <stringbundleset id="stringbundleset">
     <stringbundle id="CertPatrol-strings" src="chrome://certpatrol/locale/CertPatrol.properties"/>
   </stringbundleset>
