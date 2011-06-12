@@ -7,12 +7,13 @@
     <em:id>CertPatrol@PSYC.EU</em:id>
     <em:type>2</em:type>    <!-- Extension -->
     <em:name>Certificate Patrol</em:name>
-    <em:version>1.9beta2</em:version>
+    <em:version>2.0beta1</em:version>
     <em:unpack>false</em:unpack>
     <em:creator>Aiko Barz, tg, 20after4 and symlynX</em:creator>
     <em:developer>Aiko Barz</em:developer>
     <em:developer>Mukunda Modell</em:developer>
     <em:developer>Carlo v. Loesch</em:developer>
+    <em:developer>Gabor X Toth</em:developer>
     <!-- em:translator>French? Spanish? anyone?</em:translator -->
     <!-- em:contributor>...</em:contributor -->
     <em:homepageURL>http://patrol.psyced.org</em:homepageURL>

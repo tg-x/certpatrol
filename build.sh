@@ -62,7 +62,7 @@ rm -rf $TMP_DIR
 
 #$BEFORE_BUILD
 
-mkdir --parents --verbose $TMP_DIR/chrome
+mkdir --parents --verbose $TMP_DIR
 
 # generate the JAR file, excluding SVN and temporary files
 JAR_FILE=$TMP_DIR/chrome/$APP_NAME.jar
@@ -73,7 +73,7 @@ done
 
 #zip -0 -r $JAR_FILE `cat files`
 # The following statement should be used instead if you don't wish to use the JAR file
-cp --verbose --parents `cat files` $TMP_DIR/chrome
+cp --verbose --parents `cat files` $TMP_DIR
 
 # prepare components and defaults
 echo "Copying various files to $TMP_DIR folder..."
@@ -101,8 +101,8 @@ if [ -f "chrome.manifest" ]; then
   #s/^(skin|locale)(\s+\S*\s+\S*\s+)(.*\/)$/\1\2jar:chrome\/$APP_NAME\.jar!\/\3/
   #
   # Then try this! (Same, but with characters escaped for bash :)
-  sed -i -r s/^\(content\\s+\\S*\\s+\)\(\\S*\\/\)$/\\1jar:chrome\\/$APP_NAME\\.jar!\\/\\2/ chrome.manifest
-  sed -i -r s/^\(skin\|locale\)\(\\s+\\S*\\s+\\S*\\s+\)\(.*\\/\)$/\\1\\2jar:chrome\\/$APP_NAME\\.jar!\\/\\3/ chrome.manifest
+  #sed -i -r s/^\(content\\s+\\S*\\s+\)\(\\S*\\/\)$/\\1jar:chrome\\/$APP_NAME\\.jar!\\/\\2/ chrome.manifest
+  #sed -i -r s/^\(skin\|locale\)\(\\s+\\S*\\s+\\S*\\s+\)\(.*\\/\)$/\\1\\2jar:chrome\\/$APP_NAME\\.jar!\\/\\3/ chrome.manifest
 
   # (it simply adds jar:chrome/whatever.jar!/ at appropriate positions of chrome.manifest)
 fi
