@@ -54,6 +54,8 @@
 
       CertPatrol.addCertChain($("cmchaino"), certobj.sql.cert);
       CertPatrol.addCertChain($("cmchainn"), certobj.moz.cert);
+
+      $("cmissueronly").checked = certobj.flags &amp; CertPatrol.CHECK_ISSUER_ONLY;
     }
   </script>
   <dialogheader id="cmdiag" />
@@ -213,4 +215,6 @@
     </grid>
 
   </vbox>
+
+  <checkbox id="cmissueronly" oncommand="CertPatrol.setFlag(certobj, CertPatrol.CHECK_ISSUER_ONLY, this.checked)" label="&issuerOnly;" />
 </dialog>

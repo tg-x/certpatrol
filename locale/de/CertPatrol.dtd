@@ -3,15 +3,15 @@
 
 <!ENTITY issuedTo		"Ausgegeben an:">
 <!ENTITY issuedBy		"Ausgestellt durch:">
-<!ENTITY validity		"G\u00FCltigkeit:">
-<!ENTITY fingerprints		"Pr\u00FCfsummen:">
+<!ENTITY validity		"Gültigkeit:">
+<!ENTITY fingerprints		"Prüfsummen:">
 <!ENTITY commonName		"Name (CN):">
 <!ENTITY organization		"Organisation (O):">
 <!ENTITY organizationalUnit	"Abteilung (OU):">
 <!ENTITY serialNumber		"Seriennummer:">
 <!ENTITY emailAddress		"Kontakt:">
 <!ENTITY notBefore		"Ausgestellt am:">
-<!ENTITY notAfter		"G\u00FCltig bis:">
+<!ENTITY notAfter		"Gültig bis:">
 <!ENTITY md5Fingerprint		"MD5 Fingerprint:">
 <!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
 
@@ -19,13 +19,14 @@
 <!ENTITY viewHierarchy		"Zertifikatshierarchie betrachten">
 
 <!ENTITY viewDetails		"Details anschauen">
-<!ENTITY acceptChange		"TODO">
-<!ENTITY rejectChange		"TODO">
+<!ENTITY acceptChange		"TODO: Accept">
+<!ENTITY rejectChange		"TODO: Reject">
+<!ENTITY issuerOnly		"TODO: Check issuer &amp; CN only">
 
-<!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch f\u00FCr andere Sites dieser Domain eingesetzt.">
-<!ENTITY warn_commonName	"Warnung: Name der Site hat sich ge\u00E4ndert. Schau mal ob das ok ist so.">
+<!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch für andere Sites dieser Domain eingesetzt.">
+<!ENTITY warn_commonName	"Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">
 <!ENTITY warn_issuerCommonName	"Vorsicht: Es wurde die Zertifizierungsstelle gewechselt.">
-<!ENTITY warn_notBefore		"Achtung! Dieses Zertifikat ist noch nicht g\u00FCltig.">
+<!ENTITY warn_notBefore		"Achtung! Dieses Zertifikat ist noch nicht gültig.">
 <!ENTITY warn_notAfter_expired	"Info: Altes Zertifikat ist abgelaufen. Es muss ersetzt werden.">
-<!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit g\u00FCltig, aber vielleicht gab es andere Gr\u00FCnde es zu ersetzen.">
-<!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demn\u00E4chst ab. Es ist in Ordnung es zu erneuern.">
+<!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig, aber vielleicht gab es andere Gründe es zu ersetzen.">
+<!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
