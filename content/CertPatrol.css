@@ -16,22 +16,20 @@
 }
 
 .old {
-  color: darkred;
+  color: rgb(205,0,0));
 }
 .old.plain:before {
   width: 12px;
   float: left;
   text-align: center;
   content: "\002013";
-  color: red;
 }
 .new {
-  color: darkgreen;
+  color: rgb(0,205,0));
 }
 .new.plain:before {
   width: 12px;
   float: left;
   text-align: center;
   content: "+";
-  color: green;
 }
