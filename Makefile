@@ -3,11 +3,11 @@ N=certpatrol
 
 .SUFFIXES: .pjs .js
 
-$N.xpi: content/* install.rdf
+$N.xpi: chrome.manifest install.rdf install.js content/* locale/*/* defaults/*/*
 	./build.sh
-	cp -p $N.xpi /dev/shm
 
 it: $N.xpi
+	cp -p $N.xpi /dev/shm
 
 content/CertPatrol.js: CertPatrol.pjs
 	@rm -f $@
