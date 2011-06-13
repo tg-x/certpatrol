@@ -33,8 +33,6 @@ TODO / WISHLIST
 
 === FEEDBACK ===
 
-- Some AMO editors suggested we shouldn't use JARs anymore (build.sh).
-
 TO WHITELIST OR NOT TO WHITELIST?
     Richard Boyce: An essential add-on, but it makes using SSL for Google Search very awkward, because this add-on issues a warning every time an "early" change of Google certificate takes place. One solution would be an option to suppress a warning about an early change if the CA has not changed.
     Daniel Kauffman: A good add-on... BUT... sites providing multiple certificates for the same domain give false positives. Many of these false positives could be avoided if old (but unexpired) certificates were remembered after new certificates were accepted -- there is no harm switching between certificates that have already been accepted.
@@ -200,3 +198,4 @@ recently inserted/updated or all certs from the DB.
 	google/gmail?
 	live.com/microsoft?
       We have a 'check issuer only' checkbox instead in the change dialog.
+ - Some AMO editors suggested we shouldn't use JARs anymore (build.sh).
