@@ -172,6 +172,8 @@ Also trying out new threat policy to handle confused server farms.
  + Added a checkbox to the change dialog for "checking issuer only" in future,
    this helps with annoying domains that run on messed up certificates. As
    long as they don't mess with the certification hierarchy, it's okay.
+ + Added a checkbox to the preferences dialog for allowing CertPatrol to save
+   certificates in Private Browsing Mode.
  + Added CertPatrol to the 'Clear Recent History' dialog which deletes
    recently inserted/updated or all certs from the DB.
  + The dialogs have been reorganized, the change dialog has a diff-like layout
