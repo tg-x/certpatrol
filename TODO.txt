@@ -6,42 +6,26 @@ http://thedropbox.acmetoy.com/documents/BHUSA09-Sotirov-AttackExtSSL-PAPER.pdf
 TODO / WISHLIST
 ====/----------
 
- + use new event interface not to miss out on some https transactions
- ? reorg groupbox
- - looks like when moving from one host to another the certificate may
-   be about the new host while doc.location.host still contains the old
-   host, resulting in useless warnings. what can we do here..?
- + green/yellow/red threat level indicator
-    chojrak11@gmai suggests it should be the tab title bg color
- + allow user to reject a new or changed certificate
- ? examine certificate chain somehow?
- + jmd says: a button to copy all the information about the cert so that you
-	     can easily paste it in a mail to report that
-   (or just make the entire cert display copy+pastable?)
- ? jmd says: it would be the whole path of the certificate up to a root ca, so
-	     that expert could easily see from the content if a fake MITM
-	     certificate was involved or not
  ? blacklist of untrustworthy CAs? (can't you just remove them?)
    jmd says: the possibility to configure a watch string wenever you access
 	     a site that uses a certification path where one of the CA
 	     matches this string, you would get a specific warning so you
 	     could avoid specifically that CA even if it tried to hide itself
 	     behind a hierarchy of subca with innocent names
- + preferences panel
-    ? option to wildcard-exempt annoying domains?
-	accountonline.com
-	bookryanair.com
-	google/gmail?
-	live.com/microsoft?
  ? give feedback about quality of cipher being used
  + support for other protocols than https:
     + currently certpatrol in messengers like thunderbird only
       serves the purpose of handling https: links in e-mails
       and such. would be cooler if SMTP and IMAP certificates
       were actually checked.
+      Haven't found an API yet that allows to do that.
  + detect forms in the document that carry an https: action and
    warn if the host mentioned in that action isn't in our database
    yet (= we haven't shown the certificate to our user yet)
+     We could do this with an additional HTTP observer but this won't solve the
+     issue entirely as the cert could have changed since our last visit.
+     Or we could show an alert with a cancel button when the POST destination
+     is not the same as the current host?
  ? we could show expiry in locale text style
    but is it actually better than iso?
    sometimes javascript can't parse mozilla's certificate date formats.. #fail
@@ -180,4 +164,39 @@ Also trying out new threat policy to handle confused server farms.
 == VERSION 1.9beta ==
 
 Show and store certification hierarchy of certificates.
+Use HTTP observers now instead of onLoad which allows for checking every
+included element on the page.
+Added a checkbox for checking issuer only to the change dialog.
+Added CertPatrol to the 'Clear Recent History' dialog which deletes
+recently inserted/updated or all certs from the DB.
 
+ + use new event interface not to miss out on some https transactions
+ ? reorg groupbox
+   The dialogs have been reorganized, the change dialog has a diff-like layout.
+ - looks like when moving from one host to another the certificate may
+   be about the new host while doc.location.host still contains the old
+   host, resulting in useless warnings. what can we do here..?
+     This does not apply anymore with HTTP observers.
+ + green/yellow/red threat level indicator
+    chojrak11@gmai suggests it should be the tab title bg color
+ + allow user to reject a new or changed certificate
+     There's now an accept & reject button for changed certs.
+ ? examine certificate chain somehow?
+ ? jmd says: it would be the whole path of the certificate up to a root ca, so
+	     that expert could easily see from the content if a fake MITM
+	     certificate was involved or not
+ + jmd says: a button to copy all the information about the cert so that you
+	     can easily paste it in a mail to report that
+   (or just make the entire cert display copy+pastable?)
+     This can be done now: click the View old/new cert button, on the Details
+     tab there's an Export button.
+     Or install the Cert Viewer Plus extension which adds a 'View PEM' button
+     to the view cert dialog that shows a window with the cert info in both
+     human & machine readable format.
+ + preferences panel
+    ? option to wildcard-exempt annoying domains?
+	accountonline.com
+	bookryanair.com
+	google/gmail?
+	live.com/microsoft?
+      We have a 'check issuer only' checkbox instead in the change dialog.
