@@ -11,7 +11,8 @@
       newEvent: "&newEvent;", wildEvent: "&wildEvent;", changeEvent: "&changeEvent;",
       threat0: "&threat0;", threat1: "&threat1;", threat2: "&threat2;", threat3: "&threat3;",
       accept: "&accept;", accept_key: "&accept_key;", reject: "&reject;", reject_key: "&reject_key;",
-      viewDetails: "&viewDetails;", viewDetails_key: "&viewDetails_key;", issuedBy: "&issuedBy;",
+      viewDetails: "&viewDetails;", viewDetails_key: "&viewDetails_key;",
+      daysPast: "&daysPast;", daysFuture: "&daysFuture;", issuedBy: "&issuedBy;",
     };
   </script>
   <stringbundleset id="stringbundleset">

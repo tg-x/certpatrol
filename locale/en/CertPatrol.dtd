@@ -7,6 +7,9 @@
 <!ENTITY threat2		"Suspicious change?">
 <!ENTITY threat3		"Reason to worry!">
 
+<!ENTITY daysPast		"[_days] days ago">
+<!ENTITY daysFuture		"[_days] days ahead">
+
 <!ENTITY issuedTo		"Issued To:">
 <!ENTITY issuedBy		"Apparently Issued By:">
 <!ENTITY validity		"Validity:">

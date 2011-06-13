@@ -7,6 +7,9 @@
 <!ENTITY threat2		"Cambiamento strano?">
 <!ENTITY threat3		"Occhio! Qualcosa non va!">
 
+<!ENTITY daysPast		"[_days] giorni fa">
+<!ENTITY daysFuture		"fra [_days] giorni">
+
 <!ENTITY issuedTo		"Rilasciato a:">
 <!ENTITY issuedBy		"Apparentemente rilasciato da:">
 <!ENTITY validity		"Validita:">

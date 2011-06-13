@@ -52,7 +52,7 @@ var CertPatrol = {
     // Main
     onLoad: function() {
 	this.initialized = true;
-	this.strings = document.getElementById("CertPatrol-strings");
+##	//this.strings = document.getElementById("CertPatrol-strings");
 	this.dbinit();
 	this.init();
     },
@@ -211,8 +211,7 @@ var CertPatrol = {
     },
     daysdelta: function(td) {
 	td = Math.round(td / 86400000);	// milliseconds per day
-	return " ("+ this.strings.getFormattedString(td < 0 ?
-	  "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
+	return " ("+ this.psycText(this.locale[td < 0 ? "daysPast" : "daysFuture"], {_days: td < 0 ? -td : td}) +")";
     },
 
     byteArrayToString: function(ba) {
@@ -814,5 +813,12 @@ var CertPatrol = {
             .getService(Components.interfaces.nsICertificateDialogs)
 	    .viewCert(null, cert);
     },
+
+    psycText: function(template, vars) {
+	return template.replace(/\[_\w+\]/g, function(match) {
+            var name = match.slice(1,-1);
+            return name in vars ? vars[name] : match;
+	});
+    }
 };
 

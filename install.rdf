@@ -17,11 +17,24 @@
     <!-- em:translator>French? Spanish? anyone?</em:translator -->
     <!-- em:contributor>...</em:contributor -->
     <em:homepageURL>http://patrol.psyced.org</em:homepageURL>
-    <em:description>Monitor certificates the browser adopts for encrypted https websites.</em:description>
     <em:optionsURL>chrome://certpatrol/content/prefs.xul</em:optionsURL>
     <!-- em:updateURL>http://www.foo.com/update.cgi?id=%ITEM_ID%&amp;version=%ITEM_VERSION%</em:updateURL -->
     <em:iconURL>chrome://certpatrol/content/icon.png</em:iconURL>
     <em:aboutURL>http://patrol.psyced.org</em:aboutURL>
+
+    <em:description>Monitor and compare certificates your application adopts for encrypted HTTPS web sites.</em:description>
+    <em:localized>
+      <Description>
+        <em:locale>de-DE</em:locale>
+        <em:description>Überwache und vergleiche Zertifikatsänderungen komfortabel.</em:description>
+      </Description>
+    </em:localized>
+    <em:localized>
+      <Description>
+        <em:locale>it-IT</em:locale>
+        <em:description>Osserva come il tuo web browser adotta ed aggiorna certificati di tutti i siti HTTPS.</em:description>
+      </Description>
+    </em:localized>
 
     <!-- check https://addons.mozilla.org/en-US/firefox/pages/appversions -->
     <em:targetApplication>

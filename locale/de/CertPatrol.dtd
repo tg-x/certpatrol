@@ -7,6 +7,9 @@
 <!ENTITY threat2		"Seltsames Geschehen?">
 <!ENTITY threat3		"Grund zur Sorge!">
 
+<!ENTITY daysPast		"vor [_days] Tagen">
+<!ENTITY daysFuture		"in [_days] Tagen">
+
 <!ENTITY issuedTo		"Ausgegeben an:">
 <!ENTITY issuedBy		"Scheinbar ausgestellt durch:">
 <!ENTITY validity		"Gültigkeit:">
