@@ -820,8 +820,7 @@ var CertPatrol = {
     },
 
     psycText: function(template, vars) {
-	return template.replace(/\[_\w+\]/g, function(match) {
-            var name = match.slice(1,-1);
+	return template.replace(/\[(\w+)\]/g, function(match, name) {
             return name in vars ? vars[name] : match;
 	});
     }
