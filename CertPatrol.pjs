@@ -376,7 +376,6 @@ var CertPatrol = {
 		save = this.prefs.getBoolPref("privatebrowsing.save");
 	} catch (err) {}
 
-	var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
 	// Get certificate
 	var stmt = this.dbselect;
 	try {
@@ -400,8 +399,10 @@ var CertPatrol = {
 		certobj.sql.issuerSha1Fingerprint = stmt.getUTF8String(14);
 		var blob = {};
 		stmt.getBlob(15, {}, blob);
-		if (blob.value.length)
+		if (blob.value.length) {
+		    var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
 		    certobj.sql.cert = certdb.constructX509FromBase64(window.btoa(this.byteArrayToString(blob.value)));
+		}
 		certobj.flags = stmt.getInt64(16);
 		certobj.sql.stored = stmt.getInt64(17) * 1000;
 	    }
