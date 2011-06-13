@@ -28,7 +28,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
         <em:minVersion>2.0a1</em:minVersion>
-        <em:maxVersion>7.0a1</em:maxVersion>
+        <em:maxVersion>7.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -36,7 +36,7 @@
       <Description>
         <em:id>{86c18b42-e466-45a9-ae7a-9b95ba6f5640}</em:id> <!-- Mozilla -->
         <em:minVersion>1.5</em:minVersion>
-        <em:maxVersion>1.8+</em:maxVersion>
+        <em:maxVersion>2.0+</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -44,7 +44,7 @@
       <Description>
 	<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id> <!-- Thunderbird -->
 	<em:minVersion>2.0a1</em:minVersion>
-	<em:maxVersion>7.0a1</em:maxVersion>
+	<em:maxVersion>7.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 
