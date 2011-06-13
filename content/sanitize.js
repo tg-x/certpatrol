@@ -62,9 +62,9 @@ var CP_Sanitizer = {
             }
             _item.parentNode.insertBefore(check, null);
 
-            if (typeof(gSanitizePromptDialog) == "object") {
+            if (typeof gSanitizePromptDialog == "object") {
 		pref.setAttribute("readonly", "true");
-		check.setAttribute("onsyncfrompreference", "return gSanitizePromptDialog.onReadGeneric();");
+		check.addEventListener("onsyncfrompreference", function() { return gSanitizePromptDialog.onReadGeneric(); }, false);
             }
 	}
     },
