@@ -4,6 +4,8 @@
 // TODO: SeaMonkey still fails on something, but isn't helpful telling us.
 // Please tell us what we need to fix to make it work!
 
+(function() {
+
 var displayName = "CertPatrol";
 var version     = "1.9beta4";
 var name        = "certpatrol"; // leafname of the JAR file
@@ -153,3 +155,5 @@ function displayError(error)
             " failed.\nThe error code is: " + error);
     }
 }
+
+})();
