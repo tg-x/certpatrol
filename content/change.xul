@@ -33,6 +33,7 @@
       /* host information in brackets is pretty important.. isn't it? */
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
+      $("cmdiag").className += 'threat-'+ certobj.threat;
 
       $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
       $("cmdetailso").setAttribute("label", certobj.lang.viewHierarchy);
