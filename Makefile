@@ -3,7 +3,7 @@ N=certpatrol
 
 .SUFFIXES: .pjs .js
 
-$N.xpi: content/*
+$N.xpi: content/* install.rdf
 	./build.sh
 	cp -p $N.xpi /dev/shm
 
