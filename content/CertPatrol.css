@@ -16,7 +16,7 @@
 }
 
 .old {
-  color: rgb(205,0,0));
+  color: rgb(205,0,0);
 }
 .old.plain:before {
   width: 12px;
@@ -25,7 +25,7 @@
   content: "\002013";
 }
 .new {
-  color: rgb(0,205,0));
+  color: rgb(0,205,0);
 }
 .new.plain:before {
   width: 12px;
