@@ -11,6 +11,8 @@
   onload="return onLoad()"
   buttonlabelaccept="&acceptChange;"
   buttonlabelcancel="&rejectChange;"
+  buttonaccesskeyaccept="&acceptChange_key;"
+  buttonaccesskeycancel="&rejectChange_key;"
   ondialogaccept="return CertPatrol.saveCert(certobj)"
   ondialogcancel="return true">
   <script>
@@ -36,6 +38,8 @@
       $("cmdetailso").setAttribute("label", certobj.lang.viewHierarchy);
       $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
+      $("cmdetailsn").focus();
+      $("cmbox").scrollTop = 0;
 
       var keys = ["commonName", "organization", "organizationalUnit",
 	         // "serialNumber", "emailAddress",
@@ -84,7 +88,7 @@
     <description hidden="true" id="warn_notAfter_due">&warn_notAfter_due;</description>
   </vbox>
 
-  <vbox flex="1" style="overflow: auto">
+  <vbox id="cmbox" flex="1" style="overflow: auto">
 
     <grid>
       <columns>
@@ -96,24 +100,24 @@
         <!-- groupbox>
           <caption id="cmhierarchy" label="&hierarchy;" />
         </groupbox -->
-	<row>
-	  <label value="&oldCertHier;" />
-	  <vbox>
-	    <textbox id="cmchaino" multiline="true" readonly="true" />
-	  </vbox>
-	</row>
-        <groupbox>
-	  <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewOldCert;" />
-        </groupbox>
-	<row>
-	  <label value="&newCertHier;" />
-	  <vbox>
-	    <textbox id="cmchainn" multiline="true" readonly="true" />
-	  </vbox>
-	</row>
-        <groupbox>
-	  <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewNewCert;" />
-        </groupbox>
+        <row>
+          <vbox>
+            <label value="&oldCertHier;" />
+            <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewOldCert;" accesskey="&viewOldCert_key;" />
+          </vbox>
+          <vbox>
+            <textbox id="cmchaino" multiline="true" readonly="true" />
+          </vbox>
+        </row>
+        <row>
+          <vbox>
+            <label value="&newCertHier;" />
+            <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewNewCert;" accesskey="&viewNewCert_key;" />
+          </vbox>
+          <vbox>
+            <textbox id="cmchainn" multiline="true" readonly="true" />
+          </vbox>
+        </row>
         <groupbox>
           <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
@@ -229,5 +233,5 @@
 
   </vbox>
 
-  <checkbox id="cmissueronly" oncommand="CertPatrol.setFlag(certobj, CertPatrol.CHECK_ISSUER_ONLY, this.checked)" label="&issuerOnly;" />
+  <checkbox id="cmissueronly" oncommand="CertPatrol.setFlag(certobj, CertPatrol.CHECK_ISSUER_ONLY, this.checked)" label="&issuerOnly;" accesskey="&issuerOnly_key;" />
 </dialog>

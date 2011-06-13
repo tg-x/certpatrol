@@ -18,13 +18,20 @@
 <!ENTITY newCertHier		"Neue Zertifikatshierarchie:">
 <!ENTITY hierarchy		"Zertifikatshierarchie:">
 <!ENTITY viewHierarchy		"Zertifikatshierarchie betrachten">
+
 <!ENTITY viewOldCert		"Betrachte altes Zertifikat">
+<!ENTITY viewOldCert_key	"T">
 <!ENTITY viewNewCert		"Betrachte neues Zertifikat">
+<!ENTITY viewNewCert_key	"N">
 <!ENTITY viewDetails		"Details anschauen">
+<!ENTITY viewDetails_key	"D">
 
 <!ENTITY acceptChange		"Annehmen">
+<!ENTITY acceptChange_key	"A">
 <!ENTITY rejectChange		"Verwerfen">
+<!ENTITY rejectChange_key	"V">
 <!ENTITY issuerOnly		"Nur Zertifizierungsstelle beachten">
+<!ENTITY issuerOnly_key		"Z">
 
 <!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch für andere Sites dieser Domain eingesetzt.">
 <!ENTITY warn_commonName	"Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">

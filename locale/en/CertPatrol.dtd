@@ -18,13 +18,20 @@
 <!ENTITY newCertHier		"New Certification Hierarchy:">
 <!ENTITY hierarchy		"Certification Hierarchy:">
 <!ENTITY viewHierarchy		"View Certification Hierarchy">
+
 <!ENTITY viewOldCert		"View Old Certificate">
+<!ENTITY viewOldCert_key	"O">
 <!ENTITY viewNewCert		"View New Certificate">
+<!ENTITY viewNewCert_key	"N">
 <!ENTITY viewDetails		"View Details">
+<!ENTITY viewDetails_key	"D">
 
 <!ENTITY acceptChange		"Accept">
+<!ENTITY acceptChange_key	"A">
 <!ENTITY rejectChange		"Reject">
+<!ENTITY rejectChange_key	"R">
 <!ENTITY issuerOnly		"Check certification authority only">
+<!ENTITY issuerOnly_key		"C">
 
 <!ENTITY warn_wildcard		"Info: This certificate has a wildcard for several hostnames.">
 <!ENTITY warn_commonName	"Alert: Hostname has changed. Take a look if that's okay.">

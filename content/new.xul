@@ -61,15 +61,14 @@
         <groupbox>
           <caption id="cmhierarchy" label="&hierarchy;" />
         </groupbox>
-	<row>
-	  <label />
-	  <vbox>
-	    <textbox id="cmchain" multiline="true" readonly="true" />
-	  </vbox>
-	</row>
-        <groupbox>
-	    <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" />
-        </groupbox>
+        <row>
+          <vbox>
+            <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" accesskey="&viewDetails_key;" />
+          </vbox>
+          <vbox>
+            <textbox id="cmchain" multiline="true" readonly="true" />
+          </vbox>
+        </row>
         <groupbox>
           <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
