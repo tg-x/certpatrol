@@ -161,41 +161,31 @@ Also trying out new threat policy to handle confused server farms.
 
 == VERSION 1.9beta ==
 
-Show and store certification hierarchy of certificates.
-Use HTTP observers now instead of onLoad which allows for checking every
-included element on the page.
-Added a checkbox for checking issuer only to the change dialog.
-Added CertPatrol to the 'Clear Recent History' dialog which deletes
-recently inserted/updated or all certs from the DB.
+ + Since the hierarchy of certification authorities is the safest information
+   we have about certificates, we now store it entirely and show it first,
+   even before the text, which has been put into the certificate and may be
+   falsified if the hierarchy is bogus. We explain this in more detail on
+   our website.
+ + We now use "HTTP observers" instead of web page "onLoad" which means that
+   now we check every single included element on a page, so you may be seeing
+   certificates for servers you didn't know you were visiting before.
+ + Added a checkbox to the change dialog for "checking issuer only" in future,
+   this helps with annoying domains that run on messed up certificates. As
+   long as they don't mess with the certification hierarchy, it's okay.
+ + Added CertPatrol to the 'Clear Recent History' dialog which deletes
+   recently inserted/updated or all certs from the DB.
+ + The dialogs have been reorganized, the change dialog has a diff-like layout
+   so you don't have to compare the certificates yourself. Patrol does it for
+   you and tells you what has changed.
+ + We added green/yellow/red threat level indicators.
+ + We allow users to reject a new or changed certificate. This won't stop
+   the loading of the page, since we are not in charge of that, but it will
+   warn you again, next time you bump into the same bogus website.
+ + By adopting the standard certificate view details wizards, you can look
+   at certificates in every little detail and also export certificates into
+   a file on your desktop.
 
- + use new event interface not to miss out on some https transactions
- ? reorg groupbox
-   The dialogs have been reorganized, the change dialog has a diff-like layout.
- - looks like when moving from one host to another the certificate may
-   be about the new host while doc.location.host still contains the old
-   host, resulting in useless warnings. what can we do here..?
-     This does not apply anymore with HTTP observers.
- + green/yellow/red threat level indicator
-    chojrak11@gmai suggests it should be the tab title bg color
- + allow user to reject a new or changed certificate
-     There's now an accept & reject button for changed certs.
- ? examine certificate chain somehow?
- ? jmd says: it would be the whole path of the certificate up to a root ca, so
-	     that expert could easily see from the content if a fake MITM
-	     certificate was involved or not
- + jmd says: a button to copy all the information about the cert so that you
-	     can easily paste it in a mail to report that
-   (or just make the entire cert display copy+pastable?)
-     This can be done now: click the View old/new cert button, on the Details
-     tab there's an Export button.
+this is not about us.. should go to website maybe?
      Or install the Cert Viewer Plus extension which adds a 'View PEM' button
      to the view cert dialog that shows a window with the cert info in both
      human & machine readable format.
- + preferences panel
-    ? option to wildcard-exempt annoying domains?
-	accountonline.com
-	bookryanair.com
-	google/gmail?
-	live.com/microsoft?
-      We have a 'check issuer only' checkbox instead in the change dialog.
- - Some AMO editors suggested we shouldn't use JARs anymore (build.sh).
