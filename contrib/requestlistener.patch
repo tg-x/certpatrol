@@ -1,0 +1,301 @@
+--- CertPatrol.js-1.2.5	2010-05-01 10:28:40.054838895 +0200
++++ CertPatrol.requestlistener.js	2010-05-09 06:50:27.000000000 +0200
+@@ -32,8 +32,53 @@
+  *                              
+  * ***** END LICENSE BLOCK ***** */
+ 
+-var CertPatrol = {
+ 
++var CertPatrolTabsProgressListener =  {
++  // voodoo from the docs
++  QueryInterface: function(aIID) {
++    if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
++        aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
++        aIID.equals(Components.interfaces.nsISupports))
++      return this;
++    throw Components.results.NS_NOINTERFACE;
++  },
++
++  onStateChange: function(aBrowser, aWebProgress, aRequest, aStateFlags, aStatus) {
++    if ( (aStateFlags & Components.interfaces.nsIWebProgressListener.STATE_STOP) &&
++         aRequest &&
++         aRequest.URI &&
++         (aRequest.URI.scheme == "https") &&
++         aRequest.securityInfo ) {
++      alert("Trapped https request for " + aRequest.URI.host);
++
++      var secInfo = aRequest.securityInfo;
++
++      if (secInfo instanceof Ci.nsISSLStatusProvider) {
++        var cert = secInfo.QueryInterface(Components.interfaces.nsISSLStatusProvider).
++          SSLStatus.QueryInterface(Components.interfaces.nsISSLStatus).serverCert;
++
++        alert("Got the cert. trying to check for " + aRequest.URI.host);
++
++        CertPatrol.checkCert(aRequest.URI.host, cert);
++      }
++    }
++  },
++
++  onLocationChange: function(aBrowser, webProgress, request, location) {},
++
++  onProgressChange: function(aBrowser, webProgress, request, curSelfProgress,
++      maxSelfProgress, curTotalProgress, maxTotalProgress) {},
++
++  onSecurityChange: function(aBrowser, aWebProgress, aRequest, aState) {},
++
++  onStatusChange: function(aBrowser, aWebProgress, aRequest, aStatus, aMessage) {},
++
++  onRefreshAttempted: function(aBrowser, webProgress, aRefreshURI, aMillis, aSameURI) {},
++
++  onLinkIconAvailable: function(aBrowser) {}
++};
++
++var CertPatrol = {
+   // Main
+   onLoad: function() {
+     this.initialized = true;
+@@ -94,10 +139,19 @@
+     // Firefox
+     var content = document.getElementById("content");
+     if(content) {
+-      content.addEventListener("DOMContentLoaded", this.onPageLoad, true);
+-      content.addEventListener("DOMFrameContentLoaded", this.onPageLoad, true);
++      // content.addEventListener("DOMContentLoaded", this.onPageLoad, true);
++      // content.addEventListener("DOMFrameContentLoaded", this.onPageLoad, true);
++      content.addEventListener("load", this.onPageLoad, true);
+     }
+ 
++    // Firefox 3.5 and above:
++    //
++    // we may want to experiment with NOTIFY_STATE_REQUEST too.  It captures
++    // more events but it's not clear whether the aRequest passed in will have
++    // all the info we need.
++    gBrowser.addTabsProgressListener(CertPatrolTabsProgressListener,
++        Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
++
+     // Thunderbird
+     var messagepane = document.getElementById("messagepane");
+     if(messagepane)
+@@ -153,8 +207,10 @@
+   onPageLoad: function(aEvent) {
+     var doc = aEvent.originalTarget;
+ 
+-    if (doc && doc.location && doc.location.protocol == "https:")
++    if (doc && doc.location && doc.location.protocol == "https:") {
++      // alert("Calling onSecurePageLoad for "+ doc.location);
+       CertPatrol.onSecurePageLoad(doc);
++    }
+   },
+ 
+ 
+@@ -163,6 +219,86 @@
+     const ci = Components.interfaces;
+     var thiscert;
+     var validity;
++
++    var sp = this.extractSp(doc);
++    if (!sp)
++      return;
++
++    var stats = sp.SSLStatus;
++    // Domainname not found,
++    // Selfsigned and not yet accepted
++    if (!stats)
++      return;
++
++    var stati = stats.QueryInterface(ci.nsISSLStatus);
++    if (!stati)
++      return;
++
++    thiscert = stati.serverCert;
++    if (!thiscert)
++      return;
++
++    this.checkCert(doc.location.host, thiscert);
++  },
++
++  // Try to get the niISSLStatusProvider
++  extractSp: function(doc) {
++    const ci = Components.interfaces;
++
++    // Find the right tab, that issued the event.
++    // Load the corresponding securityUI for this event.
++    var browser = gBrowser.getBrowserForDocument(doc);
++    if (browser) {
++      var ui = browser.securityUI;
++      if (!ui)
++        return null;
++
++      var sp = ui.QueryInterface(ci.nsISSLStatusProvider);
++      if (!sp)
++        return null;
++
++      return sp;
++
++    } else {
++      return;
++
++      // alert("Alternate path for "+ doc.location);
++
++      // // Here we start experimenting with paths to get it
++      // var win = document.defaultView;
++      // if (!win) {
++      //   alert(doc.location + " no window found");
++      //   return null;
++      // }
++      // alert(doc.location + " found window");
++
++      // var channel = win.QueryInterface(ci.nsIHttpChannel);
++      // if (!channel) {
++      //   alert(doc.location + " no channel found");
++      //   return null;
++      // }
++      // alert(doc.location + " found channel");
++
++      // if (! channel instanceof ci.nsIChannel) {
++      //   alert(doc.location + " channel isn't what we wanted");
++      //   return null;
++      // }
++
++      // alert(doc.location + " channel is good");
++
++      // var secInfo = channel.securityInfo;
++      // if (secInfo instanceof ci.nsISSLStatusProvider) {
++      //   alert("We found the secInfo for " + doc.location);
++      // }
++
++      // return secInfo;
++
++    }
++  },
++
++  // Grab the certificate from the SSLStatusProvider
++  // and call the certCheck method on it
++  checkCert: function(host, thiscert) {
+     var certobj={
+       threat:0,
+       info:"",
+@@ -217,71 +353,37 @@
+       }
+     };
+ 
+-    // Find the right tab, that issued the event.
+-    // Load the corresponding securityUI for this event.
+-    var browser = gBrowser.getBrowserForDocument(doc);
+-    if (!browser) {
+-//	alert("Could not find browser for "+ doc.location);
+-	browser = gBrowser;
+-        //return;
+-    }
+-
+-    var ui = browser.securityUI;
+-    if (!ui)
+-      return;
+-    
+-    var sp = ui.QueryInterface(ci.nsISSLStatusProvider);
+-    if (!sp)
+-      return;
+-
+-    var stats = sp.SSLStatus;
+-    // Domainname not found,
+-    // Selfsigned and not yet accepted
+-    if (!stats)
+-      return;
+-    
+-    var stati = stats.QueryInterface(ci.nsISSLStatus);
+-    if (!stati)
+-      return;
+-
+-    thiscert = stati.serverCert;
+-    if (!thiscert)
+-      return;
+-
+     validity = thiscert.validity.QueryInterface(ci.nsIX509CertValidity);
+     if (!validity)
+       return;
+ 
+     // The interesting part
+-    if (thiscert && validity)
+-    {
+-      certobj.host = doc.location.host;
+-
+-      certobj.moz.commonName = thiscert.commonName;
+-      certobj.moz.organization = thiscert.organization;
+-      certobj.moz.organizationalUnit = thiscert.organizationalUnit;
+-      certobj.moz.serialNumber = thiscert.serialNumber;
+-      certobj.moz.emailAddress = thiscert.emailAddress;
+-      // "GMT" is a historic lie here.. before version 1.3 we used to work
+-      // with notAfterGMT etc and try to parse the various renderings of it.
+-      // now it is too late and pointless to change the name in the sqlite
+-      // field. how i love SQL for its terrific flexibility...  ;)
+-      // why do most web apps still use this 1970s legacy interface?
+-      certobj.moz.notBeforeGMT = validity.notBefore;
+-      certobj.moz.notAfterGMT = validity.notAfter;
+-      certobj.moz.issuerCommonName = thiscert.issuerCommonName;
+-      certobj.moz.issuerOrganization = thiscert.issuerOrganization;
+-      certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
+-      certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
+-      certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
++    certobj.host = host;
+ 
+-      this.certCheck(browser, certobj);
+-    }
++    certobj.moz.commonName = thiscert.commonName;
++    certobj.moz.organization = thiscert.organization;
++    certobj.moz.organizationalUnit = thiscert.organizationalUnit;
++    certobj.moz.serialNumber = thiscert.serialNumber;
++    certobj.moz.emailAddress = thiscert.emailAddress;
++    // "GMT" is a historic lie here.. before version 1.3 we used to work
++    // with notAfterGMT etc and try to parse the various renderings of it.
++    // now it is too late and pointless to change the name in the sqlite
++    // field. how i love SQL for its terrific flexibility...  ;)
++    // why do most web apps still use this 1970s legacy interface?
++    certobj.moz.notBeforeGMT = validity.notBefore;
++    certobj.moz.notAfterGMT = validity.notAfter;
++    certobj.moz.issuerCommonName = thiscert.issuerCommonName;
++    certobj.moz.issuerOrganization = thiscert.issuerOrganization;
++    certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
++    certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
++    certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
++
++    this.certCheck(certobj);
+   },
+ 
+ 
+   // Certificate check
+-  certCheck: function(browser, certobj) {
++  certCheck: function(certobj) {
+     var found = false;
+ 
+     // Get certificate
+@@ -379,7 +481,7 @@
+ 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+ 
+       // Output
+-      this.outchange(browser, certobj);
++      this.outchange(certobj);
+ 
+     // New certificate
+     } else if (!found) {
+@@ -415,17 +517,17 @@
+ 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+ 
+       // Output
+-      this.outnew(browser, certobj);
++      this.outnew(certobj);
+     }
+   },
+ 
+-  outnew: function(browser, certobj) {
++  outnew: function(certobj) {
+ 	window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+ 			  "chrome,dialog,modal", certobj);
+   },
+   
+   
+-  outchange: function(browser, certobj) {
++  outchange: function(certobj) {
+ 	window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+ 			  "chrome,dialog,modal", certobj);
+   },

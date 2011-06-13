@@ -14,6 +14,7 @@
   ondialogaccept="return CertPatrol.saveCert(certobj)"
   ondialogcancel="return true">
   <script>
+
     var certobj = window.arguments[0];
     var CertPatrol = window.arguments[1];
     //var $ = document.getElementById.bind(document); // TB does not have bind()
@@ -36,8 +37,9 @@
       $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
       if (!certobj.sql.cert) $("cmdetailso").disabled = true;
 
-      var keys = ["commonName", "organization", "organizationalUnit", "serialNumber",
-                  "emailAddress", "notBefore", "notAfter",
+      var keys = ["commonName", "organization", "organizationalUnit",
+	         // "serialNumber", "emailAddress",
+	          "notBefore", "notAfter",
                   "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
                   "issuerMd5Fingerprint", "issuerSha1Fingerprint",
                   "md5Fingerprint", "sha1Fingerprint"];
@@ -68,6 +70,7 @@
 
       $("cmissueronly").checked = certobj.flags &amp; CertPatrol.CHECK_ISSUER_ONLY;
     }
+
   </script>
   <dialogheader id="cmdiag" />
 
@@ -90,11 +93,27 @@
       </columns>
     
       <rows>
-        <!--row>
-          <label value="" />
-          <caption id="cmold" label="&oldCert;" />
-          <caption id="cmnew" label="&newCert;" />
-        </row-->
+        <!-- groupbox>
+          <caption id="cmhierarchy" label="&hierarchy;" />
+        </groupbox -->
+	<row>
+	  <label value="&oldCertHier;" />
+	  <vbox>
+	    <textbox id="cmchaino" multiline="true" readonly="true" />
+	  </vbox>
+	</row>
+        <groupbox>
+	  <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewOldCert;" />
+        </groupbox>
+	<row>
+	  <label value="&newCertHier;" />
+	  <vbox>
+	    <textbox id="cmchainn" multiline="true" readonly="true" />
+	  </vbox>
+	</row>
+        <groupbox>
+	  <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewNewCert;" />
+        </groupbox>
         <groupbox>
           <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
@@ -119,7 +138,7 @@
             <textbox class="plain" readonly="true" id="organizationalUnit2" />
 	  </vbox>
         </row>
-        <row>
+        <!-- row>
           <label id="cmsnl" value="&serialNumber;" />
 	  <vbox flex="1">
 	    <textbox class="plain" readonly="true" id="serialNumber" />
@@ -131,6 +150,40 @@
 	  <vbox flex="1">
 	    <textbox class="plain" readonly="true" id="emailAddress" />
 	    <textbox class="plain" readonly="true" id="emailAddress2" />
+	  </vbox>
+        </row>
+        <groupbox>
+          <caption id="cmfinger" label="&fingerprints;" />
+        </groupbox -->
+        <row>
+          <label id="cmmd5l" value="&md5Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="md5Fingerprint" />
+	    <textbox class="plain" readonly="true" id="md5Fingerprint2" />
+	  </vbox>
+        </row>
+        <row>
+          <label id="cmsha1l" value="&sha1Fingerprint;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="sha1Fingerprint" />
+	    <textbox class="plain" readonly="true" id="sha1Fingerprint2" />
+	  </vbox>
+        </row>
+        <groupbox>
+          <caption id="cmvalid" label="&validity;" />
+        </groupbox>
+        <row>
+          <label id="cmnbl" value="&notBefore;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="notBefore" />
+	    <textbox class="plain" readonly="true" id="notBefore2" />
+	  </vbox>
+        </row>
+        <row>
+          <label id="cmnal" value="&notAfter;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="notAfter" />
+	    <textbox class="plain" readonly="true" id="notAfter2" />
 	  </vbox>
         </row>
         <groupbox>
@@ -171,57 +224,6 @@
 	    <textbox class="plain" readonly="true" id="issuerSha1Fingerprint2" />
 	  </vbox>
         </row>
-        <groupbox>
-          <caption id="cmvalid" label="&validity;" />
-        </groupbox>
-        <row>
-          <label id="cmnbl" value="&notBefore;" />
-	  <vbox flex="1">
-	    <textbox class="plain" readonly="true" id="notBefore" />
-	    <textbox class="plain" readonly="true" id="notBefore2" />
-	  </vbox>
-        </row>
-        <row>
-          <label id="cmnal" value="&notAfter;" />
-	  <vbox flex="1">
-	    <textbox class="plain" readonly="true" id="notAfter" />
-	    <textbox class="plain" readonly="true" id="notAfter2" />
-	  </vbox>
-        </row>
-        <groupbox>
-          <caption id="cmfinger" label="&fingerprints;" />
-        </groupbox>
-        <row>
-          <label id="cmmd5l" value="&md5Fingerprint;" />
-	  <vbox flex="1">
-	    <textbox class="plain" readonly="true" id="md5Fingerprint" />
-	    <textbox class="plain" readonly="true" id="md5Fingerprint2" />
-	  </vbox>
-        </row>
-        <row>
-          <label id="cmsha1l" value="&sha1Fingerprint;" />
-	  <vbox flex="1">
-	    <textbox class="plain" readonly="true" id="sha1Fingerprint" />
-	    <textbox class="plain" readonly="true" id="sha1Fingerprint2" />
-	  </vbox>
-        </row>
-        <groupbox>
-          <caption id="cmhierarchy" label="&hierarchy;" />
-        </groupbox>
-	<row>
-	  <label value="&oldCert;" />
-	  <vbox>
-	    <textbox id="cmchaino" multiline="true" readonly="true" />
-	    <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewHierarchy;" />
-	  </vbox>
-	</row>
-	<row>
-	  <label value="&newCert;" />
-	  <vbox>
-	    <textbox id="cmchainn" multiline="true" readonly="true" />
-	    <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewHierarchy;" />
-	  </vbox>
-	</row>
       </rows>
     </grid>
 

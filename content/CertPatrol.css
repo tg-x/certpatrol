@@ -23,6 +23,7 @@
   float: left;
   text-align: center;
   content: "\002013";
+  color: red;
 }
 .new {
   color: darkgreen;
@@ -32,4 +33,5 @@
   float: left;
   text-align: center;
   content: "+";
+  color: green;
 }

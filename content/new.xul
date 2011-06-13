@@ -6,11 +6,12 @@
 <dialog id="ssl-new"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="800" height="600"
+  persist="screenX screenY width height" width="800" height="400"
   buttons="accept"
   onload="return onLoad()"
   onDialogAccept="return true">
   <script>
+
     var certobj = window.arguments[0];
     var CertPatrol = window.arguments[1];
     //var $ = document.getElementById.bind(document); // TB does not have bind()
@@ -25,11 +26,18 @@
       $("cmdiag").setAttribute("description", "("+certobj.host+")");
       $("cmdiag").setAttribute("title", certobj.event);
 
-      var keys = ['commonName', 'organization', 'organizationalUnit', 'serialNumber',
-                  'emailAddress', 'notBefore', 'notAfter',
-                  'issuerCommonName', 'issuerOrganization', 'issuerOrganizationUnit',
-                  'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
-                  'md5Fingerprint', 'sha1Fingerprint'];
+      var keys = [ 'commonName', 'organization', 'organizationalUnit',
+		// NOT SHOWN ANYMORE (go details):
+		// 'serialNumber', 'emailAddress',
+		// 'issuerCommonName', 'issuerOrganization',
+		// 'issuerOrganizationUnit',
+		// 'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
+		// 'md5Fingerprint', 'sha1Fingerprint',
+		// 'notBefore',
+		// TO BE SHOWN IN FUTURE:
+		// 'countryName', 'localityName', 'stateOrProvinceName',
+                   'notAfter'
+      ];
       for (var i in keys) {
         var key = keys[i];
         $(key).value = certobj.moz[key];
@@ -37,6 +45,7 @@
 
       CertPatrol.addCertChain($("cmchain"), certobj.moz.cert);
     }
+
   </script>
   <dialogheader id="cmdiag" />
 
@@ -49,6 +58,18 @@
       </columns>
     
       <rows>
+        <groupbox>
+          <caption id="cmhierarchy" label="&hierarchy;" />
+        </groupbox>
+	<row>
+	  <label />
+	  <vbox>
+	    <textbox id="cmchain" multiline="true" readonly="true" />
+	  </vbox>
+	</row>
+        <groupbox>
+	    <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" />
+        </groupbox>
         <groupbox>
           <caption id="cmissto" label="&issuedTo;" />
         </groupbox>
@@ -64,7 +85,7 @@
           <label id="cmoul" value="&organizationalUnit;" />
           <textbox class="plain" readonly="true" id="organizationalUnit" />
         </row>
-        <row>
+        <!-- row>
           <label id="cmsnl" value="&serialNumber;" />
           <textbox class="plain" readonly="true" id="serialNumber" />
         </row>
@@ -94,19 +115,19 @@
         <row>
           <label id="cmisha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="issuerSha1Fingerprint" />
-        </row>
+        </row -->
         <groupbox>
           <caption id="cmvalid" label="&validity;" />
         </groupbox>
-        <row>
+        <!-- row>
           <label id="cmnbl" value="&notBefore;" />
           <textbox class="plain" readonly="true" id="notBefore" />
-        </row>
+        </row -->
         <row>
           <label id="cmnal" value="&notAfter;" />
           <textbox class="plain" readonly="true" id="notAfter" />
         </row>
-        <groupbox>
+        <!-- groupbox>
           <caption id="cmfinger" label="&fingerprints;" />
         </groupbox>
         <row>
@@ -116,17 +137,7 @@
         <row>
           <label id="cmsha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="sha1Fingerprint" />
-        </row>
-        <groupbox>
-          <caption id="cmhierarchy" label="&hierarchy;" />
-        </groupbox>
-	<row>
-	  <label />
-	  <vbox>
-	    <textbox id="cmchain" multiline="true" readonly="true" />
-	    <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewHierarchy;" />
-	  </vbox>
-	</row>
+        </row -->
       </rows>
     </grid>
 

@@ -3,11 +3,11 @@ N=certpatrol
 
 .SUFFIXES: .pjs .js
 
-all: it
-it: content/CertPatrol.js
+$N.xpi: content/*
 	./build.sh
-shm:
 	cp -p $N.xpi /dev/shm
+
+it: $N.xpi
 
 content/CertPatrol.js: CertPatrol.pjs
 	@rm -f $@

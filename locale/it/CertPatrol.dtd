@@ -1,8 +1,5 @@
-<!ENTITY oldCert		"Vecchio certificato:">
-<!ENTITY newCert		"Nuovo certificato:">
-
 <!ENTITY issuedTo		"Rilasciato a:">
-<!ENTITY issuedBy		"Rilasciato da:">
+<!ENTITY issuedBy		"Apparentemente rilasciato da:">
 <!ENTITY validity		"Validita:">
 <!ENTITY fingerprints		"Impronte:">
 <!ENTITY commonName		"Nome comune (CN):">
@@ -15,10 +12,16 @@
 <!ENTITY md5Fingerprint		"Impronta MD5:">
 <!ENTITY sha1Fingerprint	"Impronta SHA1:">
 
+<!ENTITY oldCert		"Vecchio certificato:">
+<!ENTITY newCert		"Nuovo certificato:">
+<!ENTITY oldCertHier		"Vecchia gerarchia di certificazione:">
+<!ENTITY newCertHier		"Nuova gerarchia di certificazione:">
 <!ENTITY hierarchy		"Gerarchia di certificazione:">
 <!ENTITY viewHierarchy		"Vedi gerarchia di certificazione">
+<!ENTITY viewOldCert		"Vedi certificato vecchio">
+<!ENTITY viewNewCert		"Vedi certificato nuovo">
+<!ENTITY viewDetails		"Vedi dettagli">
 
-<!ENTITY viewDetails		"Vedi Dettagli">
 <!ENTITY acceptChange		"Accetta">
 <!ENTITY rejectChange		"Ignora">
 <!ENTITY issuerOnly		"Controlla solo l'autorità di certificazione">
