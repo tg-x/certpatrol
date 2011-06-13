@@ -6,10 +6,15 @@
 <dialog id="ssl-new"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="800" height="400"
-  buttons="accept"
+  persist="screenX screenY width height" width="800" height="370"
+  buttons="accept,cancel"
   onload="return onLoad()"
-  onDialogAccept="return true">
+  buttonlabelaccept="&accept;"
+  buttonlabelcancel="&reject;"
+  buttonaccesskeyaccept="&accept_key;"
+  buttonaccesskeycancel="&reject_key;"
+  ondialogaccept="return true"
+  ondialogcancel="return CertPatrol.delCert(certobj.host)">
   <script>
 
     var certobj = window.arguments[0];
@@ -19,8 +24,10 @@
 
     function onLoad() {
       $("ssl-new").getButton("accept").disabled = true;
+      $("ssl-new").getButton("cancel").disabled = true;
       setTimeout(function() {
         $("ssl-new").getButton("accept").disabled = false;
+        $("ssl-new").getButton("cancel").disabled = false;
       }, 2000);
 
       $("cmdiag").setAttribute("description", "("+certobj.host+")");

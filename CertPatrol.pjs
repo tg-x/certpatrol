@@ -47,6 +47,7 @@
 // This source code is formatted according to half-indented KNF.
 var CertPatrol = {
     CHECK_ISSUER_ONLY: 1,
+    locale: {},
 
     // Main
     onLoad: function() {
@@ -143,7 +144,9 @@ var CertPatrol = {
 		"notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
 		"md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
 	      "WHERE host=?1");
-	    this.dbdel = this.dbh.createStatement(
+	    this.dbdelhost = this.dbh.createStatement(
+	      "DELETE FROM certificates WHERE host=?1");
+	    this.dbdelsince = this.dbh.createStatement(
 	      "DELETE FROM certificates WHERE stored >= ?18");
 	    this.dbdelall = this.dbh.createStatement(
 	      "DELETE FROM certificates");
@@ -483,13 +486,13 @@ var CertPatrol = {
 
 	    if (wild && certobj.threat == 0) {
 		certobj.warn.wildcard = true;
-		certobj.event = this.strings.getString("wildEvent");
+		certobj.event = this.locale.wildEvent;
 		this.outwild(browser, certobj);
 		return;
 	    }
 
-	    certobj.event = this.strings.getString("changeEvent") +" "+
-	                    this.strings.getString("threatLevel_"+ certobj.threat);
+	    certobj.event = this.locale.changeEvent +" "+
+	        this.locale["threat"+ certobj.threat];
 	    this.outchange(browser, certobj);
 
 	    // New certificate
@@ -534,12 +537,12 @@ var CertPatrol = {
 
 	    if (wild) {
 		certobj.warn.wildcard = true;
-		certobj.event = this.strings.getString("wildEvent");
+		certobj.event = this.locale.wildEvent;
 		this.outwild(browser, certobj);
 		return;
 	    }
 
-	    certobj.event = this.strings.getString("newEvent");
+	    certobj.event = this.locale.newEvent;
 	    this.outnew(browser, certobj);
 	}
     },
@@ -586,6 +589,7 @@ var CertPatrol = {
 	}
     },
 
+    // accept changed cert
     saveCert: function(certobj) {
 ##	this.log(">> saveCert: "+ certobj.host);
 	var stmt = this.dbupdate;
@@ -619,6 +623,38 @@ var CertPatrol = {
 	return true;
     },
 
+    // reject new cert
+    delCert: function(host) {
+	var stmt;
+	try {
+	    stmt = this.dbdelhost;
+	    stmt.bindUTF8StringParameter(0, host);
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to remove certificate: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+    },
+
+    // sanitizer - clear recent history
+    delCerts: function(range) {
+	var stmt;
+	try {
+	    if (range) {
+		stmt = this.dbdelsince;
+		stmt.bindInt64Parameter(17, range[0] / 1000000);
+	    } else {
+		stmt = this.dbdelall;
+	    }
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to remove certificates: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+    },
+
     setFlag: function(certobj, flag, on) {
 	if (on)
 	    certobj.flags |= flag;
@@ -641,12 +677,12 @@ var CertPatrol = {
 	    notifyBox.appendNotification(
 		"(CertPatrol) "+ certobj.event +" "+
 		    certobj.moz.commonName +". "+
-		    this.strings.getString("issuedBy") +" "+
+		    this.locale.issuedBy +" "+
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
 		certobj.host, null, notifyBox.PRIORITY_INFO_HIGH,
 		[{
-		    label: this.strings.getString("viewDetails"),
-		    accessKey: this.strings.getString("viewDetails_key"),
+		    label: this.locale.viewDetails,
+		    accessKey: this.locale.viewDetails_key,
 		    callback: function(msg, btn) {
 			window.openDialog("chrome://certpatrol/content/new.xul",
 					  "_blank", "chrome,dialog,modal",
@@ -671,12 +707,18 @@ var CertPatrol = {
 	    notifyBox.appendNotification(
 		"(CertPatrol) "+ certobj.event +" "+
 		    certobj.moz.commonName +". "+
-		    this.strings.getString("issuedBy") +" "+
+		    this.locale.issuedBy +" "+
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
 		certobj.host, null, notifyBox.PRIORITY_INFO_HIGH,
 		[{
-		    label: this.strings.getString("viewDetails"),
-		    accessKey: this.strings.getString("viewDetails_key"),
+		    label: this.locale.reject,
+		    accessKey: this.locale.reject_key,
+		    callback: function(msg, btn) {
+			CertPatrol.delCert(certobj.host);
+		    }
+		}, {
+		    label: this.locale.viewDetails,
+		    accessKey: this.locale.viewDetails_key,
 		    callback: function(msg, btn) {
 			window.openDialog("chrome://certpatrol/content/new.xul",
 					  "_blank", "chrome,dialog,modal",
@@ -707,19 +749,19 @@ var CertPatrol = {
 	    notifyBox.appendNotification(
 		"(CertPatrol) "+ certobj.event +" "+
 		    certobj.moz.commonName +". "+
-		    this.strings.getString("issuedBy") +" "+
+		    this.locale.issuedBy +" "+
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
 		    +" "+ certobj.info,
 		certobj.host, null, priority[certobj.threat],
 		[{
-		    label: this.strings.getString("acceptChange"),
-		    accessKey: this.strings.getString("acceptChange_key"),
+		    label: this.locale.accept,
+		    accessKey: this.locale.accept_key,
 		    callback: function(msg, btn) {
 			CertPatrol.saveCert(certobj);
 		    }
 		}, {
-		    label: this.strings.getString("viewDetails"),
-		    accessKey: this.strings.getString("viewDetails_key"),
+		    label: this.locale.viewDetails,
+		    accessKey: this.locale.viewDetails_key,
 		    callback: function(msg, btn) {
 			window.openDialog("chrome://certpatrol/content/change.xul",
 					  "_blank", "chrome,dialog,modal",
@@ -772,23 +814,5 @@ var CertPatrol = {
             .getService(Components.interfaces.nsICertificateDialogs)
 	    .viewCert(null, cert);
     },
-
-    // sanitizer - clear recent history
-    delCerts: function(range) {
-	var stmt;
-	try {
-	    if (range) {
-		stmt = this.dbdel;
-		stmt.bindInt64Parameter(17, range[0] / 1000000);
-	    } else {
-		stmt = this.dbdelall;
-	    }
-	    stmt.executeStep();
-	} catch (err) {
-	    this.warn("Error while trying to remove certificates: "+ err);
-	} finally {
-	    stmt.reset();
-	}
-    }
 };
 

@@ -1,3 +1,12 @@
+<!ENTITY newEvent		"Zertifikat eingespeichert.">
+<!ENTITY wildEvent		"Wildcard-Zertifikat akzeptiert.">
+<!ENTITY changeEvent		"Zertifikat ersetzt.">
+
+<!ENTITY threat0		"Alles in Ordnung.">
+<!ENTITY threat1		"Wahrscheinlich harmlos:">
+<!ENTITY threat2		"Seltsames Geschehen?">
+<!ENTITY threat3		"Grund zur Sorge!">
+
 <!ENTITY issuedTo		"Ausgegeben an:">
 <!ENTITY issuedBy		"Scheinbar ausgestellt durch:">
 <!ENTITY validity		"Gültigkeit:">
@@ -26,10 +35,10 @@
 <!ENTITY viewDetails		"Details anschauen">
 <!ENTITY viewDetails_key	"D">
 
-<!ENTITY acceptChange		"Annehmen">
-<!ENTITY acceptChange_key	"A">
-<!ENTITY rejectChange		"Verwerfen">
-<!ENTITY rejectChange_key	"V">
+<!ENTITY accept			"Annehmen">
+<!ENTITY accept_key		"A">
+<!ENTITY reject			"Verwerfen">
+<!ENTITY reject_key		"V">
 <!ENTITY issuerOnly		"Nur Zertifizierungsstelle beachten">
 <!ENTITY issuerOnly_key		"Z">
 

@@ -9,10 +9,10 @@
   persist="screenX screenY width height" width="800" height="600"
   buttons="accept,cancel"
   onload="return onLoad()"
-  buttonlabelaccept="&acceptChange;"
-  buttonlabelcancel="&rejectChange;"
-  buttonaccesskeyaccept="&acceptChange_key;"
-  buttonaccesskeycancel="&rejectChange_key;"
+  buttonlabelaccept="&accept;"
+  buttonlabelcancel="&reject;"
+  buttonaccesskeyaccept="&accept_key;"
+  buttonaccesskeycancel="&reject_key;"
   ondialogaccept="return CertPatrol.saveCert(certobj)"
   ondialogcancel="return true">
   <script>

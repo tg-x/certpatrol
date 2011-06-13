@@ -1,3 +1,12 @@
+<!ENTITY newEvent		"Certificate accepted and stored.">
+<!ENTITY wildEvent		"Wildcard certificate accepted for a new host.">
+<!ENTITY changeEvent		"Certificate exchanged.">
+
+<!ENTITY threat0		"Everything fine.">
+<!ENTITY threat1		"Mostly harmless.">
+<!ENTITY threat2		"Suspicious change?">
+<!ENTITY threat3		"Reason to worry!">
+
 <!ENTITY issuedTo		"Issued To:">
 <!ENTITY issuedBy		"Apparently Issued By:">
 <!ENTITY validity		"Validity:">
@@ -26,10 +35,10 @@
 <!ENTITY viewDetails		"View Details">
 <!ENTITY viewDetails_key	"D">
 
-<!ENTITY acceptChange		"Accept">
-<!ENTITY acceptChange_key	"A">
-<!ENTITY rejectChange		"Reject">
-<!ENTITY rejectChange_key	"R">
+<!ENTITY accept			"Accept">
+<!ENTITY accept_key		"A">
+<!ENTITY reject			"Reject">
+<!ENTITY reject_key		"R">
 <!ENTITY issuerOnly		"Check certification authority only">
 <!ENTITY issuerOnly_key		"C">
 
