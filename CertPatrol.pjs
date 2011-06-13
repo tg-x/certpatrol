@@ -264,8 +264,12 @@ var CertPatrol = {
 	};
     },
 
-    fillCertObj: function(obj, cert) {
+    fillCertObj: function(obj, cert, cipherName, keyLength, secretKeyLength) {
 	obj.cert = cert;
+	obj.ciphername = cipherName;
+	obj.keyLength = keyLength;
+	obj.secretKeyLength = secretKeyLength;
+
 	obj.notBefore = cert.validity.notBefore;
 	obj.notAfter = cert.validity.notAfter;
 	obj.issuerMd5Fingerprint = cert.issuer.md5Fingerprint;
@@ -326,16 +330,12 @@ var CertPatrol = {
 	if (browser && !(browser.securityUI.state & wpl.STATE_IS_SECURE))
 	    return;
 
-	var sp = si.QueryInterface(Ci.nsISSLStatusProvider);
-	if (!sp) return;
+	si.QueryInterface(Ci.nsISSLStatusProvider);
+	var st = si.SSLStatus;
+	if (!st) return;
 
-	var stats = sp.SSLStatus;
-	if (!stats) return;
-
-	var stati = stats.QueryInterface(Ci.nsISSLStatus);
-	if (!stati) return;
-
-	var cert = stati.serverCert;
+	st.QueryInterface(Ci.nsISSLStatus);
+	var cert = st.serverCert;
 	if (!cert) return;
 
 	var obj = browser || win.top;
@@ -350,7 +350,7 @@ var CertPatrol = {
 	// The interesting part
 	var certobj = this.newCertObj();
 	certobj.host = host;
-	this.fillCertObj(certobj.moz, cert);
+	this.fillCertObj(certobj.moz, cert, st.cipherName, st.keyLength, st.secretKeyLength);
 	this.certCheck(browser, certobj);
     },
 
