@@ -18,6 +18,9 @@
     <preference id="_popup_wild"
 	name="certpatrol.popup.wild"
 	type="bool" />
+    <preference id="_privatebrowsing_save"
+	name="certpatrol.privatebrowsing.save"
+	type="bool" />
   </preferences>
   <dialogheader title="&_title;" />
   <groupbox>
@@ -30,6 +33,9 @@
 	    checked="false" />
     <checkbox label="&_popup_wild;"
 	    preference="_popup_wild" 
+	    checked="false" />
+    <checkbox label="&_privatebrowsing_save;"
+	    preference="_privatebrowsing_save"
 	    checked="false" />
   </groupbox> 
 

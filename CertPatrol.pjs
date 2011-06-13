@@ -365,12 +365,17 @@ var CertPatrol = {
 ##	//if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == certobj.moz.sha1Fingerprint) return;
 ##	//else this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
 
-	var pbm = false;
 	var pbs = Cc["@mozilla.org/privatebrowsing;1"];
 	if (pbs) {
 	    pbs = Cc["@mozilla.org/privatebrowsing;1"].getService(Ci.nsIPrivateBrowsingService);
-	    pbm = pbs.privateBrowsingEnabled;
+	    var pbm = pbs.privateBrowsingEnabled;
 	}
+	var save = !pbm;
+	try {
+	    if (pbm && this.prefs)
+		save = this.prefs.getBoolPref("privatebrowsing.save");
+	} catch (err) {}
+
 	var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
 	// Get certificate
 	var stmt = this.dbselect;
@@ -496,7 +501,7 @@ var CertPatrol = {
 
 	    // New certificate
 	} else if (!found) {
-	    if (!pbm) {
+	    if (save) {
 		// Store data
 		stmt = this.dbinsert;
 		try {

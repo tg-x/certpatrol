@@ -3,5 +3,6 @@
 <!ENTITY _popup_new	"Mostra sempre i dettagli per certificati nuovamente adottati">
 <!ENTITY _popup_change	"Mostra immediatamente i dettagli anche per cambiamenti di certificato innocui">
 <!ENTITY _popup_wild	"Mostra certificati wildcard gia` accettati ogni volta che si presentano per un host diverso">
+<!ENTITY _privatebrowsing_save	"TODO: Save new and changed certificates in Private Browsing Mode">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
