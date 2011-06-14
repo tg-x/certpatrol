@@ -686,6 +686,12 @@ var CertPatrol = {
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
 		certobj.host, null, notifyBox.PRIORITY_INFO_HIGH,
 		[{
+		    label: this.locale.reject,
+		    accessKey: this.locale.reject_key,
+		    callback: function(msg, btn) {
+			CertPatrol.delCert(certobj.host);
+		    }
+		}, {
 		    label: this.locale.viewDetails,
 		    accessKey: this.locale.viewDetails_key,
 		    callback: function(msg, btn) {
