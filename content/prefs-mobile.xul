@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE options SYSTEM "chrome://certpatrol/locale/prefs.dtd">
+
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <setting
+	pref="certpatrol.popup.new"
+	title="&_popup_new;"
+	type="bool" />
+    <setting
+	pref="certpatrol.popup.change"
+	title="&_popup_change;"
+	type="bool" />
+    <setting
+	pref="certpatrol.popup.wild"
+	title="&_popup_wild;"
+	type="bool" />
+    <setting
+	pref="certpatrol.privatebrowsing.save"
+	title="&_privatebrowsing_save;"
+	type="bool" />
+</vbox>
