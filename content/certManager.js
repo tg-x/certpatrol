@@ -223,7 +223,7 @@ CP_TreeView.prototype._rebuild = function() {
 
 CP_TreeView.prototype.toggleAll = function() {
     for (var i=0; i<this._rowMap.length; i++)
-	if (this._rowMap[i].data.cert)
+	//if (this._rowMap[i].data.cert)
 	    this.toggleOpenState(i);
 };
 

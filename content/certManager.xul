@@ -35,31 +35,30 @@
               onselect="CP_CertManager.enableButtons()">
           <treecols>
             <treecol id="host" label="&certmgr.certserver;" primary="true"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="commonName" label="&certmgr.certname;"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="serialNumber" label="&certmgr.serial;" hidden="true"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="notBefore" label="&certmgr.issued;" hidden="true"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="notAfter" label="&certmgr.expires;"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="stored" label="&certManager.stored;"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="sha1Fingerprint" label="&certManager.sha1;"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="md5Fingerprint" label="&certManager.md5;" hidden="true"
-                     persist="hidden width ordinal" flex="1"/>
+                     persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="issueronly" label="&certManager.issuerOnly;"
-                     type="text" editable="true"
                      persist="hidden width ordinal" flex="1"/>
           </treecols>
           <treechildren ondblclick="CP_CertManager.viewCerts();"/>
