@@ -2,15 +2,15 @@
 // Based on similar functionality from Tab Mix Plus (http://tmp.garyr.net).
 
 var CP_Sanitizer = {
+    locale: {},
+
     onLoad: function (event) {
 	if (typeof Sanitizer != 'function')
             return;
 
 	Sanitizer.prototype.items['extensions-certpatrol'] = {
             clear: function() {
-		CertPatrol.dbinit();
-		CertPatrol.delCerts(this.range);
-		CertPatrol.dbclose();
+		CertPatrol.delCertsSince(this.range);
             },
             get canClear() {
 		return true;
@@ -45,8 +45,8 @@ var CP_Sanitizer = {
             prefs.appendChild(pref);
 
             let check = document.createElement(itemList ? "listitem" : "checkbox");
-            check.setAttribute("label", CertPatrolLocale.itemLabel);
-            //check.setAttribute("accesskey", CertPatrolLocale.itemKey);
+            check.setAttribute("label", this.locale.itemLabel);
+            //check.setAttribute("accesskey", this.locale.itemKey);
             check.setAttribute("preference", prefName);
             //check.setAttribute("oncommand", "CP_Sanitizer.confirm(this);");
 
@@ -64,7 +64,7 @@ var CP_Sanitizer = {
 
             if (typeof gSanitizePromptDialog == "object") {
 		pref.setAttribute("readonly", "true");
-		check.addEventListener("onsyncfrompreference", function() { return gSanitizePromptDialog.onReadGeneric(); }, false);
+		check.addEventListener("syncfrompreference", function() { return gSanitizePromptDialog.onReadGeneric(); }, false);
             }
 	}
     },

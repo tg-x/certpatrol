@@ -5,7 +5,7 @@
   <script src="CertPatrol.js"/>
   <script src="sanitize.js" type="application/x-javascript; version=1.7; charset=utf-8" />
   <script>
-    var CertPatrolLocale = {
+    CP_Sanitizer.locale = {
         itemLabel: "&sanitizer.itemLabel;",
     };
     window.addEventListener("load", function(e) { CP_Sanitizer.onLoad(e); }, true);

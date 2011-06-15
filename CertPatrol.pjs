@@ -60,9 +60,7 @@ var CertPatrol = {
     // DB init
     dbinit: function() {
 	this.dbh = null;
-	this.dbselect = null;
-	this.dbinsert = null;
-	this.dbupdate = null;
+	this.db = {};
 
 	try {
 	    var file = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -128,37 +126,39 @@ var CertPatrol = {
 	    }
 
 	    // Prepared statements
-	    this.dbselect = this.dbh.createStatement(
-	      "SELECT * FROM certificates WHERE host=?1");
-	    this.dbselectWild = this.dbh.createStatement(
-	      "SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13");
-	    this.dbinsert = this.dbh.createStatement(
-	      "INSERT INTO certificates ("+
-		"host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
-		"notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
-		"md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored) "+
-	      "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18)");
-	    this.dbupdate = this.dbh.createStatement(
-	      "UPDATE certificates SET "+
-		"commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
-		"notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
-		"md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
-	      "WHERE host=?1");
-	    this.dbdelhost = this.dbh.createStatement(
-	      "DELETE FROM certificates WHERE host=?1");
-	    this.dbdelsince = this.dbh.createStatement(
-	      "DELETE FROM certificates WHERE stored >= ?18");
-	    this.dbdelall = this.dbh.createStatement(
-	      "DELETE FROM certificates");
+	    this.db = {
+		selectAll: this.dbh.createStatement("SELECT * FROM certificates"),
+		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1"),
+		selectWild: this.dbh.createStatement("SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
+		insert: this.dbh.createStatement(
+		  "INSERT INTO certificates ("+
+		    "host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
+		    "notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
+		    "md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored) "+
+		  "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18)"),
+		update: this.dbh.createStatement(
+		  "UPDATE certificates SET "+
+		    "commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
+		    "notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
+		    "md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
+		  "WHERE host=?1"),
+		delHost: this.dbh.createStatement("DELETE FROM certificates WHERE host=?1"),
+		delSince: this.dbh.createStatement("DELETE FROM certificates WHERE stored >= ?18"),
+		delAll: this.dbh.createStatement("DELETE FROM certificates"),
+	    };
 	} catch (err) {
 	    this.warn("Error initializing SQLite operations: "+ err);
 	}
     },
 
     dbclose: function() {
-	if (this.dbh) {
-	    this.dbh.close();
-	    this.dbh = null;
+	try {
+	    if (this.dbh) {
+		this.dbh.close();
+		this.dbh = null;
+	    }
+	} catch (err) {
+	    this.log("CertPatrol: Error trying to close connection: "+ err);
 	}
     },
 
@@ -214,11 +214,21 @@ var CertPatrol = {
 	return " ("+ this.psycText(this.locale[td < 0 ? "daysPast" : "daysFuture"], {_days: td < 0 ? -td : td}) +")";
     },
 
+    isodatedelta: function(tim) {
+	return tim ? this.isodate(tim) + this.daysdelta(this.timedelta(tim)) : "";
+    },
+
     byteArrayToString: function(ba) {
 	var s = "";
 	for (var i = 0; i < ba.length; i++)
             s += String.fromCharCode(ba[i]);
 	return s;
+    },
+
+    byteArrayToCert: function(ba) {
+	var Cc = Components.classes, Ci = Components.interfaces;
+	var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
+	return certdb.constructX509FromBase64(window.btoa(this.byteArrayToString(ba.value)));
     },
 
     newCertObj: function() {
@@ -268,9 +278,9 @@ var CertPatrol = {
 
     fillCertObj: function(obj, cert, cipherName, keyLength, secretKeyLength) {
 	obj.cert = cert;
-	obj.ciphername = cipherName;
-	obj.keyLength = keyLength;
-	obj.secretKeyLength = secretKeyLength;
+	if (cipherName) obj.ciphername = cipherName;
+	if (keyLength) obj.keyLength = keyLength;
+	if (secretKeyLength) obj.secretKeyLength = secretKeyLength;
 
 	obj.notBefore = cert.validity.notBefore;
 	obj.notAfter = cert.validity.notAfter;
@@ -377,7 +387,7 @@ var CertPatrol = {
 	} catch (err) {}
 
 	// Get certificate
-	var stmt = this.dbselect;
+	var stmt = this.db.selectHost;
 	try {
 	    stmt.bindUTF8StringParameter(0, certobj.host);
 	    if (stmt.executeStep()) {
@@ -399,10 +409,8 @@ var CertPatrol = {
 		certobj.sql.issuerSha1Fingerprint = stmt.getUTF8String(14);
 		var blob = {};
 		stmt.getBlob(15, {}, blob);
-		if (blob.value.length) {
-		    var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-		    certobj.sql.cert = certdb.constructX509FromBase64(window.btoa(this.byteArrayToString(blob.value)));
-		}
+		if (blob.value.length)
+		    certobj.sql.cert = this.byteArrayToCert(blob);
 		certobj.flags = stmt.getInt64(16);
 		certobj.sql.stored = stmt.getInt64(17) * 1000;
 	    }
@@ -477,17 +485,11 @@ var CertPatrol = {
 	    if (certobj.threat > 3) certobj.threat = 3;
 
 	    // produce human readable expiration dates
-	    certobj.sql.notBefore = this.isodate(certobj.sql.notBefore) +
-	      this.daysdelta(this.timedelta(certobj.sql.notBefore));
-	    certobj.sql.notAfter = this.isodate(certobj.sql.notAfter) +
-	      this.daysdelta(natd);
-	    certobj.moz.notBefore = this.isodate(certobj.moz.notBefore) +
-	      this.daysdelta(this.timedelta(certobj.moz.notBefore));
-	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
-	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
-
-	    //certobj.sql.stored = this.isodate(certobj.sql.stored) +
-	      //this.daysdelta(this.timedelta(certobj.sql.stored));
+	    certobj.sql.notBefore = this.isodatedelta(certobj.sql.notBefore);
+	    certobj.sql.notAfter = this.isodatedelta(certobj.sql.notAfter);
+	    certobj.moz.notBefore = this.isodatedelta(certobj.moz.notBefore);
+	    certobj.moz.notAfter = this.isodatedelta(certobj.moz.notAfter);
+	    //certobj.sql.stored = this.isodatedelta(certobj.sql.stored);
 
 	    if (wild && certobj.threat == 0) {
 		certobj.warn.wildcard = true;
@@ -504,7 +506,7 @@ var CertPatrol = {
 	} else if (!found) {
 	    if (save) {
 		// Store data
-		stmt = this.dbinsert;
+		stmt = this.db.insert;
 		try {
 		    stmt.bindUTF8StringParameter( 0, certobj.host);
 		    stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
@@ -535,10 +537,8 @@ var CertPatrol = {
 	    }
 ##	    // checks are done by firefox before we even get here
 ##	    // that's why we don't complain about host != common name etc.
-	    certobj.moz.notBefore = this.isodate(certobj.moz.notBefore) +
-	      this.daysdelta(this.timedelta(certobj.moz.notBefore));
-	    certobj.moz.notAfter = this.isodate(certobj.moz.notAfter) +
-	      this.daysdelta(this.timedelta(certobj.moz.notAfter));
+	    certobj.moz.notBefore = this.isodatedelta(certobj.moz.notBefore);
+	    certobj.moz.notAfter = this.isodatedelta(certobj.moz.notAfter);
 
 	    if (wild) {
 		certobj.warn.wildcard = true;
@@ -568,7 +568,7 @@ var CertPatrol = {
 	    // the certificate will be shown. Otherwise, return yes and the new cert
 	    // dialog will be omitted.
 	    try {
-		stmt = this.dbselectWild;
+		stmt = this.db.selectWild;
 		// starts counting from 0, so ?13 is 12 here. you gotta love it.
 		stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
 		stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
@@ -597,7 +597,7 @@ var CertPatrol = {
     // accept changed cert
     saveCert: function(certobj) {
 ##	this.log(">> saveCert: "+ certobj.host);
-	var stmt = this.dbupdate;
+	var stmt = this.db.update;
 	var cert = certobj.moz.cert;
 	try {
 	    stmt.bindUTF8StringParameter( 0, certobj.host);
@@ -632,7 +632,7 @@ var CertPatrol = {
     delCert: function(host) {
 	var stmt;
 	try {
-	    stmt = this.dbdelhost;
+	    stmt = this.db.delHost;
 	    stmt.bindUTF8StringParameter(0, host);
 	    stmt.executeStep();
 	} catch (err) {
@@ -642,19 +642,84 @@ var CertPatrol = {
 	}
     },
 
+    delCerts: function(hosts) {
+	if (!hosts || !hosts.length)
+	    return;
+	if (!this.dbh)
+	    this.dbinit();
+
+	var params = [];
+	for (var i=1; i<=hosts.length; i++)
+	    params.push('?'+i);
+
+	try {
+	    var stmt = this.dbh.createStatement("DELETE FROM certificates WHERE host IN ("+ params.join(",") +")");
+	    for (var i=0; i<hosts.length; i++)
+		stmt.bindUTF8StringParameter(i, hosts[i]);
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to remove certificates: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+    },
+
     // sanitizer - clear recent history
-    delCerts: function(range) {
+    delCertsSince: function(range) {
+	if (!this.dbh)
+	    this.dbinit();
 	var stmt;
 	try {
 	    if (range) {
-		stmt = this.dbdelsince;
+		stmt = this.db.delSince;
 		stmt.bindInt64Parameter(17, range[0] / 1000000);
 	    } else {
-		stmt = this.dbdelall;
+		stmt = this.db.delAll;
 	    }
 	    stmt.executeStep();
 	} catch (err) {
 	    this.warn("Error while trying to remove certificates: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+    },
+
+    updateFlags: function(hosts, flag, on) {
+	if (!hosts || !hosts.length)
+	    return;
+	if (typeof hosts != 'object')
+	    hosts = [hosts];
+	if (!this.dbh)
+	    this.dbinit();
+
+	var params = [];
+	for (var i=0; i<hosts.length; i++)
+	    params.push('?'+ (i+2));
+
+	try {
+	    var stmt;
+	    if (on)
+		stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags | ?1 WHERE host IN ("+ params.join(",") +")");
+	    else
+		stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags & ~?1 WHERE host IN ("+ params.join(",") +")");
+	    stmt.bindInt64Parameter(0, flag);
+	    for (var i=0; i<hosts.length; i++)
+		stmt.bindUTF8StringParameter(i+1, hosts[i]);
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to update flags: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+
+	try {
+	    stmt = this.dbh.createStatement("UPDATE certificates SET flags = ?1 WHERE flags IS NULL AND host IN ("+ params.join(",") +")");
+	    stmt.bindInt64Parameter(0, flag);
+	    for (var i=0; i<hosts.length; i++)
+		stmt.bindUTF8StringParameter(i+1, hosts[i]);
+	    stmt.executeStep();
+	} catch (err) {
+	    this.warn("Error while trying to update flags: "+ err);
 	} finally {
 	    stmt.reset();
 	}
@@ -665,6 +730,54 @@ var CertPatrol = {
 	    certobj.flags |= flag;
 	else
 	    certobj.flags &= ~flag;
+    },
+
+    getAllCerts: function() {
+	if (!this.dbh)
+	    this.dbinit();
+	var certs = [];
+	var stmt;
+	try {
+	    stmt = this.db.selectAll;
+	    while (stmt.executeStep()) {
+		var obj = {
+		    host: stmt.getUTF8String(0),
+		    commonName: stmt.getUTF8String(1),
+		    organization: stmt.getUTF8String(2),
+		    organizationalUnit: stmt.getUTF8String(3),
+		    serialNumber: stmt.getUTF8String(4),
+		    emailAddress: stmt.getUTF8String(5),
+		    md5Fingerprint: stmt.getUTF8String(11),
+		    sha1Fingerprint: stmt.getUTF8String(12),
+		    validity: {
+			notBefore: stmt.getUTF8String(6),
+			notAfter: stmt.getUTF8String(7),
+		    },
+		    issuer: {
+			commonName: stmt.getUTF8String(8),
+			organization: stmt.getUTF8String(9),
+			organizationUnit: stmt.getUTF8String(10),
+			issuerMd5Fingerprint: stmt.getUTF8String(13),
+			issuerSha1Fingerprint: stmt.getUTF8String(14),
+		    },
+		    flags: stmt.getInt64(16),
+		    stored: stmt.getInt64(17) * 1000,
+		};
+		var blob = {};
+		stmt.getBlob(15, {}, blob);
+		if (blob.value.length) {
+		    var cert = this.byteArrayToCert(blob);
+		    if (cert)
+			this.fillCertObj(obj, cert);
+		}
+		certs.push(obj);
+	    }
+	} catch (err) {
+	    this.warn("Error while trying to get certificates: "+ err);
+	} finally {
+	    stmt.reset();
+	}
+	return certs;
     },
 
     outnew: function(browser, certobj) {
@@ -795,7 +908,8 @@ var CertPatrol = {
 
     warn: function(result) {
 	window.openDialog("chrome://certpatrol/content/warning.xul",
-	  /* "ssl-warning" */ "_blank", "chrome,dialog,modal", result);
+			  "_blank", "chrome,dialog,modal", result);
+	this.log("CertPatol: "+ result);
     },
 
     log: function(s, a) {
@@ -832,4 +946,3 @@ var CertPatrol = {
 	});
     }
 };
-

@@ -54,3 +54,16 @@
 <!ENTITY warn_notAfter_due	"Info: This certificate will expire soon. It is normal to replace it now.">
 
 <!ENTITY sanitizer.itemLabel	"Certificates stored by CertPatrol">
+
+<!ENTITY certManager.description	"You have the following certificates stored by CertPatrol:">
+<!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the CertPatrol database?">
+
+<!ENTITY certManager.sha1		"SHA1 Fingerprint">
+<!ENTITY certManager.md5		"MD5 Fingerprint">
+<!ENTITY certManager.stored		"Stored">
+
+<!ENTITY certManager.issuerOnly			"Check CA only">
+<!ENTITY certManager.issuerOnly.set		"Set issuer-only checking">
+<!ENTITY certManager.issuerOnly.set.key		"S">
+<!ENTITY certManager.issuerOnly.unset		"Unset issuer-only checking">
+<!ENTITY certManager.issuerOnly.unset.key	"U">

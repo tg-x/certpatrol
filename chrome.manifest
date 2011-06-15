@@ -11,6 +11,7 @@ locale	certpatrol	it-IT	locale/it/
 # Firefox, Iceweasel, Flock
 overlay	chrome://browser/content/browser.xul chrome://certpatrol/content/overlay.xul
 overlay	chrome://browser/content/sanitize.xul chrome://certpatrol/content/sanitize.xul
+overlay chrome://pippki/content/certManager.xul chrome://certpatrol/content/certManager.xul
 
 # Mobile (Fennec)
 override chrome://certpatrol/content/prefs.xul chrome://certpatrol/content/prefs-mobile.xul application={a23983c0-fd0e-11dc-95ff-0800200c9a66}
