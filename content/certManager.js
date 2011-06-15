@@ -210,7 +210,7 @@ var CP_CertManager = {
 
 /**** TreeView ****/
 
-CP_TreeView = function(rows, grouping) {
+var CP_TreeView = function(rows, grouping) {
     PROTO_TREE_VIEW.call(this);
     this._rowMap = rows;
     this.grouping = grouping;
