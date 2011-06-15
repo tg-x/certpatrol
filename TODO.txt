@@ -176,6 +176,8 @@ Also trying out new threat policy to handle confused server farms.
    certificates in Private Browsing Mode.
  + Added CertPatrol to the 'Clear Recent History' dialog which deletes
    recently inserted/updated or all certs from the DB.
+ + Added CertPatrol to the Certificate Manager dialog where you can view and
+   delete the certificates stored by CertPatrol.
  + The dialogs have been reorganized, the change dialog has a diff-like layout
    so you don't have to compare the certificates yourself. Patrol does it for
    you and tells you what has changed.
