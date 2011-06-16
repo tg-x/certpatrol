@@ -276,12 +276,8 @@ var CertPatrol = {
 	};
     },
 
-    fillCertObj: function(obj, cert, cipherName, keyLength, secretKeyLength) {
+    fillCertObj: function(obj, cert) {
 	obj.cert = cert;
-	if (cipherName) obj.ciphername = cipherName;
-	if (keyLength) obj.keyLength = keyLength;
-	if (secretKeyLength) obj.secretKeyLength = secretKeyLength;
-
 	obj.notBefore = cert.validity.notBefore;
 	obj.notAfter = cert.validity.notAfter;
 	obj.issuerMd5Fingerprint = cert.issuer.md5Fingerprint;
@@ -364,7 +360,11 @@ var CertPatrol = {
 	// The interesting part
 	var certobj = this.newCertObj();
 	certobj.host = host;
-	this.fillCertObj(certobj.moz, cert, st.cipherName, st.keyLength, st.secretKeyLength);
+	certobj.ciphername = st.cipherName;
+	certobj.keyLength = st.keyLength;
+	certobj.secretKeyLength = st.secretKeyLength;
+	this.fillCertObj(certobj.moz, cert);
+
 	this.certCheck(browser, certobj);
     },
 

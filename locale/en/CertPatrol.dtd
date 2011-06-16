@@ -62,6 +62,9 @@
 <!ENTITY certManager.md5		"MD5 Fingerprint">
 <!ENTITY certManager.stored		"Stored">
 
+<!ENTITY certManager.groupByCA		"Group by CA">
+<!ENTITY certManager.groupByCA.key	"G">
+
 <!ENTITY certManager.issuerOnly			"Check CA only">
 <!ENTITY certManager.issuerOnly.set		"Set issuer-only checking">
 <!ENTITY certManager.issuerOnly.set.key		"S">

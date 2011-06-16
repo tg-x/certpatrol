@@ -61,6 +61,9 @@
 <!ENTITY certManager.md5		"TODO: MD5 Fingerprint">
 <!ENTITY certManager.stored		"TODO: Stored">
 
+<!ENTITY certManager.groupByCA		"TODO: Group by CA">
+<!ENTITY certManager.groupByCA.key	"TODO: G>
+
 <!ENTITY certManager.issuerOnly			"TODO: Check CA only">
 <!ENTITY certManager.issuerOnly.set		"TODO: Set issuer-only checking">
 <!ENTITY certManager.issuerOnly.set.key		"TODO: S">

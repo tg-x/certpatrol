@@ -28,7 +28,8 @@
       <vbox id="CertPatrolCerts" flex="1">
         <hbox>
           <description flex="1">&certManager.description;</description>
-          <checkbox id="CertPatrol_grouping" label="group by CA" oncommand="CP_CertManager.setGrouping(this.checked)" checked="true" />
+          <checkbox id="CertPatrol_grouping" label="&certManager.groupByCA;" accesskey="&certManager.groupByCA.key;"
+                    oncommand="CP_CertManager.setGrouping(this.checked)" checked="true" />
         </hbox>
         <separator class="thin"/>
         <tree id="CertPatrol-tree" flex="1" enableColumnDrag="true"
