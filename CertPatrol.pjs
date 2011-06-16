@@ -98,7 +98,7 @@ var CertPatrol = {
 		try {
 		    var old = stmt.executeStep();
 		} catch (err) {
-		    this.warn("Error trying to check SQL schema version: "+ err);
+		    this.warn("Error trying to check SQL schema version: ", err);
 		} finally {
 		    stmt.reset();
 		}
@@ -114,7 +114,7 @@ var CertPatrol = {
 		try {
 		    old = stmt.executeStep();
 		} catch (err) {
-		    this.warn("Error trying to check SQL schema version: "+ err);
+		    this.warn("Error trying to check SQL schema version: ", err);
 		} finally {
 		    stmt.reset();
 		}
@@ -147,7 +147,7 @@ var CertPatrol = {
 		delAll: this.dbh.createStatement("DELETE FROM certificates"),
 	    };
 	} catch (err) {
-	    this.warn("Error initializing SQLite operations: "+ err);
+	    this.warn("Error initializing SQLite operations: ", err);
 	}
     },
 
@@ -158,7 +158,7 @@ var CertPatrol = {
 		this.dbh = null;
 	    }
 	} catch (err) {
-	    this.log("CertPatrol: Error trying to close connection: "+ err);
+	    this.log("CertPatrol: Error trying to close connection: ", err);
 	}
     },
 
@@ -280,8 +280,12 @@ var CertPatrol = {
 	obj.cert = cert;
 	obj.notBefore = cert.validity.notBefore;
 	obj.notAfter = cert.validity.notAfter;
-	obj.issuerMd5Fingerprint = cert.issuer.md5Fingerprint;
-	obj.issuerSha1Fingerprint = cert.issuer.sha1Fingerprint;
+	if (cert.issuer) {
+	    obj.issuerMd5Fingerprint = cert.issuer.md5Fingerprint;
+	    obj.issuerSha1Fingerprint = cert.issuer.sha1Fingerprint;
+	} else {
+	    //this.log("no issuer: "+ [cert.commonName, cert.issuer, cert.sha1Fingerprint]);
+	}
 
 	var keys = ["commonName", "organization", "organizationalUnit", "serialNumber", "emailAddress",
 		    "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
@@ -417,7 +421,7 @@ var CertPatrol = {
 		certobj.sql.stored = stmt.getInt64(17) * 1000;
 	    }
 	} catch(err) {
-	    this.warn("Error trying to check certificate: "+ err);
+	    this.warn("Error trying to check certificate: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -531,8 +535,8 @@ var CertPatrol = {
 		    stmt.bindInt64Parameter(17, parseInt(new Date().getTime() / 1000));
 		    stmt.execute();
 		} catch(err) {
-		    this.warn("Error trying to insert certificate for "+certobj.host+
-		      ": "+err);
+		    this.warn("Error trying to insert certificate for "+
+			      certobj.host +": ", err);
 		} finally {
 		    stmt.reset();
 		}
@@ -586,8 +590,8 @@ var CertPatrol = {
 		    return false;
 		}
 	    } catch (err) {
-		this.warn("Error trying to check wildcard certificate "+ cert.commonName
-		  +": "+ err);
+		this.warn("Error trying to check wildcard certificate "+
+			  cert.commonName +": ", err);
 	    } finally {
 		stmt.reset();
 	    }
@@ -623,7 +627,7 @@ var CertPatrol = {
 	    stmt.bindInt64Parameter(17, parseInt(new Date().getTime() / 1000));
 	    stmt.execute();
 	} catch(err) {
-	    this.warn("Error trying to update certificate: "+ err);
+	    this.warn("Error trying to update certificate: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -638,7 +642,7 @@ var CertPatrol = {
 	    stmt.bindUTF8StringParameter(0, host);
 	    stmt.executeStep();
 	} catch (err) {
-	    this.warn("Error while trying to remove certificate: "+ err);
+	    this.warn("Error while trying to remove certificate: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -660,7 +664,7 @@ var CertPatrol = {
 		stmt.bindUTF8StringParameter(i, hosts[i]);
 	    stmt.executeStep();
 	} catch (err) {
-	    this.warn("Error while trying to remove certificates: "+ err);
+	    this.warn("Error while trying to remove certificates: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -680,7 +684,7 @@ var CertPatrol = {
 	    }
 	    stmt.executeStep();
 	} catch (err) {
-	    this.warn("Error while trying to remove certificates: "+ err);
+	    this.warn("Error while trying to remove certificates: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -709,7 +713,7 @@ var CertPatrol = {
 		stmt.bindUTF8StringParameter(i+1, hosts[i]);
 	    stmt.executeStep();
 	} catch (err) {
-	    this.warn("Error while trying to update flags: "+ err);
+	    this.warn("Error while trying to update flags: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -721,7 +725,7 @@ var CertPatrol = {
 		stmt.bindUTF8StringParameter(i+1, hosts[i]);
 	    stmt.executeStep();
 	} catch (err) {
-	    this.warn("Error while trying to update flags: "+ err);
+	    this.warn("Error while trying to update flags: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -775,7 +779,7 @@ var CertPatrol = {
 		certs.push(obj);
 	    }
 	} catch (err) {
-	    this.warn("Error while trying to get certificates: "+ err);
+	    this.warn("Error while trying to get certificates: ", err);
 	} finally {
 	    stmt.reset();
 	}
@@ -908,7 +912,8 @@ var CertPatrol = {
 	    return window.getNotificationBox(); // does not seem to work
     },
 
-    warn: function(result) {
+    warn: function(result, error) {
+	if (error) result += error +" at "+ error.fileName +" line "+ error.lineNumber;
 	window.openDialog("chrome://certpatrol/content/warning.xul",
 			  "_blank", "chrome,dialog,modal", result);
 	this.log("CertPatol: "+ result);
