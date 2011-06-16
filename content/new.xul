@@ -34,16 +34,16 @@
       $("cmdiag").setAttribute("title", certobj.event);
 
       var keys = [ 'commonName', 'organization', 'organizationalUnit',
+		   'md5Fingerprint', 'sha1Fingerprint',
 		// NOT SHOWN ANYMORE (go details):
-		// 'serialNumber', 'emailAddress',
+		// 'serialNumber',
 		// 'issuerCommonName', 'issuerOrganization',
 		// 'issuerOrganizationUnit',
 		// 'issuerMd5Fingerprint', 'issuerSha1Fingerprint',
-		// 'md5Fingerprint', 'sha1Fingerprint',
 		// 'notBefore',
 		// TO BE SHOWN IN FUTURE:
 		// 'countryName', 'localityName', 'stateOrProvinceName',
-                   'notAfter'
+                   'notAfter', 'emailAddress'
       ];
       for (var i in keys) {
         var key = keys[i];
@@ -91,13 +91,13 @@
           <label id="cmoul" value="&organizationalUnit;" />
           <textbox class="plain" readonly="true" id="organizationalUnit" />
         </row>
-        <!-- row>
-          <label id="cmsnl" value="&serialNumber;" />
-          <textbox class="plain" readonly="true" id="serialNumber" />
-        </row>
         <row>
           <label id="cmeml" value="&emailAddress;" />
           <textbox class="plain" readonly="true" id="emailAddress" />
+        </row>
+        <!-- row>
+          <label id="cmsnl" value="&serialNumber;" />
+          <textbox class="plain" readonly="true" id="serialNumber" />
         </row>
         <groupbox>
           <caption id="cmissby" label="&issuedBy;" />
@@ -133,7 +133,7 @@
           <label id="cmnal" value="&notAfter;" />
           <textbox class="plain" readonly="true" id="notAfter" />
         </row>
-        <!-- groupbox>
+        <groupbox>
           <caption id="cmfinger" label="&fingerprints;" />
         </groupbox>
         <row>
@@ -143,7 +143,7 @@
         <row>
           <label id="cmsha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="sha1Fingerprint" />
-        </row -->
+        </row>
       </rows>
     </grid>
 
