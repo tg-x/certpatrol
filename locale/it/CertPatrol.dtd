@@ -57,15 +57,15 @@
 <!ENTITY certManager.description	"Certificate Patrol ha memorizzato i seguenti certificati per te:">
 <!ENTITY certManager.confirmDelete	"Sei sicuro di rimuovere i seguenti certificati dalla memoria di CertPatrol?">
 
-<!ENTITY certManager.sha1		"TODO: SHA1 Fingerprint">
-<!ENTITY certManager.md5		"TODO: MD5 Fingerprint">
-<!ENTITY certManager.stored		"TODO: Stored">
+<!ENTITY certManager.sha1		"Impronta SHA1">
+<!ENTITY certManager.md5		"Impronta MD5">
+<!ENTITY certManager.stored		"Memorizzato il">
 
-<!ENTITY certManager.groupByCA		"TODO: Group by CA">
-<!ENTITY certManager.groupByCA.key	"TODO: G>
+<!ENTITY certManager.groupByCA		"Ragruppa secondo Autorità Root">
+<!ENTITY certManager.groupByCA.key	"R">
 
-<!ENTITY certManager.issuerOnly			"TODO: Check CA only">
-<!ENTITY certManager.issuerOnly.set		"TODO: Set issuer-only checking">
-<!ENTITY certManager.issuerOnly.set.key		"TODO: S">
-<!ENTITY certManager.issuerOnly.unset		"TODO: Unset issuer-only checking">
-<!ENTITY certManager.issuerOnly.unset.key	"TODO: U">
+<!ENTITY certManager.issuerOnly			"Controlla solo la CA">
+<!ENTITY certManager.issuerOnly.set		"Attiva controllo solo della CA">
+<!ENTITY certManager.issuerOnly.set.key		"A">
+<!ENTITY certManager.issuerOnly.unset		"Disattiva controllo solo della CA">
+<!ENTITY certManager.issuerOnly.unset.key	"D">

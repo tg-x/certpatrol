@@ -53,20 +53,20 @@
 <!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig, aber vielleicht gab es andere Gründe es zu ersetzen.">
 <!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
 
-<!ENTITY sanitizer.itemLabel	"TODO: Certificates stored by CertPatrol">
+<!ENTITY sanitizer.itemLabel	"Durch Certificate Patrol gespeicherte Zertifikate">
 
-<!ENTITY certManager.description	"TODO: You have the following certificates stored by CertPatrol:">
-<!ENTITY certManager.confirmDelete	"TODO: Are you sure you want to delete the selected certificates from the CertPatrol database?">
+<!ENTITY certManager.description	"Certificate Patrol hat folgende Zertifikate gespeichert:">
+<!ENTITY certManager.confirmDelete	"Sicher, dass die Zertifikate von der CertPatrol Datenbank gelöscht werden sollen?">
 
-<!ENTITY certManager.sha1		"TODO: SHA1 Fingerprint">
-<!ENTITY certManager.md5		"TODO: MD5 Fingerprint">
-<!ENTITY certManager.stored		"TODO: Stored">
+<!ENTITY certManager.sha1		"SHA1 Fingerprint">
+<!ENTITY certManager.md5		"MD5 Fingerprint">
+<!ENTITY certManager.stored		"Gespeichert am">
 
-<!ENTITY certManager.groupByCA		"TODO: Group by CA">
-<!ENTITY certManager.groupByCA.key	"TODO: G>
+<!ENTITY certManager.groupByCA		"Nach Root CA gruppieren">
+<!ENTITY certManager.groupByCA.key	"G">
 
-<!ENTITY certManager.issuerOnly			"TODO: Check CA only">
-<!ENTITY certManager.issuerOnly.set		"TODO: Set issuer-only checking">
-<!ENTITY certManager.issuerOnly.set.key		"TODO: S">
-<!ENTITY certManager.issuerOnly.unset		"TODO: Unset issuer-only checking">
-<!ENTITY certManager.issuerOnly.unset.key	"TODO: U">
+<!ENTITY certManager.issuerOnly			"Nur CA beachten">
+<!ENTITY certManager.issuerOnly.set		"Aktiviere nur CA beachten">
+<!ENTITY certManager.issuerOnly.set.key		"A">
+<!ENTITY certManager.issuerOnly.unset		"Deaktiviere nur CA beachten">
+<!ENTITY certManager.issuerOnly.unset.key	"D">

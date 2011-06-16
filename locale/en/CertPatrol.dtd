@@ -60,13 +60,13 @@
 
 <!ENTITY certManager.sha1		"SHA1 Fingerprint">
 <!ENTITY certManager.md5		"MD5 Fingerprint">
-<!ENTITY certManager.stored		"Stored">
+<!ENTITY certManager.stored		"Stored Since">
 
-<!ENTITY certManager.groupByCA		"Group by CA">
+<!ENTITY certManager.groupByCA		"Group by Root Authority">
 <!ENTITY certManager.groupByCA.key	"G">
 
 <!ENTITY certManager.issuerOnly			"Check CA only">
-<!ENTITY certManager.issuerOnly.set		"Set issuer-only checking">
+<!ENTITY certManager.issuerOnly.set		"Set CA-only checking">
 <!ENTITY certManager.issuerOnly.set.key		"S">
-<!ENTITY certManager.issuerOnly.unset		"Unset issuer-only checking">
+<!ENTITY certManager.issuerOnly.unset		"Unset CA-only checking">
 <!ENTITY certManager.issuerOnly.unset.key	"U">

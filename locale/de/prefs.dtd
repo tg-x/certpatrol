@@ -3,6 +3,6 @@
 <!ENTITY _popup_new	"Immer Details anzeigen für neu angenommene Zertifikate">
 <!ENTITY _popup_change	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
 <!ENTITY _popup_wild	"Details erneut anzeigen für mehrfach eingesetzte Wildcardzertifikate">
-<!ENTITY _privatebrowsing_save	"TODO: Save new and changed certificates in Private Browsing Mode">
+<!ENTITY _privatebrowsing_save	"Speichere Zertifikate auch wenn Private Browsing Mode aktiv ist">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">

@@ -3,6 +3,6 @@
 <!ENTITY _popup_new	"Newly accepted certificates are always shown in a pop-up by default">
 <!ENTITY _popup_change	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
 <!ENTITY _popup_wild	"Show already accepted wildcard certificates again when they match a new hostname">
-<!ENTITY _privatebrowsing_save	"Save new and changed certificates in Private Browsing Mode">
+<!ENTITY _privatebrowsing_save	"Store certificates even when in Private Browsing Mode">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">

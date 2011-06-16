@@ -22,7 +22,7 @@
 
   <tabbox id="certmanagertabs">
     <tabs id="certMgrTabbox">
-      <tab id="CertPatrol_tab" label="CertPatrol"/>
+      <tab id="CertPatrol_tab" label="Certificate Patrol"/>
     </tabs>
     <tabpanels>
       <vbox id="CertPatrolCerts" flex="1">
