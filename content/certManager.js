@@ -102,7 +102,10 @@ var CP_CertManager = {
 
 	    var keys = [];
 	    for (var k in tree) keys.push(k);
-	    keys.sort(function(a, b){return a.toLowerCase() > b.toLowerCase()});
+	    keys.sort(function(a, b) {
+		a = a.toLowerCase(); b = b.toLowerCase();
+		return a > b ? 1 : a < b ? -1 : 0
+	    });
 	    for (var i=0; i<keys.length; i++) {
 		var k = keys[i];
 		var issuer = {};
@@ -258,7 +261,7 @@ CP_TreeView.prototype.sort = function(key) {
 	this.sortAsc = true;
     this.sortKey = key;
 
-    var asc = this.sortAsc, grouping = this.grouping;
+    var order = this.sortAsc ? 1 : -1, grouping = this.grouping;
     var map = {
 	notBefore: ['validity', 'notBefore'],
 	notAfter: ['validity', 'notAfter'],
@@ -272,9 +275,9 @@ CP_TreeView.prototype.sort = function(key) {
 	var bcert = b.data.cert || b.data;
 	if (typeof key != 'object') {
 	    if (key in a.data)
-		ret = a.data[key] > b.data[key];
+		ret = a.data[key] > b.data[key] ? 1 : a.data[key] < b.data[key] ? -1 : 0;
 	    else
-		ret = acert[key] > bcert[key];
+		ret = acert[key] > bcert[key] ? 1 : acert[key] < bcert[key] ? -1 : 0;
 	} else {
 	    var aval = acert[key[0]][key[1]];
 	    var bval = bcert[key[0]][key[1]];
@@ -282,13 +285,13 @@ CP_TreeView.prototype.sort = function(key) {
 		if (typeof aval == 'string' && aval.indexOf(' ') >= 0) aval = 0;
 		if (typeof bval == 'string' && bval.indexOf(' ') >= 0) bval = 0;
 	    }
-	    ret = aval > bval;
+	    ret = aval > bval ? 1 : aval < bval ? -1 : 0;
 	}
-	return asc ? ret : !ret;
+	return ret * order;
     };
 
     if (!this.grouping)
-	return this. _rowMap.sort(sort);;
+	return this. _rowMap.sort(sort);
 
     for (var i=0; i<this._rowMap.length; i++) {
 	var row = this._rowMap[i];

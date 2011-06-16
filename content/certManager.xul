@@ -53,7 +53,7 @@
             <treecol id="stored" label="&certManager.stored;"
                      persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
-            <treecol id="sha1Fingerprint" label="&certManager.sha1;"
+            <treecol id="sha1Fingerprint" label="&certManager.sha1;" hidden="true"
                      persist="hidden width ordinal" flex="5"/>
             <splitter class="tree-splitter"/>
             <treecol id="md5Fingerprint" label="&certManager.md5;" hidden="true"
