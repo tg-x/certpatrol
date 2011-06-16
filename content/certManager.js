@@ -89,7 +89,8 @@ var CP_CertManager = {
 		var issuer, key;
 		if (chain && chain.length > 1) {
 		    issuer = chain.queryElementAt(chain.length - 1, Ci.nsIX509Cert);
-		    key = issuer.sha1Fingerprint + issuer.md5Fingerprint;
+		    key = ['\0', issuer.organization, issuer.organizationUnit,
+			   issuer.sha1Fingerprint, issuer.md5Fingerprint].join('|');
 		} else {
 		    issuer = c.issuer;
 		    key = [c.issuer.organization, c.issuer.organizationUnit].join('|');
