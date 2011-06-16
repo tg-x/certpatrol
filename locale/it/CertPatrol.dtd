@@ -56,6 +56,7 @@
 <!ENTITY sanitizer.itemLabel	"Certificati memorizzati da Certificate Patrol">
 <!ENTITY certManager.description	"Certificate Patrol ha memorizzato i seguenti certificati per te:">
 <!ENTITY certManager.confirmDelete	"Sei sicuro di rimuovere i seguenti certificati dalla memoria di CertPatrol?">
+<!ENTITY certManager.view.tooltip	"TODO: Works only for rows where the '&certManager.stored;' column is not empty">
 
 <!ENTITY certManager.sha1		"Impronta SHA1">
 <!ENTITY certManager.md5		"Impronta MD5">
