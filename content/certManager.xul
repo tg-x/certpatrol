@@ -70,7 +70,7 @@
         <hbox>
           <hbox flex="1">
             <button id="CertPatrol_viewButton" class="normal" 
-                    label="&certmgr.view2.label;" tooltiptext="&certManager.view.tooltip;"
+                    label="&certmgr.view2.label;"
                     accesskey="&certmgr.view2.accesskey;"
                     disabled="true" oncommand="CP_CertManager.viewCerts();"/>
             <button id="CertPatrol_deleteButton" class="normal" 

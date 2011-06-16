@@ -179,9 +179,15 @@ var CP_CertManager = {
 
     viewCerts: function() {
 	var certs = this.getSelectedCerts();
-	for (var i=0; i<certs.length; i++)
+	for (var i=0; i<certs.length; i++) {
 	    if (certs[i].cert instanceof Components.interfaces.nsIX509Cert)
-		viewCertHelper(window, certs[i].cert);
+		CertPatrol.viewCert(certs[i].cert);
+	    else if (certs[i].sha1Fingerprint != null)
+		window.openDialog("chrome://certpatrol/content/view.xul",
+				  "_blank", "chrome,dialog",
+				  certs[i], CertPatrol);
+
+	}
     },
 
     deleteCerts: function() {

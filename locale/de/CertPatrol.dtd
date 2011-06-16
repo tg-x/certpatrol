@@ -57,7 +57,6 @@
 
 <!ENTITY certManager.description	"Certificate Patrol hat folgende Zertifikate gespeichert:">
 <!ENTITY certManager.confirmDelete	"Sicher, dass die Zertifikate von der CertPatrol Datenbank gelöscht werden sollen?">
-<!ENTITY certManager.view.tooltip	"TODO: Works only for rows where the '&certManager.stored;' column is not empty">
 
 <!ENTITY certManager.sha1		"SHA1 Fingerprint">
 <!ENTITY certManager.md5		"MD5 Fingerprint">

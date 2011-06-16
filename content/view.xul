@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd">
+
+<?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
+
+<dialog id="ssl-view"
+  title="Certificate Patrol"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  persist="screenX screenY width height" width="700" height="500"
+  buttons="accept"
+  onload="return onLoad()"
+  ondialogaccept="return true">
+  <script><![CDATA[
+    var certobj = window.arguments[0];
+    var CertPatrol = window.arguments[1];
+    //var $ = document.getElementById.bind(document); // TB does not have bind()
+    function $() { return document.getElementById.apply(document, arguments); }
+
+    function onLoad() {
+      $("cmdiag").setAttribute("title", certobj.host);
+
+      var keys = [ "commonName", "organization", "organizationalUnit",
+		   "md5Fingerprint", "sha1Fingerprint",
+		   "serialNumber", "emailAddress",
+      ];
+      for (var i=0; i<keys.length; i++)
+          $(keys[i]).value = certobj[keys[i]] || "";
+
+      keys = ["commonName", "organization", "organizationUnit"];
+      for (var i=0; i<keys.length; i++)
+          $("issuer."+keys[i]).value = certobj.issuer[keys[i]] || "";
+
+      $("validity.notBefore").value = CertPatrol.isodatedelta(certobj.validity.notBefore);
+      $("validity.notAfter").value = CertPatrol.isodatedelta(certobj.validity.notAfter);
+    }
+
+   ]]></script>
+  <dialogheader id="cmdiag" />
+
+  <vbox flex="1" style="overflow: auto">
+
+    <grid>
+      <columns>
+        <column flex="1" />
+        <column flex="2" />
+      </columns>
+    
+      <rows>
+        <groupbox>
+          <caption id="cmissto" label="&issuedTo;" />
+        </groupbox>
+        <row>
+          <label id="cmcnl" value="&commonName;" />
+          <textbox class="plain" readonly="true" id="commonName" />
+        </row>
+        <row>
+          <label id="cmol" value="&organization;" />
+          <textbox class="plain" readonly="true" id="organization" />
+        </row>
+        <row>
+          <label id="cmoul" value="&organizationalUnit;" />
+          <textbox class="plain" readonly="true" id="organizationalUnit" />
+        </row>
+        <row>
+          <label id="cmeml" value="&emailAddress;" />
+          <textbox class="plain" readonly="true" id="emailAddress" />
+        </row>
+        <row>
+          <label id="cmsnl" value="&serialNumber;" />
+          <textbox class="plain" readonly="true" id="serialNumber" />
+        </row>
+        <groupbox>
+          <caption id="cmissby" label="&issuedBy;" />
+        </groupbox>
+        <row>
+          <label id="cmicnl" value="&commonName;" />
+          <textbox class="plain" readonly="true" id="issuer.commonName" />
+        </row>
+        <row>
+          <label id="cmiol" value="&organization;" />
+          <textbox class="plain" readonly="true" id="issuer.organization" />
+        </row>
+        <row>
+          <label id="cmioul" value="&organizationalUnit;" />
+          <textbox class="plain" readonly="true" id="issuer.organizationUnit" />
+        </row>
+        <groupbox>
+          <caption id="cmvalid" label="&validity;" />
+        </groupbox>
+        <row>
+          <label id="cmnbl" value="&notBefore;" />
+          <textbox class="plain" readonly="true" id="validity.notBefore" />
+        </row>
+        <row>
+          <label id="cmnal" value="&notAfter;" />
+          <textbox class="plain" readonly="true" id="validity.notAfter" />
+        </row>
+        <groupbox>
+          <caption id="cmfinger" label="&fingerprints;" />
+        </groupbox>
+        <row>
+          <label id="cmmd5l" value="&md5Fingerprint;" />
+          <textbox class="plain" readonly="true" size="64" id="md5Fingerprint" />
+        </row>
+        <row>
+          <label id="cmsha1l" value="&sha1Fingerprint;" />
+          <textbox class="plain" readonly="true" size="64" id="sha1Fingerprint" />
+        </row>
+      </rows>
+    </grid>
+
+  </vbox>
+</dialog>

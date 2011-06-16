@@ -941,10 +941,10 @@ var CertPatrol = {
 	node.setAttribute("rows", chain.length);
     },
 
-    viewCert: function(cert) {
+    viewCert: function(cert, parent) {
 	Components.classes["@mozilla.org/nsCertificateDialogs;1"]
             .getService(Components.interfaces.nsICertificateDialogs)
-	    .viewCert(null, cert);
+	    .viewCert(parent, cert);
     },
 
     psycText: function(template, vars) {
