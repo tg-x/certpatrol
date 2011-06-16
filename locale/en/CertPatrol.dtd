@@ -55,7 +55,7 @@
 
 <!ENTITY sanitizer.itemLabel	"Certificates stored by CertPatrol">
 
-<!ENTITY certManager.description	"You have the following certificates stored by CertPatrol:">
+<!ENTITY certManager.description	"Certificate Patrol has stored the following certificates for you:">
 <!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the CertPatrol database?">
 
 <!ENTITY certManager.sha1		"SHA1 Fingerprint">

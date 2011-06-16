@@ -53,9 +53,9 @@
 <!ENTITY warn_notAfter_notdue	"Attenzione: Il vecchio certificato non era ancora scaduto, ma forse c'erano altre ragioni per cambiarlo.">
 <!ENTITY warn_notAfter_due	"Info: Il vecchio certificato scade prossimamente. È normale cambiarlo.">
 
-<!ENTITY sanitizer.itemLabel	"TODO: Certificates stored by CertPatrol">
-<!ENTITY certManager.description	"TODO: You have the following certificates stored by CertPatrol:">
-<!ENTITY certManager.confirmDelete	"TODO: Are you sure you want to delete the selected certificates from the CertPatrol database?">
+<!ENTITY sanitizer.itemLabel	"Certificati memorizzati da Certificate Patrol">
+<!ENTITY certManager.description	"Certificate Patrol ha memorizzato i seguenti certificati per te:">
+<!ENTITY certManager.confirmDelete	"Sei sicuro di rimuovere i seguenti certificati dalla memoria di CertPatrol?">
 
 <!ENTITY certManager.sha1		"TODO: SHA1 Fingerprint">
 <!ENTITY certManager.md5		"TODO: MD5 Fingerprint">
