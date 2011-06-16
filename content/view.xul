@@ -32,6 +32,8 @@
 
       $("validity.notBefore").value = CertPatrol.isodatedelta(certobj.validity.notBefore);
       $("validity.notAfter").value = CertPatrol.isodatedelta(certobj.validity.notAfter);
+
+      $("ssl-view").focus();
     }
 
    ]]></script>
