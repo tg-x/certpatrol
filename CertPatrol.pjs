@@ -319,7 +319,9 @@ var CertPatrol = {
 	if (!si)
 	    return;
 
-	var nc = channel.notificationCallbacks || channel.loadGroup.notificationCallbacks;
+	var nc = channel.notificationCallbacks;
+	if (!nc && channel.loadGroup)
+	    nc = channel.loadGroup.notificationCallbacks;
 	if (!nc)
 	    return;
 
