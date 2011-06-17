@@ -835,7 +835,7 @@ var CertPatrol = {
 ##      // using certobj.host as the id for the notification
 	if (notifyBox && !popup) {
 	    notifyBox.appendNotification(
-		"(CertPatrol) "+ certobj.event +" "+
+		"(CertPatrol) "+ certobj.host +": "+certobj.event +" "+
 		    certobj.moz.commonName +". "+
 		    this.locale.issuedBy +" "+
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
@@ -878,7 +878,7 @@ var CertPatrol = {
 		notifyBox.PRIORITY_CRITICAL_HIGH
 	    ];
 	    notifyBox.appendNotification(
-		"(CertPatrol) "+ certobj.event +" "+
+		"(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
 		    certobj.moz.commonName +". "+
 		    this.locale.issuedBy +" "+
 		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
