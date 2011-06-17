@@ -127,18 +127,18 @@ var CertPatrol = {
 		} catch (e) {
 		    this.dbh.executeSimpleSQL("ALTER TABLE version ADD COLUMN extversion TEXT");
 		}
-		this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
 
-		var vc = Components.classes["@mozilla.org/xpcom/version-comparator;1"]
-                    .getService(Components.interfaces.nsIVersionComparator);
+		if (extversion != this.version) {
+		    this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
 
-		// show release notes for stable versions after upgrade
-		if (!/[a-z]/.test(this.version) && (!extversion || vc.compare(extversion, this.version) < 0)) {
-		    var url = "http://patrol.psyced.org/version-"+ this.version +".html";
-		    if (typeof gBrowser != "undefined")
-			gBrowser.selectedTab = gBrowser.addTab(url);
-		    else
-			window.openDialog(url, "_blank");
+		    // show release notes for stable versions after upgrade
+		    if (!/[a-z]/.test(this.version)) {
+			var url = "http://patrol.psyced.org/version-"+ this.version +".html";
+			if (typeof gBrowser != "undefined")
+			    gBrowser.selectedTab = gBrowser.addTab(url);
+			else
+			    window.openDialog(url, "_blank");
+		    }
 		}
 	    }
 
