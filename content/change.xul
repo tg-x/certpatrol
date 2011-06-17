@@ -80,7 +80,7 @@
   <dialogheader id="cmdiag" />
 
   <vbox style="font-weight: bold">
-    <description hidden="true" style="font-weight: bold" id="warn_wildcard">&warn_wildcard;</description>
+    <description hidden="true" id="warn_wildcard">&warn_wildcard;</description>
     <description hidden="true" id="warn_commonName">&warn_commonName;</description>
     <description hidden="true" id="warn_issuerCommonName">&warn_issuerCommonName;</description>
     <description hidden="true" id="warn_notBefore">&warn_notBefore;</description>
