@@ -264,8 +264,8 @@ var CertPatrol = {
 
     byteArrayToCert: function(ba) {
 	var Cc = Components.classes, Ci = Components.interfaces;
-	var certdb = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-	return certdb.constructX509FromBase64(window.btoa(this.byteArrayToString(ba.value)));
+	var c = "@mozilla.org/security/x509certdb;1", i= "nsIX509CertDB";
+	return Cc[c].getService(Ci[i]).constructX509FromBase64(window.btoa(this.byteArrayToString(ba.value)));
     },
 
     newCertObj: function() {

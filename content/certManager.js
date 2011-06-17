@@ -318,7 +318,7 @@ CP_TreeView.getRow = function(data, level) {
 	level: level,
 	open: false,
 	children: [],
-	data: data,
+	data : data,
 	getText: function(col) {
 	    var d = this.data;
 	    var cert = d.cert || d;
