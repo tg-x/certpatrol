@@ -10,7 +10,8 @@
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * ''Certificate Patrol'' was conceived by Carlo v. Loesch and
- * implemented by Aiko Barz, Mukunda Modell, Carlo v. Loesch and Gabor Adam Toth.
+ * implemented by Aiko Barz, Gabor X Toth, Carlo v. Loesch and Mukunda Modell.
+ * Wildcard functionality was contributed by Georg Koppen, JonDos GmbH 2010.
  *
  * http://patrol.psyced.org
  *
@@ -37,10 +38,6 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *                              
  * ***** END LICENSE BLOCK ***** */
-##
-## The original Certificate Patrol code was slightly adapted by Georg Koppen, 
-## JonDos GmbH 2010. The wildcard certificate functionality was developed by 
-## Georg Koppen, JonDos GmbH 2010.
 
 // This source code is formatted according to half-indented KNF.
 var CertPatrol = {
@@ -422,7 +419,19 @@ var CertPatrol = {
 		save = this.prefs.getBoolPref("privatebrowsing.save");
 	} catch (err) {}
 
-	// Get certificate
+## TODO: Before we even check the database we can make checks on the
+## credibility of subCAs:
+##
+## + raise the threat level on subCAs that share no common substring
+##   with the root CA (like "bogus CA" being a subCA of "CNNIC")
+##
+## + provide a hardcoded blacklist of CAs that sell subCAs for money
+##   (see website). raise threat level for those.
+##
+## + maybe add a whitelist of subCAs which happen to be okay anyway?
+##   (startssl case)
+##
+	// Get certificate from storage
 	var stmt = this.db.selectHost;
 	try {
 	    stmt.bindUTF8StringParameter(0, certobj.host);
@@ -464,9 +473,9 @@ var CertPatrol = {
 	    // we don't have the full cert yet, so we just store it in the DB
 	    // and return if everything looks fine.
 	    if (!certobj.sql.cert &&
-		certobj.sql.sha1Fingerprint == certobj.moz.sha1Fingerprint &&
-		certobj.sql.md5Fingerprint == certobj.moz.md5Fingerprint)
-		    return this.saveCert(certobj);
+		 certobj.sql.sha1Fingerprint == certobj.moz.sha1Fingerprint &&
+		 certobj.sql.md5Fingerprint == certobj.moz.md5Fingerprint)
+	      return this.saveCert(certobj);
 
 	    // has the certificated hostname changed?
 	    if (!wild && certobj.moz.commonName != certobj.sql.commonName) {
@@ -505,7 +514,6 @@ var CertPatrol = {
 	    // further checks done by agent before we even get here
 
 	    // check if they have the same issuer
-##	    // VeriSign case suggests i should compare issuerOrganization instead...
 	    if (certobj.sql.cert && certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer)) {
 		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY) return;
 	    } else if (certobj.sql.cert ||
@@ -513,7 +521,10 @@ var CertPatrol = {
 			(certobj.moz.issuerOrganization != certobj.sql.issuerOrganization ||
 			 certobj.moz.issuerCommonName != certobj.sql.issuerCommonName))) {
 		certobj.warn.issuerCommonName = true;
-		certobj.threat += 2;
+                // companies pick different CAs all the time unfortunately
+		certobj.threat ++;
+                // TODO: implement more refined CA comparisons like
+                //  has the root CA remained the same (
 	    }
 
 	    // fetch suitable scare message
@@ -594,7 +605,7 @@ var CertPatrol = {
 	// just return false and the new cert dialog will be schown. But even if
 	// we have one but no SHA1 fingerprint we should show it for security's
 	// sake...
-##  alert("doing wildcardCertCheck for "+ sha1Fingerprint);
+##	alert("doing wildcardCertCheck for "+ sha1Fingerprint);
 	if (cert.commonName.charAt(0) === '*' && cert.md5Fingerprint && cert.sha1Fingerprint) {
 	    // We got one, check now if we have it already. If not, return false and
 	    // the certificate will be shown. Otherwise, return yes and the new cert
