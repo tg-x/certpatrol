@@ -1,12 +1,10 @@
-### vim:syntax=js
+### vim:syntax=javascript
 ###
 ### PREP SOURCE.. not in the mood for jaggler.. maybe i'll have to port later
 ### The following warning isn't for you if you can read this.
 #// This file has been generated using prep.   http://perl.pages.de
 ###
 ### Currently no ifdefs in here.
-##
-## TODO: GeKo sagt: I mean you are not saving a cert but saying so at the moment...
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -250,7 +248,6 @@ var CertPatrol = {
 	td = Math.round(td / 86400000);	// milliseconds per day
 	return " ("+ this.psycText(this.locale[td < 0 ? "daysPast" : "daysFuture"], {_days: td < 0 ? -td : td}) +")";
     },
-
     isodatedelta: function(tim) {
 	return tim ? this.isodate(tim) + this.daysdelta(this.timedelta(tim)) : "";
     },
@@ -258,7 +255,7 @@ var CertPatrol = {
     byteArrayToString: function(ba) {
 	var s = "";
 	for (var i = 0; i < ba.length; i++)
-            s += String.fromCharCode(ba[i]);
+	  s += String.fromCharCode(ba[i]);
 	return s;
     },
 
@@ -328,19 +325,19 @@ var CertPatrol = {
 		    "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
 		    "md5Fingerprint", "sha1Fingerprint"];
 	for (var i in keys)
-	    obj[keys[i]] = cert[keys[i]];
+	  obj[keys[i]] = cert[keys[i]];
     },
 
 
     registerObserver: function(topic) {
 	var observerService = Components.classes["@mozilla.org/observer-service;1"]
-            .getService(Components.interfaces.nsIObserverService);
+          .getService(Components.interfaces.nsIObserverService);
 	observerService.addObserver(this, topic, false);
     },
 
     unregisterObserver: function(topic) {
 	var observerService = Components.classes["@mozilla.org/observer-service;1"]
-            .getService(Components.interfaces.nsIObserverService);
+          .getService(Components.interfaces.nsIObserverService);
 	observerService.removeObserver(this, topic);
     },
 
@@ -353,23 +350,19 @@ var CertPatrol = {
 ##	this.log("URI: "+ channel.URI.spec);
 
 	var si = channel.securityInfo;
-	if (!si)
-	    return;
+	if (!si) return;
 
 	var nc = channel.notificationCallbacks;
 	if (!nc && channel.loadGroup)
 	    nc = channel.loadGroup.notificationCallbacks;
-	if (!nc)
-	    return;
+	if (!nc) return;
 
 	try {
 	    var win = nc.getInterface(Ci.nsIDOMWindow);
 	} catch (e) {
 	    return; // no window for e.g. favicons
 	}
-
-	if (!win.document)
-	    return;
+	if (!win.document) return;
 
 	var browser;
 	if (typeof gBrowser != "undefined") // thunderbird has no gBrowser
@@ -379,7 +372,7 @@ var CertPatrol = {
 	var wpl = Ci.nsIWebProgressListener;
 	// proceed only if the page is considered secure or browser is null
 	if (browser && !(browser.securityUI.state & wpl.STATE_IS_SECURE))
-	    return;
+	  return;
 
 	si.QueryInterface(Ci.nsISSLStatusProvider);
 	var st = si.SSLStatus;
@@ -394,7 +387,7 @@ var CertPatrol = {
 	// show only one notification per host for a browser tab
 	var key = [host, cert.md5Fingerprint, cert.sha1Fingerprint].join('|');
 	if (obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key]))
-	    return;
+	  return;
 	obj.__certs = obj.__certs || {};
 	obj.__certs[key] = cert;
 
@@ -514,8 +507,7 @@ var CertPatrol = {
 	    // check if they have the same issuer
 ##	    // VeriSign case suggests i should compare issuerOrganization instead...
 	    if (certobj.sql.cert && certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer)) {
-		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY)
-		    return;
+		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY) return;
 	    } else if (certobj.sql.cert ||
 		       (!certobj.sql.cert && // old method, if we don't have a cert stored yet
 			(certobj.moz.issuerOrganization != certobj.sql.issuerOrganization ||
@@ -587,7 +579,6 @@ var CertPatrol = {
 		this.outwild(browser, certobj);
 		return;
 	    }
-
 	    certobj.event = this.locale.newEvent;
 	    this.outnew(browser, certobj);
 	}
@@ -630,9 +621,7 @@ var CertPatrol = {
 	    } finally {
 		stmt.reset();
 	    }
-	} else {
-	    return false;
-	}
+	} else return false;
     },
 
     // accept changed cert
@@ -684,14 +673,12 @@ var CertPatrol = {
     },
 
     delCerts: function(hosts) {
-	if (!hosts || !hosts.length)
-	    return;
-	if (!this.dbh)
-	    this.dbinit();
+	if (!hosts || !hosts.length) return;
+	if (!this.dbh) this.dbinit();
 
 	var params = [];
 	for (var i=1; i<=hosts.length; i++)
-	    params.push('?'+i);
+	  params.push('?'+i);
 
 	try {
 	    var stmt = this.dbh.createStatement("DELETE FROM certificates WHERE host IN ("+ params.join(",") +")");
@@ -726,26 +713,23 @@ var CertPatrol = {
     },
 
     updateFlags: function(hosts, flag, on) {
-	if (!hosts || !hosts.length)
-	    return;
-	if (typeof hosts != 'object')
-	    hosts = [hosts];
-	if (!this.dbh)
-	    this.dbinit();
+	if (!hosts || !hosts.length) return;
+	if (typeof hosts != 'object') hosts = [hosts];
+	if (!this.dbh) this.dbinit();
 
 	var params = [];
 	for (var i=0; i<hosts.length; i++)
-	    params.push('?'+ (i+2));
+	  params.push('?'+ (i+2));
 
 	try {
 	    var stmt;
 	    if (on)
-		stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags | ?1 WHERE host IN ("+ params.join(",") +")");
+	      stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags | ?1 WHERE host IN ("+ params.join(",") +")");
 	    else
-		stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags & ~?1 WHERE host IN ("+ params.join(",") +")");
+	      stmt = this.dbh.createStatement("UPDATE certificates SET flags = flags & ~?1 WHERE host IN ("+ params.join(",") +")");
 	    stmt.bindInt64Parameter(0, flag);
 	    for (var i=0; i<hosts.length; i++)
-		stmt.bindUTF8StringParameter(i+1, hosts[i]);
+	      stmt.bindUTF8StringParameter(i+1, hosts[i]);
 	    stmt.executeStep();
 	} catch (err) {
 	    this.warn("Error while trying to update flags: ", err);
@@ -757,7 +741,7 @@ var CertPatrol = {
 	    stmt = this.dbh.createStatement("UPDATE certificates SET flags = ?1 WHERE flags IS NULL AND host IN ("+ params.join(",") +")");
 	    stmt.bindInt64Parameter(0, flag);
 	    for (var i=0; i<hosts.length; i++)
-		stmt.bindUTF8StringParameter(i+1, hosts[i]);
+	      stmt.bindUTF8StringParameter(i+1, hosts[i]);
 	    stmt.executeStep();
 	} catch (err) {
 	    this.warn("Error while trying to update flags: ", err);
@@ -768,16 +752,16 @@ var CertPatrol = {
 
     setFlag: function(certobj, flag, on) {
 	if (on)
-	    certobj.flags |= flag;
+	  certobj.flags |= flag;
 	else
-	    certobj.flags &= ~flag;
+	  certobj.flags &= ~flag;
     },
 
     getAllCerts: function() {
-	if (!this.dbh)
-	    this.dbinit();
+	if (!this.dbh) this.dbinit();
 	var certs = [];
 	var stmt;
+
 	try {
 	    stmt = this.db.selectAll;
 	    while (stmt.executeStep()) {
@@ -824,8 +808,7 @@ var CertPatrol = {
     outnew: function(browser, certobj) {
 	var forcePopup = false;
 	try {
-	    if (this.prefs)
-		forcePopup = this.prefs.getBoolPref("popup.new");
+	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
@@ -857,7 +840,7 @@ var CertPatrol = {
 		}]);
 	}
 	if (popup)
-	    window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+	  window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			      "chrome,dialog,modal", certobj, CertPatrol);
     },
 
@@ -865,7 +848,7 @@ var CertPatrol = {
 	var forcePopup = false;
 	try {
 	    if (this.prefs)
-		forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.change");
+	      forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.change");
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
@@ -878,39 +861,37 @@ var CertPatrol = {
 		notifyBox.PRIORITY_CRITICAL_HIGH
 	    ];
 	    notifyBox.appendNotification(
-		"(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
-		    certobj.moz.commonName +". "+
-		    this.locale.issuedBy +" "+
-		    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
-		    +" "+ certobj.info,
-		certobj.host, null, priority[certobj.threat],
-		[{
-		    label: this.locale.accept,
-		    accessKey: this.locale.accept_key,
-		    callback: function(msg, btn) {
-			CertPatrol.saveCert(certobj);
+	      "(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
+	      certobj.moz.commonName +". "+
+	      this.locale.issuedBy +" "+
+	      (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
+	      +" "+ certobj.info, certobj.host, null, priority[certobj.threat],
+	      [{
+		label: this.locale.accept,
+		accessKey: this.locale.accept_key,
+		callback: function(msg, btn) {
+		    CertPatrol.saveCert(certobj);
+		}
+	    }, {
+		label: this.locale.viewDetails,
+		accessKey: this.locale.viewDetails_key,
+		callback: function(msg, btn) {
+		    window.openDialog("chrome://certpatrol/content/change.xul",
+				      "_blank", "chrome,dialog,modal",
+				      certobj, CertPatrol);
 		    }
-		}, {
-		    label: this.locale.viewDetails,
-		    accessKey: this.locale.viewDetails_key,
-		    callback: function(msg, btn) {
-			window.openDialog("chrome://certpatrol/content/change.xul",
-					  "_blank", "chrome,dialog,modal",
-					  certobj, CertPatrol);
-		    }
-		}]);
+	    }]);
 	}
 	if (popup)
-	    window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
-			      "chrome,dialog,modal", certobj, CertPatrol);
+	  window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			    "chrome,dialog,modal", certobj, CertPatrol);
     },
 
     getNotificationBox: function (win) {
 	if (typeof gBrowser != "undefined")
-	    return gBrowser.getNotificationBox(win);
-
+	  return gBrowser.getNotificationBox(win);
 	if (window.getNotificationBox)
-	    return window.getNotificationBox(); // does not seem to work
+	  return window.getNotificationBox(); // does not seem to work
     },
 
     warn: function(result, error) {
@@ -921,18 +902,17 @@ var CertPatrol = {
     },
 
     log: function(s, a) {
-	if (a && a.length && a.join)
-	    s += " " + a.join(", ");
+	if (a && a.length && a.join) s += " " + a.join(", ");
 	Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage(s);
     },
 
     // functions for the new & change dialogs
 
     addCertChain: function(node, cert) {
-	if (!cert)
-	    return;
+	if (!cert) return;
 	var chain = cert.getChain();
 	var text = "";
+
 	for (var i = chain.length - 1; i >= 0; i--) {
             var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
 	    text += Array((chain.length - i - 1) * 2 + 1).join(" ") + "- " + (cert.commonName || cert.windowTitle) + (i > 0 ? "\n" : "");
@@ -944,8 +924,8 @@ var CertPatrol = {
 
     viewCert: function(cert, parent) {
 	Components.classes["@mozilla.org/nsCertificateDialogs;1"]
-            .getService(Components.interfaces.nsICertificateDialogs)
-	    .viewCert(parent, cert);
+          .getService(Components.interfaces.nsICertificateDialogs)
+	  .viewCert(parent, cert);
     },
 
     psycText: function(template, vars) {
