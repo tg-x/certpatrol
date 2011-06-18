@@ -5,8 +5,7 @@ var CP_Sanitizer = {
     locale: {},
 
     onLoad: function (event) {
-	if (typeof Sanitizer != 'function')
-            return;
+	if (typeof Sanitizer != 'function') return;
 
 	Sanitizer.prototype.items['extensions-certpatrol'] = {
             clear: function() {
@@ -16,7 +15,6 @@ var CP_Sanitizer = {
 		return true;
             }
 	}
-
 	this.addMenuItem();
     },
 
@@ -25,7 +23,7 @@ var CP_Sanitizer = {
 	var _item;
 	var itemList = document.getElementById("itemList");
 	if (itemList)
-            _item = itemList.lastChild;
+          _item = itemList.lastChild;
 	else {
             _item = document.getElementsByTagName("checkbox");
             _item = _item[_item.length - 1];
@@ -34,9 +32,9 @@ var CP_Sanitizer = {
             let prefName;
             let cpd = _item.getAttribute("preference").indexOf("privacy.cpd.") != -1;
             if (cpd)
-		prefName = "privacy.cpd.extensions-certpatrol";
+	      prefName = "privacy.cpd.extensions-certpatrol";
             else
-		prefName = "privacy.clearOnShutdown.extensions-certpatrol";
+	      prefName = "privacy.clearOnShutdown.extensions-certpatrol";
 
             let pref = document.createElement("preference");
             pref.setAttribute("id", prefName);
@@ -51,9 +49,9 @@ var CP_Sanitizer = {
             //check.setAttribute("oncommand", "CP_Sanitizer.confirm(this);");
 
 	    var prefsService = Components.classes["@mozilla.org/preferences-service;1"]
-		.getService(Components.interfaces.nsIPrefBranch);
+	      .getService(Components.interfaces.nsIPrefBranch);
             if (prefsService.prefHasUserValue(prefName))
-		check.setAttribute("checked", prefsService.getBoolPref(prefName));
+	      check.setAttribute("checked", prefsService.getBoolPref(prefName));
 
             if (itemList) {
 		check.setAttribute("type", "checkbox");
@@ -69,3 +67,4 @@ var CP_Sanitizer = {
 	}
     },
 };
+

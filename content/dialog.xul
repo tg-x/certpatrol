@@ -11,17 +11,17 @@
     persist="screenX screenY width height" width="555" height="555"
     buttons="accept" centerWindowOnScreen="yes"
     onload="return onLoad();" onDialogAccept="return true;">
-
 	<script>
-		function onLoad() {
-			var msgEle = document.getElementById("message");
-			var text = window.arguments[0];
-			msgEle.value=text;
-			//var textNode = document.createTextNode(text);
-			//msgEle.appendChild(textNode);
-		}
-	</script>
 
+function onLoad() {
+	var msgEle = document.getElementById("message");
+	var text = window.arguments[0];
+	msgEle.value=text;
+	//var textNode = document.createTextNode(text);
+	//msgEle.appendChild(textNode);
+}
+
+	</script>
 	<dialogheader title="Certificate Patrol" flex='1'
 	     description="Report"/>
 

@@ -10,31 +10,32 @@
   buttons="accept"
   onload="return onLoad()"
   ondialogaccept="return true">
-  <script><![CDATA[
-    var certobj = window.arguments[0];
-    var CertPatrol = window.arguments[1];
-    //var $ = document.getElementById.bind(document); // TB does not have bind()
-    function $() { return document.getElementById.apply(document, arguments); }
+  <script><![CDATA[     // why do we CDATA this here?
 
-    function onLoad() {
-      $("cmdiag").setAttribute("title", certobj.host);
+var certobj = window.arguments[0];
+var CertPatrol = window.arguments[1];
+//var $ = document.getElementById.bind(document); // TB does not have bind()
+function $() { return document.getElementById.apply(document, arguments); }
 
-      var keys = [ "commonName", "organization", "organizationalUnit",
-		   "md5Fingerprint", "sha1Fingerprint",
-		   "serialNumber", "emailAddress",
-      ];
-      for (var i=0; i<keys.length; i++)
-          $(keys[i]).value = certobj[keys[i]] || "";
+function onLoad() {
+    $("cmdiag").setAttribute("title", certobj.host);
 
-      keys = ["commonName", "organization", "organizationUnit"];
-      for (var i=0; i<keys.length; i++)
-          $("issuer."+keys[i]).value = certobj.issuer[keys[i]] || "";
+    var keys = [ "commonName", "organization", "organizationalUnit",
+	         "md5Fingerprint", "sha1Fingerprint",
+	         "serialNumber", "emailAddress",
+    ];
+    for (var i=0; i<keys.length; i++)
+      $(keys[i]).value = certobj[keys[i]] || "";
 
-      $("validity.notBefore").value = CertPatrol.isodatedelta(certobj.validity.notBefore);
-      $("validity.notAfter").value = CertPatrol.isodatedelta(certobj.validity.notAfter);
+    keys = ["commonName", "organization", "organizationUnit"];
+    for (var i=0; i<keys.length; i++)
+      $("issuer."+keys[i]).value = certobj.issuer[keys[i]] || "";
 
-      $("ssl-view").focus();
-    }
+    $("validity.notBefore").value = CertPatrol.isodatedelta(certobj.validity.notBefore);
+    $("validity.notAfter").value = CertPatrol.isodatedelta(certobj.validity.notAfter);
+
+    $("ssl-view").focus();
+}
 
    ]]></script>
   <dialogheader id="cmdiag" />

@@ -57,15 +57,13 @@ var CP_CertManager = {
 	}
 
 	tabbox.addEventListener("select", function(event) {
-	    if (tabbox.tabs.selectedItem != tab)
-		return;
+	    if (tabbox.tabs.selectedItem != tab) return;
 	    CP_CertManager.init();
 	}, false);
     },
 
     init: function() {
-	if (this.inited)
-	    return;
+	if (this.inited) return;
 
 	this.tree.focus();
 	this.loadCerts();
@@ -110,15 +108,15 @@ var CP_CertManager = {
 		var k = keys[i];
 		var issuer = {};
 		if (tree[k].cert instanceof Ci.nsIX509Cert)
-		    issuer.cert = tree[k].cert;
+		  issuer.cert = tree[k].cert;
 		else
-		    issuer = {organization: tree[k].cert.organization, organizationUnit: tree[k].cert.organizationUnit, validity: {}};
+		  issuer = {organization: tree[k].cert.organization, organizationUnit: tree[k].cert.organizationUnit, validity: {}};
 
 		var row = CP_TreeView.getRow(issuer, 0);
 		rows.push(row);
 
 		for (var j in tree[k].children)
-		    row.children.push(CP_TreeView.getRow(tree[k].children[j], 1));
+		  row.children.push(CP_TreeView.getRow(tree[k].children[j], 1));
 	    }
 	} else {
 	    for (var i=0; i<this.certs.length; i++) {
@@ -140,12 +138,12 @@ var CP_CertManager = {
 	var items = this.treeView.selection;
 	var toggle = items.getRangeCount() == 0;
 	for (var i in this.buttons)
-	    this.buttons[i].disabled = toggle;
+	  this.buttons[i].disabled = toggle;
     },
 
     getSelectedCerts: function() {
 	if (!this.tab.selected)
-	    return this._getSelectedCerts();
+	  return this._getSelectedCerts();
 
 	var items = this.treeView.selection;
 	var certs = [];
@@ -172,7 +170,7 @@ var CP_CertManager = {
 	var certs = this.getSelectedCerts();
 	for (var i=0; i<certs.length; i++) {
 	    if (certs[i].host)
-		hosts.push(certs[i].host);
+	      hosts.push(certs[i].host);
 	}
 	return hosts;
     },
@@ -181,23 +179,21 @@ var CP_CertManager = {
 	var certs = this.getSelectedCerts();
 	for (var i=0; i<certs.length; i++) {
 	    if (certs[i].cert instanceof Components.interfaces.nsIX509Cert)
-		CertPatrol.viewCert(certs[i].cert);
+	      CertPatrol.viewCert(certs[i].cert);
 	    else if (certs[i].sha1Fingerprint != null)
-		window.openDialog("chrome://certpatrol/content/view.xul",
-				  "_blank", "chrome,dialog",
-				  certs[i], CertPatrol);
+	      window.openDialog("chrome://certpatrol/content/view.xul",
+				"_blank", "chrome,dialog",
+				certs[i], CertPatrol);
 
 	}
     },
 
     deleteCerts: function() {
 	var hosts = this.getSelectedHosts();
-	if (!hosts.length)
-	    return;
+	if (!hosts.length) return;
 
 	if (!confirm(this.locale.confirmDelete +'\n\n'+ hosts.sort().join(', ')))
-	    return;
-
+	  return;
 	CertPatrol.delCerts(hosts);
 
 	var rows = this.treeView.getOpenRows();
@@ -207,8 +203,7 @@ var CP_CertManager = {
 
     setIssuerOnly: function(on) {
 	var hosts = this.getSelectedHosts();
-	if (!hosts.length)
-	    return;
+	if (!hosts.length) return;
 
 	CertPatrol.updateFlags(hosts, CertPatrol.CHECK_ISSUER_ONLY, on);
 
@@ -244,15 +239,15 @@ CP_TreeView.prototype.getData = function (row) {
 CP_TreeView.prototype.getOpenRows = function () {
     var ids = {};
     for (var i=0; i<this._rowMap.length; i++)
-	if (this._rowMap[i].open)
-	    ids[this._rowMap[i].id] = true;
+      if (this._rowMap[i].open)
+	ids[this._rowMap[i].id] = true;
     return ids;
 };
 
 CP_TreeView.prototype.setOpenRows = function (ids) {
     for (var i=0; i<this._rowMap.length; i++) {
 	if (ids[this._rowMap[i].id] && !this._rowMap[i].open)
-	    this.toggleOpenState(i);
+	  this.toggleOpenState(i);
     }
 };
 
@@ -262,9 +257,9 @@ CP_TreeView.prototype.cycleHeader = function(col) {
 
 CP_TreeView.prototype.sort = function(key) {
     if (this.sortKey == key)
-	this.sortAsc = !this.sortAsc;
+      this.sortAsc = !this.sortAsc;
     else
-	this.sortAsc = true;
+      this.sortAsc = true;
     this.sortKey = key;
 
     var order = this.sortAsc ? 1 : -1, grouping = this.grouping;
@@ -281,9 +276,9 @@ CP_TreeView.prototype.sort = function(key) {
 	var bcert = b.data.cert || b.data;
 	if (typeof key != 'object') {
 	    if (key in a.data)
-		ret = a.data[key] > b.data[key] ? 1 : a.data[key] < b.data[key] ? -1 : 0;
+	      ret = a.data[key] > b.data[key] ? 1 : a.data[key] < b.data[key] ? -1 : 0;
 	    else
-		ret = acert[key] > bcert[key] ? 1 : acert[key] < bcert[key] ? -1 : 0;
+	      ret = acert[key] > bcert[key] ? 1 : acert[key] < bcert[key] ? -1 : 0;
 	} else {
 	    var aval = acert[key[0]][key[1]];
 	    var bval = bcert[key[0]][key[1]];
@@ -297,7 +292,7 @@ CP_TreeView.prototype.sort = function(key) {
     };
 
     if (!this.grouping)
-	return this. _rowMap.sort(sort);
+      return this. _rowMap.sort(sort);
 
     for (var i=0; i<this._rowMap.length; i++) {
 	var row = this._rowMap[i];
@@ -318,7 +313,7 @@ CP_TreeView.getRow = function(data, level) {
 	level: level,
 	open: false,
 	children: [],
-	data : data,
+	data : data,    // needs a space or AMO will complain about a funny URI scheme
 	getText: function(col) {
 	    var d = this.data;
 	    var cert = d.cert || d;

@@ -11,13 +11,15 @@
   <script src="treeview.js" type="application/x-javascript; version=1.7; charset=utf-8" />
   <script src="certManager.js"/>
   <script>
+
     CertPatrol.locale = {
-      daysPast: "&daysPast;", daysFuture: "&daysFuture;",
+	daysPast: "&daysPast;", daysFuture: "&daysFuture;",
     };
     CP_CertManager.locale = {
-      confirmDelete: "&certManager.confirmDelete;",
+	confirmDelete: "&certManager.confirmDelete;",
     };
     window.addEventListener("load", function(e) { CP_CertManager.onLoad(e); }, false);
+
   </script>
 
   <tabbox id="certmanagertabs">

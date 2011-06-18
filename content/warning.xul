@@ -12,9 +12,11 @@
   onload="return onLoad();"
   onDialogAccept="return true;">
   <script>
-    function onLoad() {
-      document.getElementById("cmontxt").value = window.arguments[0];
-    }
+
+function onLoad() {
+    document.getElementById("cmontxt").value = window.arguments[0];
+}
+
   </script>
   <dialogheader title="Alert" /> <!-- description="Warning" -->
   <textbox id="cmontxt" flex="1" multiline="true" readonly="true" />

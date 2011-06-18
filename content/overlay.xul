@@ -6,14 +6,16 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="CertPatrol.js"/>
   <script>
-    window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
-    CertPatrol.locale = {
-      newEvent: "&newEvent;", wildEvent: "&wildEvent;", changeEvent: "&changeEvent;",
-      threat0: "&threat0;", threat1: "&threat1;", threat2: "&threat2;", threat3: "&threat3;",
-      accept: "&accept;", accept_key: "&accept_key;", reject: "&reject;", reject_key: "&reject_key;",
-      viewDetails: "&viewDetails;", viewDetails_key: "&viewDetails_key;",
-      daysPast: "&daysPast;", daysFuture: "&daysFuture;", issuedBy: "&issuedBy;",
-    };
+
+window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
+CertPatrol.locale = {
+     newEvent: "&newEvent;", wildEvent: "&wildEvent;", changeEvent: "&changeEvent;",
+     threat0: "&threat0;", threat1: "&threat1;", threat2: "&threat2;", threat3: "&threat3;",
+     accept: "&accept;", accept_key: "&accept_key;", reject: "&reject;", reject_key: "&reject_key;",
+     viewDetails: "&viewDetails;", viewDetails_key: "&viewDetails_key;",
+     daysPast: "&daysPast;", daysFuture: "&daysFuture;", issuedBy: "&issuedBy;",
+};
+
   </script>
   <stringbundleset id="stringbundleset">
     <stringbundle id="CertPatrol-strings" src="chrome://certpatrol/locale/CertPatrol.properties"/>

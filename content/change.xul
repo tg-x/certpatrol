@@ -17,17 +17,17 @@
   ondialogcancel="return true">
   <script>
 
-    var certobj = window.arguments[0];
-    var CertPatrol = window.arguments[1];
-    //var $ = document.getElementById.bind(document); // TB does not have bind()
-    function $() { return document.getElementById.apply(document, arguments); }
+  var certobj = window.arguments[0];
+  var CertPatrol = window.arguments[1];
+  //var $ = document.getElementById.bind(document); // TB does not have bind()
+  function $() { return document.getElementById.apply(document, arguments); }
 
-    function onLoad() {
+  function onLoad() {
       $("ssl-change").getButton("accept").disabled = true;
       $("ssl-change").getButton("cancel").disabled = true;
       setTimeout(function() {
-        $("ssl-change").getButton("accept").disabled = false;
-        $("ssl-change").getButton("cancel").disabled = false;
+          $("ssl-change").getButton("accept").disabled = false;
+          $("ssl-change").getButton("cancel").disabled = false;
       }, 2000);
 
       /* host information in brackets is pretty important.. isn't it? */
@@ -49,17 +49,17 @@
                   "issuerMd5Fingerprint", "issuerSha1Fingerprint",
                   "md5Fingerprint", "sha1Fingerprint"];
       for (var i in keys) {
-        var key = keys[i];
-        if (certobj.moz[key] == certobj.sql[key]) {
-         $(key).value = certobj.sql[key];
-         $(key+2).hidden = true;
-        } else {
-          $(key).value = certobj.sql[key];
-          $(key+2).value = certobj.moz[key];
-          $(key).className += " old";
-          $(key+2).className += " new";
-          $(key+2).hidden = false;
-        }
+          var key = keys[i];
+          if (certobj.moz[key] == certobj.sql[key]) {
+	      $(key).value = certobj.sql[key];
+	      $(key+2).hidden = true;
+          } else {
+	      $(key).value = certobj.sql[key];
+	      $(key+2).value = certobj.moz[key];
+	      $(key).className += " old";
+	      $(key+2).className += " new";
+	      $(key+2).hidden = false;
+          }
       }
 
       for (var k in certobj.warn)
@@ -74,7 +74,7 @@
       }
 
       $("cmissueronly").checked = certobj.flags &amp; CertPatrol.CHECK_ISSUER_ONLY;
-    }
+  }
 
   </script>
   <dialogheader id="cmdiag" />
