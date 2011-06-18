@@ -423,7 +423,11 @@ var CertPatrol = {
 ## credibility of subCAs:
 ##
 ## + raise the threat level on subCAs that share no common substring
-##   with the root CA (like "bogus CA" being a subCA of "CNNIC")
+##   like "verisign"  with its root CA (like "bogus CA" being a subCA
+##   of "CNNIC"). here's a list of words to exclude, plus all strings
+##   shorter than 4 chars i suppose.
+##	"Internet Builtin Object Token Class Public Primary
+##	 Certification Authority Extended Validation"
 ##
 ## + provide a hardcoded blacklist of CAs that sell subCAs for money
 ##   (see website). raise threat level for those.
