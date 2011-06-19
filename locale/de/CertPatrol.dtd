@@ -1,3 +1,5 @@
+<!ENTITY updateMsg		"TODO: Certificate Patrol has been updated to version [_version], click [_button] to see what changed.">
+
 <!ENTITY newEvent		"Zertifikat eingespeichert.">
 <!ENTITY wildEvent		"Wildcard-Zertifikat akzeptiert.">
 <!ENTITY changeEvent		"Zertifikat ersetzt.">

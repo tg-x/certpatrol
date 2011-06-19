@@ -129,10 +129,14 @@ var CertPatrol = {
 		    // show release notes for stable versions after upgrade
 		    if (!/[a-z]/.test(this.version)) {
 			var url = "http://patrol.psyced.org/version-"+ this.version +".html";
-			if (typeof gBrowser != "undefined")
-			    gBrowser.selectedTab = gBrowser.addTab(url);
-			else
-			    window.openDialog(url, "_blank");
+			var msg = this.psycText(this.locale.updateMsg,
+						{_version: this.version, _button: "OK"});
+			if (confirm(msg)) {
+			    if (typeof gBrowser != "undefined")
+				gBrowser.selectedTab = gBrowser.addTab(url);
+			    else
+				window.openDialog(url, "_blank");
+			}
 		    }
 		}
 	    }
@@ -419,6 +423,7 @@ var CertPatrol = {
 		save = this.prefs.getBoolPref("privatebrowsing.save");
 	} catch (err) {}
 
+##/*
 ## TODO: Before we even check the database we can make checks on the
 ## credibility of subCAs:
 ##
@@ -434,7 +439,7 @@ var CertPatrol = {
 ##
 ## + maybe add a whitelist of subCAs which happen to be okay anyway?
 ##   (startssl case)
-##
+##*/
 	// Get certificate from storage
 	var stmt = this.db.selectHost;
 	try {
