@@ -128,7 +128,7 @@ var CertPatrol = {
 
 		    // show release notes for stable versions after upgrade
 		    if (!/[a-z]/.test(this.version)) {
-			var url = "http://patrol.psyced.org/version-"+ this.version +".html";
+			var url = "http://patrol.psyced.org/#"+ this.version;
 			var msg = this.psycText(this.locale.updateMsg,
 						{_version: this.version, _button: "OK"});
 			if (confirm(msg)) {
