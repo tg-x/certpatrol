@@ -3,7 +3,11 @@ N=certpatrol
 
 .SUFFIXES: .pjs .js
 
-$N.xpi: build.sh chrome.manifest install.rdf install.js content/* locale/*/* defaults/*/*
+# to build the xpi you also need a copy of git://git.psyced.org/pages
+# and symlink the org/patrol directory as "web" so that the symlinks
+# in "skin" work
+#
+$N.xpi: build.sh chrome.manifest install.rdf install.js content/* locale/*/* defaults/*/* skin/* skin/*/*
 	./build.sh
 
 it: $N.xpi
