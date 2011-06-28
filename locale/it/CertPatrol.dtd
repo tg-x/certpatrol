@@ -1,4 +1,4 @@
-<!ENTITY updateMsg		"TODO: Certificate Patrol has been updated to version [_version], click [_button] to see what changed.">
+<!ENTITY updateMsg		"Certificate Patrol è stato aggiornato alla versione [_version], clicca [_button] per informazioni dettagliate.">
 
 <!ENTITY newEvent		"Certificato memorizzato.">
 <!ENTITY wildEvent		"Accettato certificato jolly.">
