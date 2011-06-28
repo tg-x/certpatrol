@@ -6,3 +6,7 @@
 <!ENTITY _privatebrowsing_save	"Store certificates even when in Private Browsing Mode">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
+<!ENTITY _certmgr	"View Certificates">
+<!ENTITY _certmgr_key	"V">
+<!ENTITY _sanitizer	"Clear Recent History">
+<!ENTITY _sanitizer_key	"H">

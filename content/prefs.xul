@@ -5,7 +5,17 @@
 <?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
 
 <prefwindow id="CertPatrol-prefs" title="&_title;"
-  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  buttons="accept,cancel,disclosure,extra1,extra2"
+  buttonlabelextra1="&_certmgr;"
+  buttonaccesskeyextra1="&_certmgr_key;"
+  buttonlabelextra2="&_sanitizer;"
+  buttonaccesskeyextra2="&_sanitizer_key;"
+  ondialogextra1="CertPatrol.showCertMgr()"
+  ondialogextra2="CertPatrol.showSanitizer()"
+  ondialogdisclosure="CertPatrol.showRelNotes()">
+
+<script src="CertPatrol.js"/>
 
 <prefpane id="main" label="&_title_main;">
   <preferences> 
@@ -22,7 +32,9 @@
 	name="certpatrol.privatebrowsing.save"
 	type="bool" />
   </preferences>
+
   <dialogheader title="&_title;" />
+
   <groupbox>
     <caption label="&_title_main;" />
     <checkbox label="&_popup_new;"
@@ -38,13 +50,6 @@
 	    preference="_privatebrowsing_save"
 	    checked="false" />
   </groupbox> 
-
-  <!-- hbox>
-      <button id="_home" label="&_home;"
-	 onClick="gBrowser.location='http://patrol.psyced.org/';" />
-      <button id="_close" label="&_close;" command="closeCmd" />
-  </hbox -->
-
 </prefpane>
 
 </prefwindow> 

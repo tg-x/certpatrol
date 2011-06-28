@@ -6,3 +6,7 @@
 <!ENTITY _privatebrowsing_save	"Memorizza certificati anche se in Private Browsing Mode">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
+<!ENTITY _certmgr	"TODO: View Certificates">
+<!ENTITY _certmgr_key	"TODO: V">
+<!ENTITY _sanitizer	"TODO: Clear Recent History">
+<!ENTITY _sanitizer_key	"TODO: H">
