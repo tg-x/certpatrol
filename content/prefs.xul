@@ -16,6 +16,12 @@
   ondialogdisclosure="CertPatrol.showRelNotes()">
 
 <script src="CertPatrol.js"/>
+<script>
+  if (!Components.classes["@mozilla.org/browser/browserglue;1"]) {
+    var btn = document.getElementById("CertPatrol-prefs").getButton("extra2");
+    btn.parentNode.removeChild(btn);
+  }
+</script>
 
 <prefpane id="main" label="&_title_main;">
   <preferences> 
