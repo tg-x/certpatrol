@@ -68,7 +68,7 @@ mkdir --parents --verbose $TMP_DIR
 JAR_FILE=$TMP_DIR/chrome/$APP_NAME.jar
 echo "Generating $JAR_FILE..."
 for CHROME_SUBDIR in $CHROME_PROVIDERS; do
-  find $CHROME_SUBDIR -regex '.*/\..*\|.*~$' -prune -o -type f -print >> files
+  find $CHROME_SUBDIR -regex '.*/\..*\|.*~$' -prune -o -follow -type f -print >> files
 done
 
 #zip -0 -r $JAR_FILE `cat files`
