@@ -7,6 +7,6 @@
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"Mostra la lista dei certificati">
-<!ENTITY _certmgr_key	"L">
-<!ENTITY _sanitizer	"Esamina la cronologia recente">
+<!ENTITY _certmgr_key	"C">
+<!ENTITY _sanitizer	"Modifica la cronologia recente">
 <!ENTITY _sanitizer_key	"R">

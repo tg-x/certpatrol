@@ -954,7 +954,7 @@ var CertPatrol = {
 	if (typeof gBrowser != "undefined")
 	    gBrowser.selectedTab = gBrowser.addTab(url);
 	else
-	    window.openDialog(url, "_blank");
+	    window.openDialog(url, "_blank", "width=700,height=600");
     },
 
     showCertMgr: function() {

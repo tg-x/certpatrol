@@ -7,12 +7,12 @@
 <prefwindow id="CertPatrol-prefs" title="&_title;"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   buttons="accept,cancel,disclosure,extra1,extra2"
-  buttonlabelextra1="&_certmgr;"
-  buttonaccesskeyextra1="&_certmgr_key;"
-  buttonlabelextra2="&_sanitizer;"
-  buttonaccesskeyextra2="&_sanitizer_key;"
-  ondialogextra1="CertPatrol.showCertMgr()"
-  ondialogextra2="CertPatrol.showSanitizer()"
+  buttonlabelextra2="&_certmgr;"
+  buttonaccesskeyextra2="&_certmgr_key;"
+  buttonlabelextra1="&_sanitizer;"
+  buttonaccesskeyextra1="&_sanitizer_key;"
+  ondialogextra2="CertPatrol.showCertMgr()"
+  ondialogextra1="CertPatrol.showSanitizer()"
   ondialogdisclosure="CertPatrol.showRelNotes()">
 
 <script src="CertPatrol.js"/>

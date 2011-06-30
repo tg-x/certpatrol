@@ -7,6 +7,6 @@
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"View Certificates">
-<!ENTITY _certmgr_key	"V">
-<!ENTITY _sanitizer	"Clear Recent History">
-<!ENTITY _sanitizer_key	"H">
+<!ENTITY _certmgr_key	"C">
+<!ENTITY _sanitizer	"Edit Recent History">
+<!ENTITY _sanitizer_key	"R">
