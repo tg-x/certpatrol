@@ -1,10 +1,3 @@
-1. version.html isn't actually shown!?
-2. in preferences pop-up: provide an "information" button to see version page
-				     + a "support" button
-
-
-
-
 See also http://psyced.org:33333/@patrol?scratchpad
 
 http://thedropbox.acmetoy.com/documents/BHUSA09-Sotirov-AttackExtSSL-PAPER.pdf
