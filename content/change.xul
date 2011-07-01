@@ -79,7 +79,7 @@
   </script>
   <dialogheader id="cmdiag" />
 
-  <vbox style="font-weight: bold">
+  <vbox class="warning">
     <description hidden="true" id="warn_wildcard">&warn_wildcard;</description>
     <description hidden="true" id="warn_commonName">&warn_commonName;</description>
     <description hidden="true" id="warn_issuerCommonName">&warn_issuerCommonName;</description>

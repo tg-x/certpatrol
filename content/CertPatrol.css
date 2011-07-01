@@ -1,5 +1,10 @@
 @import url("chrome://global/skin/global.css");
 
+.warning {
+	padding: 1em 0 1em 1em;
+	font-weight: bold;
+}
+
 .warnCP {
 	outline: 2px dashed yellow;
 	outline-offset: 1px;
