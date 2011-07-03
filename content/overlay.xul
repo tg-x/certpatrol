@@ -14,6 +14,13 @@ CertPatrol.locale = {
      accept: "&accept;", accept_key: "&accept_key;", reject: "&reject;", reject_key: "&reject_key;",
      viewDetails: "&viewDetails;", viewDetails_key: "&viewDetails_key;", updateMsg: "&updateMsg;",
      daysPast: "&daysPast;", daysFuture: "&daysFuture;", issuedBy: "&issuedBy;",
+     warn_wildcard: "&warn_wildcard;",
+     warn_commonName: "&warn_commonName;",
+     warn_issuerCommonName: "&warn_issuerCommonName;",
+     warn_notBefore: "&warn_notBefore;",
+     warn_notAfter_expired: "&warn_notAfter_expired;",
+     warn_notAfter_notdue: "&warn_notAfter_notdue;",
+     warn_notAfter_due: "&warn_notAfter_due;",
 };
 
   </script>

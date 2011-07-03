@@ -264,7 +264,6 @@ var CertPatrol = {
 	return {
 	    threat: 0,
 	    flags: 0,
-	    info: "",
 	    host: "",
 	    threatLevel: "",
 	    warn: {},
@@ -360,9 +359,14 @@ var CertPatrol = {
 	if (!win.document) return;
 
 	var browser;
-	if (typeof gBrowser != "undefined") // thunderbird has no gBrowser
-	    browser = gBrowser.getBrowserForDocument(win.top.document);
-##	//if (!browser) return; // no browser for e.g. favicons
+	if (typeof gBrowser != "undefined") { // thunderbird has no gBrowser
+	    browser = gBrowser.getBrowserForDocument(win.top.document)
+            // We get notifications for a request in all of the open windows
+            // but browser is set only in the window the request is originated from,
+            // browser is null for favicons too.
+	    if (!browser) return;
+        }
+##	this.log("browser: "+ browser);
 
 	var wpl = Ci.nsIWebProgressListener;
 	// proceed only if the page is considered secure or browser is null
@@ -847,14 +851,14 @@ var CertPatrol = {
 		    label: this.locale.viewDetails,
 		    accessKey: this.locale.viewDetails_key,
 		    callback: function(msg, btn) {
-			window.openDialog("chrome://certpatrol/content/new.xul",
+			browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul",
 					  "_blank", "chrome,dialog,modal",
 					  certobj, CertPatrol);
 		    }
 		}]);
 	}
 	if (popup)
-	  window.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+	  browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul", "_blank",
 			      "chrome,dialog,modal", certobj, CertPatrol);
     },
 
@@ -874,12 +878,17 @@ var CertPatrol = {
 		notifyBox.PRIORITY_WARNING_HIGH,
 		notifyBox.PRIORITY_CRITICAL_HIGH
 	    ];
+            var warn = "";
+            for (var k in certobj.warn)
+                if (this.locale["warn_"+k])
+                    warn += " *** " + this.locale["warn_"+k];
+
 	    notifyBox.appendNotification(
 	      "(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
 	      certobj.moz.commonName +". "+
 	      this.locale.issuedBy +" "+
-	      (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
-	      +" "+ certobj.info, certobj.host, null, priority[certobj.threat],
+	      (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName) +" "+
+              warn, certobj.host, null, priority[certobj.threat],
 	      [{
 		label: this.locale.accept,
 		accessKey: this.locale.accept_key,
@@ -890,14 +899,14 @@ var CertPatrol = {
 		label: this.locale.viewDetails,
 		accessKey: this.locale.viewDetails_key,
 		callback: function(msg, btn) {
-		    window.openDialog("chrome://certpatrol/content/change.xul",
+		    browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul",
 				      "_blank", "chrome,dialog,modal",
 				      certobj, CertPatrol);
 		    }
 	    }]);
 	}
 	if (popup)
-	  window.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+	  browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul", "_blank",
 			    "chrome,dialog,modal", certobj, CertPatrol);
     },
 
