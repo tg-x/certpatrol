@@ -959,10 +959,13 @@ var CertPatrol = {
     showRelNotes: function() {
 ##//	var url = "http://patrol.psyced.org/#"+ this.version;
 	var url = "chrome://certpatrol/content/pages/version.html";
-	if (typeof gBrowser != "undefined")
-	    gBrowser.selectedTab = gBrowser.addTab(url);
-	else
+##	if (typeof gBrowser != "undefined") {
+##	    gBrowser.selectedTab = gBrowser.addTab(url);
+##	    alert("gBrowser.selectedTab");
+##	} else {
 	    window.openDialog(url, "_blank", "width=700,height=600");
+##	    alert("window.openDialog");
+##	}
     },
 
     showCertMgr: function() {
