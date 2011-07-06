@@ -58,6 +58,10 @@ var CertPatrol = {
 	});
     },
 
+    onUnload: function() {
+	this.unregisterObserver("http-on-examine-response");
+    },
+
     // DB init
     dbinit: function() {
 	this.dbh = null;

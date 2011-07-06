@@ -8,6 +8,8 @@
   <script>
 
 window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
+window.addEventListener("unload", function(e) { CertPatrol.onUnload(e); }, false);
+
 CertPatrol.locale = {
      newEvent: "&newEvent;", wildEvent: "&wildEvent;", changeEvent: "&changeEvent;",
      threat0: "&threat0;", threat1: "&threat1;", threat2: "&threat2;", threat3: "&threat3;",
