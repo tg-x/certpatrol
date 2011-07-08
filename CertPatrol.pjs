@@ -127,14 +127,14 @@ var CertPatrol = {
 		    this.dbh.executeSimpleSQL("ALTER TABLE version ADD COLUMN extversion TEXT");
 		}
 
-		if (extversion != this.version) {
+		if (extversion && this.version && extversion != this.version) {
 		    this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
-
+		    this.log("[CertPatrol] old: "+ extversion +" new: "+ this.version);
 		    // show release notes for stable versions after upgrade
-		    if (!/[a-z]/.test(this.version)) {
+		    //if (!/[a-z]/.test(this.version)) {
 ##			//var msg = this.psycText(this.locale.updateMsg, {_version: this.version, _button: "OK"});
 			this.showRelNotes();
-		    }
+		    //}
 		}
 	    }
 
@@ -371,25 +371,28 @@ var CertPatrol = {
         }
 ##	this.log("browser: "+ browser);
 
-	var wpl = Ci.nsIWebProgressListener;
-	// proceed only if the page is considered secure or browser is null
-	if (browser && !(browser.securityUI.state & wpl.STATE_IS_SECURE))
-	  return;
+##	//var wpl = Ci.nsIWebProgressListener;
+##	//this.log("securityUI.state: "+ browser.securityUI.state +", "+ (browser.securityUI.state & wpl.STATE_IS_SECURE));
+##	// proceed only if the page is considered secure or browser is null -- disabled as it's not reliable
+##	//if (browser && !(browser.securityUI.state & wpl.STATE_IS_SECURE))
+##	    //return;
 
 	si.QueryInterface(Ci.nsISSLStatusProvider);
 	var st = si.SSLStatus;
 	if (!st) return;
+##	this.log("st: "+ st);
 
 	st.QueryInterface(Ci.nsISSLStatus);
 	var cert = st.serverCert;
 	if (!cert) return;
+##	this.log("cert: "+ cert);
 
 	var obj = browser || win.top;
 	// store certs in the browser object so we can
 	// show only one notification per host for a browser tab
 	var key = [host, cert.md5Fingerprint, cert.sha1Fingerprint].join('|');
 	if (obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key]))
-	  return;
+	    return;
 	obj.__certs = obj.__certs || {};
 	obj.__certs[key] = cert;
 
@@ -838,7 +841,7 @@ var CertPatrol = {
 ##      // http://gist.github.com/256554
 ##      // using certobj.host as the id for the notification
 	if (notifyBox && !popup) {
-	    notifyBox.appendNotification(
+	    var n = notifyBox.appendNotification(
 		"(CertPatrol) "+ certobj.host +": "+certobj.event +" "+
 		    certobj.moz.commonName +". "+
 		    this.locale.issuedBy +" "+
@@ -859,6 +862,7 @@ var CertPatrol = {
 					  certobj, CertPatrol);
 		    }
 		}]);
+            n.persistence = 10; // make sure it stays visible after redirects
 	}
 	if (popup)
 	  browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul", "_blank",
@@ -886,7 +890,7 @@ var CertPatrol = {
                 if (this.locale["warn_"+k])
                     warn += " *** " + this.locale["warn_"+k];
 
-	    notifyBox.appendNotification(
+	    var n = notifyBox.appendNotification(
 	      "(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
 	      certobj.moz.commonName +". "+
 	      this.locale.issuedBy +" "+
@@ -907,6 +911,7 @@ var CertPatrol = {
 				      certobj, CertPatrol);
 		    }
 	    }]);
+            n.persistence = 10; // make sure it stays visible after redirects
 	}
 	if (popup)
 	  browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul", "_blank",
