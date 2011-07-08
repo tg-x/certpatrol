@@ -129,12 +129,12 @@ var CertPatrol = {
 
 		if (extversion && this.version && extversion != this.version) {
 		    this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
-		    this.log("[CertPatrol] old: "+ extversion +" new: "+ this.version);
+##		    this.log("[CertPatrol] old: "+ extversion +" new: "+ this.version);
 		    // show release notes for stable versions after upgrade
-		    //if (!/[a-z]/.test(this.version)) {
+		    if (!/[a-z]/.test(this.version)) {
 ##			//var msg = this.psycText(this.locale.updateMsg, {_version: this.version, _button: "OK"});
 			this.showRelNotes();
-		    //}
+		    }
 		}
 	    }
 
