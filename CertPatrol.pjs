@@ -129,12 +129,12 @@ var CertPatrol = {
 
 		if (extversion && this.version && extversion != this.version) {
 		    this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
-##		    this.log("[CertPatrol] old: "+ extversion +" new: "+ this.version);
+		    this.log("[CertPatrol] old: "+ extversion +" new: "+ this.version);
 		    // show release notes for stable versions after upgrade
-		    if (!/[a-z]/.test(this.version)) {
+		    //if (!/[a-z]/.test(this.version)) {
 ##			//var msg = this.psycText(this.locale.updateMsg, {_version: this.version, _button: "OK"});
 			this.showRelNotes();
-		    }
+		    //}
 		}
 	    }
 
@@ -734,6 +734,23 @@ var CertPatrol = {
 	} finally {
 	    stmt.reset();
 	}
+
+        try {
+            // delete stored certs in browser objects
+            var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                .getService(Components.interfaces.nsIWindowMediator);
+            var enumerator = wm.getEnumerator(null);
+            while (enumerator.hasMoreElements()) {
+                var win = enumerator.getNext();
+                if (win && win.gBrowser && win.gBrowser.browsers) {
+                    var browsers = win.gBrowser.browsers;
+                    for (var i=0; i<browsers.length; i++)
+                        delete browsers[i].__certs;
+                }
+            }
+        } catch (err) {
+            this.warn("Error while trying to remove certificates from tabs: ", err);
+        }
     },
 
     updateFlags: function(hosts, flag, on) {
