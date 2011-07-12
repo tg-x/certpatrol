@@ -318,9 +318,10 @@ var CertPatrol = {
 	    //this.log("no issuer: "+ [cert.commonName, cert.issuer, cert.sha1Fingerprint]);
 	}
 
-	var keys = ["commonName", "organization", "organizationalUnit", "serialNumber", "emailAddress",
-		    "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
-		    "md5Fingerprint", "sha1Fingerprint"];
+	var keys = [
+	  "commonName", "organization", "organizationalUnit", "serialNumber", "emailAddress",
+	  "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
+	  "md5Fingerprint", "sha1Fingerprint" ];
 	for (var i in keys)
 	  obj[keys[i]] = cert[keys[i]];
     },
@@ -362,8 +363,9 @@ var CertPatrol = {
 	if (!win.document) return;
 
 	var browser;
-	if (typeof gBrowser != "undefined") { // thunderbird has no gBrowser
-	    browser = gBrowser.getBrowserForDocument(win.top.document)
+	// thunderbird has no gBrowser
+	if (typeof gBrowser != "undefined") {
+	    browser = gBrowser.getBrowserForDocument(win.top.document);
             // We get notifications for a request in all of the open windows
             // but browser is set only in the window the request is originated from,
             // browser is null for favicons too.
@@ -900,8 +902,7 @@ var CertPatrol = {
 		notifyBox.PRIORITY_INFO_LOW,
 		notifyBox.PRIORITY_INFO_HIGH,
 		notifyBox.PRIORITY_WARNING_HIGH,
-		notifyBox.PRIORITY_CRITICAL_HIGH
-	    ];
+		notifyBox.PRIORITY_CRITICAL_HIGH ];
             var warn = "";
             for (var k in certobj.warn)
                 if (this.locale["warn_"+k])

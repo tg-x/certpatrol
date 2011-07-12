@@ -7,7 +7,7 @@
 <!ENTITY threat0		"Everything fine.">
 <!ENTITY threat1		"Mostly harmless.">
 <!ENTITY threat2		"Suspicious change?">
-<!ENTITY threat3		"Reason to worry!">
+<!ENTITY threat3		"Reason to be careful!">
 
 <!ENTITY daysPast		"[_days] days ago">
 <!ENTITY daysFuture		"[_days] days ahead">

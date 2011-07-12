@@ -7,7 +7,7 @@
 <!ENTITY threat0		"Nessun problema.">
 <!ENTITY threat1		"Piccola prudenza:">
 <!ENTITY threat2		"Cambiamento strano?">
-<!ENTITY threat3		"Occhio! Qualcosa non va!">
+<!ENTITY threat3		"Occhio! Qui bisogna fare attenzione.">
 
 <!ENTITY daysPast		"[_days] giorni fa">
 <!ENTITY daysFuture		"fra [_days] giorni">
