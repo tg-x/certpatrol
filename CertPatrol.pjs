@@ -92,12 +92,12 @@ var CertPatrol = {
 		this.dbh.executeSimpleSQL("INSERT INTO version (version, extversion) VALUES (3, '"+ this.version +"')");
 		this.dbh.executeSimpleSQL(
 		  "CREATE TABLE certificates ("+
-		  "host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, "+
-		  "serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, "+
-		  "issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, "+
-		  "md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
-		  "issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
-		  "cert BLOB, flags INT, stored INT)");
+		  "  host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, "+
+		  "  serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, "+
+		  "  issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, "+
+		  "  md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
+		  "  issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
+		  "  cert BLOB, flags INT, stored INT)");
 	    } else {
 		var stmt = this.dbh.createStatement("SELECT version FROM version");
 		stmt.executeStep();
@@ -143,15 +143,17 @@ var CertPatrol = {
 		selectAll: this.dbh.createStatement("SELECT * FROM certificates"),
 		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1"),
 		selectWild: this.dbh.createStatement("SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
-		insert: this.dbh.createStatement("INSERT INTO certificates ("+
-		  "host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
-		  "notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
-		  "md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored) "+
+		insert: this.dbh.createStatement(
+		  "INSERT INTO certificates ("+
+		  "  host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
+		  "  notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
+		  "  md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored) "+
 		  "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18)"),
-		update: this.dbh.createStatement("UPDATE certificates SET "+
-		  "commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
-		  "notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
-		  "md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
+		update: this.dbh.createStatement(
+		  "UPDATE certificates SET "+
+		  "  commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
+		  "  notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, "+
+		  "  md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
 		  "WHERE host=?1"),
 		delHost: this.dbh.createStatement("DELETE FROM certificates WHERE host=?1"),
 		delSince: this.dbh.createStatement("DELETE FROM certificates WHERE stored >= ?18"),
