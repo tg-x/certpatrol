@@ -529,7 +529,7 @@ var CertPatrol = {
 	    // further checks done by agent before we even get here
 
 	    // check if they have the same issuer
-	    if (certobj.sql.cert && certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer)) {
+	    if (certobj.sql.cert && certobj.moz.cert.issuer && certobj.moz.cert.issuer.equals(certobj.sql.cert.issuer)) {
 		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY) return;
 	    } else if (certobj.sql.cert ||
 	    (!certobj.sql.cert && // old method, if we don't have a cert stored yet
@@ -669,8 +669,10 @@ var CertPatrol = {
 	    stmt.bindUTF8StringParameter(10, cert.issuerOrganizationUnit);
 	    stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
 	    stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
-	    stmt.bindUTF8StringParameter(13, cert.issuer.md5Fingerprint);
-	    stmt.bindUTF8StringParameter(14, cert.issuer.sha1Fingerprint);
+            if (cert.issuer) {
+	        stmt.bindUTF8StringParameter(13, cert.issuer.md5Fingerprint);
+	        stmt.bindUTF8StringParameter(14, cert.issuer.sha1Fingerprint);
+            }
 	    var der = cert.getRawDER({});
 	    stmt.bindBlobParameter(15, der, der.length);
 	    stmt.bindInt64Parameter(16, certobj.flags);
