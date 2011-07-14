@@ -47,9 +47,9 @@ function onLoad() {
     ];
     for (var i in keys) {
 	var key = keys[i];
-	$(key).value = certobj.moz[key];
+	$(key).value = certobj.now[key];
     }
-    CertPatrol.addCertChain($("cmchain"), certobj.moz.cert);
+    CertPatrol.addCertChain($("cmchain"), certobj.now.cert);
 }
 
   </script>
@@ -69,7 +69,7 @@ function onLoad() {
         </groupbox>
         <row>
           <vbox>
-            <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewDetails;" accesskey="&viewDetails_key;" />
+            <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.now.cert)" label="&viewDetails;" accesskey="&viewDetails_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchain" multiline="true" readonly="true" />

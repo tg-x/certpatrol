@@ -35,10 +35,7 @@
       $("cmdiag").setAttribute("title", certobj.event);
       $("cmdiag").className += 'threat-'+ certobj.threat;
 
-      $("cmhierarchy").setAttribute("label", certobj.lang.hierarchy);
-      $("cmdetailso").setAttribute("label", certobj.lang.viewHierarchy);
-      $("cmdetailsn").setAttribute("label", certobj.lang.viewHierarchy);
-      if (!certobj.sql.cert) $("cmdetailso").disabled = true;
+      if (!certobj.old.cert) $("cmdetailso").disabled = true;
       $("cmdetailsn").focus();
       $("cmbox").scrollTop = 0;
 
@@ -50,12 +47,12 @@
                   "md5Fingerprint", "sha1Fingerprint"];
       for (var i in keys) {
           var key = keys[i];
-          if (certobj.moz[key] == certobj.sql[key]) {
-	      $(key).value = certobj.sql[key];
+          if (certobj.now[key] == certobj.old[key]) {
+	      $(key).value = certobj.old[key];
 	      $(key+2).hidden = true;
           } else {
-	      $(key).value = certobj.sql[key];
-	      $(key+2).value = certobj.moz[key];
+	      $(key).value = certobj.old[key];
+	      $(key+2).value = certobj.now[key];
 	      $(key).className += " old";
 	      $(key+2).className += " new";
 	      $(key+2).hidden = false;
@@ -66,8 +63,8 @@
         if (certobj.warn[k])
           $("warn_"+k).hidden = false;
 
-      CertPatrol.addCertChain($("cmchaino"), certobj.sql.cert);
-      CertPatrol.addCertChain($("cmchainn"), certobj.moz.cert);
+      CertPatrol.addCertChain($("cmchaino"), certobj.old.cert);
+      CertPatrol.addCertChain($("cmchainn"), certobj.now.cert);
       if ($("cmchaino").value != $("cmchainn").value) {
           $("cmchaino").className += " old";
           $("cmchainn").className += " new";
@@ -104,7 +101,7 @@
         <row>
           <vbox>
             <label value="&oldCertHier;" />
-            <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.sql.cert)" label="&viewOldCert;" accesskey="&viewOldCert_key;" />
+            <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.old.cert)" label="&viewOldCert;" accesskey="&viewOldCert_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchaino" multiline="true" readonly="true" />
@@ -113,7 +110,7 @@
         <row>
           <vbox>
             <label value="&newCertHier;" />
-            <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.moz.cert)" label="&viewNewCert;" accesskey="&viewNewCert_key;" />
+            <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.now.cert)" label="&viewNewCert;" accesskey="&viewNewCert_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchainn" multiline="true" readonly="true" />
