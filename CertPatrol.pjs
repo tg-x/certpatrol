@@ -267,8 +267,7 @@ var CertPatrol = {
 	if (!struc) return;
 	if (re.test(struc.displayName)) return struc;
 
-	var s = null;
-
+	var s, Ci = Components.interfaces;
 	try {
 	    s = struc.QueryInterface(Ci.nsIASN1Sequence);
 	}
@@ -276,7 +275,7 @@ var CertPatrol = {
 	if (!s || !s.isValidContainer) return;
 
 	for (var i=0; i<s.ASN1Objects.length; i++) {
-	    struc = s.ASN1Objects.queryElementAt(i, Components.interfaces.nsIASN1Object);
+	    struc = s.ASN1Objects.queryElementAt(i, Ci.nsIASN1Object);
 	    var res = this.findASN1Object(struc, re);
 	    if (res) return res;
 	}
