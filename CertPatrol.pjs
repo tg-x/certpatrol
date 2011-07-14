@@ -338,7 +338,8 @@ var CertPatrol = {
 	}
 
 	var keys = [
-	  "commonName", "organization", "organizationalUnit", "serialNumber", "emailAddress",
+	  "commonName", "organization", "organizationalUnit", "serialNumber",
+	  "emailAddress", // "subjectAlternativeName",
 	  "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
 	  "md5Fingerprint", "sha1Fingerprint" ];
 	for (var i in keys)
