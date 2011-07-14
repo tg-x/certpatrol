@@ -263,6 +263,25 @@ var CertPatrol = {
 	return Cc[c].getService(Ci[i]).constructX509FromBase64(window.btoa(this.byteArrayToString(ba.value)));
     },
 
+    findASN1Object: function (struc, re) {
+	if (!struc) return;
+	if (re.test(struc.displayName)) return struc;
+
+	var s = null;
+
+	try {
+	    s = struc.QueryInterface(Ci.nsIASN1Sequence);
+	}
+	catch (e) {}
+	if (!s || !s.isValidContainer) return;
+
+	for (var i=0; i<s.ASN1Objects.length; i++) {
+	    struc = s.ASN1Objects.queryElementAt(i, Components.interfaces.nsIASN1Object);
+	    var res = this.findASN1Object(struc, re);
+	    if (res) return res;
+	}
+    },
+
     newCertObj: function() {
 	return {
 	    threat: 0,
@@ -324,6 +343,15 @@ var CertPatrol = {
 	  "md5Fingerprint", "sha1Fingerprint" ];
 	for (var i in keys)
 	  obj[keys[i]] = cert[keys[i]];
+
+	var san = this.findASN1Object(cert.ASN1Structure, /^Certificate Subject Alt Name$/);
+	//this.log("SAN:", [san.displayName, san.displayValue]);
+	var m, re = /DNS Name: ((?:\*\.)?[a-z0-9.-]+)/g;
+	obj.subjectAltName = [];
+	while (m = re.exec(san.displayValue))
+	  obj.subjectAltName.push(m[1]);
+	this.log("SAN:", obj.subjectAltName);
+	// how do we use this now?
     },
 
 
