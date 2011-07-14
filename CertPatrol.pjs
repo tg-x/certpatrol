@@ -289,7 +289,7 @@ var CertPatrol = {
 	    host: "",
 	    threatLevel: "",
 	    warn: {},
-	    moz: {
+	    now: {
 		commonName: "",
 		organization: "",
 		organizationalUnit: "",
@@ -306,7 +306,7 @@ var CertPatrol = {
 		issuerSha1Fingerprint: "",
 		cert: null,
 	    },
-	    sql: {
+	    old: {
 		commonName: "",
 		organization: "",
 		organizationalUnit: "",
@@ -433,7 +433,7 @@ var CertPatrol = {
 	certobj.ciphername = st.cipherName;
 	certobj.keyLength = st.keyLength;
 	certobj.secretKeyLength = st.secretKeyLength;
-	this.fillCertObj(certobj.moz, cert);
+	this.fillCertObj(certobj.now, cert);
 
 	this.certCheck(browser, certobj);
     },
@@ -442,11 +442,11 @@ var CertPatrol = {
     certCheck: function(browser, certobj) {
 ##	this.log(">> certCheck: "+ certobj.host);
 	var Cc = Components.classes, Ci = Components.interfaces;
-	var moz = certobj.moz, sql = certobj.sql;
+	var now = certobj.now, old = certobj.old;
 	var found = false;
 
-##	//if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == moz.sha1Fingerprint) return;
-##	//else this.last_sha1Fingerprint = moz.sha1Fingerprint;
+##	//if (this.last_sha1Fingerprint && this.last_sha1Fingerprint == now.sha1Fingerprint) return;
+##	//else this.last_sha1Fingerprint = now.sha1Fingerprint;
 
 	var pbs = Cc["@mozilla.org/privatebrowsing;1"];
 	if (pbs) {
@@ -483,26 +483,26 @@ var CertPatrol = {
 	    if (stmt.executeStep()) {
 		found = true;
 
-		sql.commonName = stmt.getUTF8String(1);
-		sql.organization = stmt.getUTF8String(2);
-		sql.organizationalUnit = stmt.getUTF8String(3);
-		sql.serialNumber = stmt.getUTF8String(4);
-		sql.emailAddress = stmt.getUTF8String(5);
-		sql.notBefore = stmt.getUTF8String(6);
-		sql.notAfter = stmt.getUTF8String(7);
-		sql.issuerCommonName = stmt.getUTF8String(8);
-		sql.issuerOrganization = stmt.getUTF8String(9);
-		sql.issuerOrganizationUnit = stmt.getUTF8String(10);
-		sql.md5Fingerprint = stmt.getUTF8String(11);
-		sql.sha1Fingerprint = stmt.getUTF8String(12);
-		sql.issuerMd5Fingerprint = stmt.getUTF8String(13);
-		sql.issuerSha1Fingerprint = stmt.getUTF8String(14);
+		old.commonName = stmt.getUTF8String(1);
+		old.organization = stmt.getUTF8String(2);
+		old.organizationalUnit = stmt.getUTF8String(3);
+		old.serialNumber = stmt.getUTF8String(4);
+		old.emailAddress = stmt.getUTF8String(5);
+		old.notBefore = stmt.getUTF8String(6);
+		old.notAfter = stmt.getUTF8String(7);
+		old.issuerCommonName = stmt.getUTF8String(8);
+		old.issuerOrganization = stmt.getUTF8String(9);
+		old.issuerOrganizationUnit = stmt.getUTF8String(10);
+		old.md5Fingerprint = stmt.getUTF8String(11);
+		old.sha1Fingerprint = stmt.getUTF8String(12);
+		old.issuerMd5Fingerprint = stmt.getUTF8String(13);
+		old.issuerSha1Fingerprint = stmt.getUTF8String(14);
 		var blob = {};
 		stmt.getBlob(15, {}, blob);
 		if (blob.value.length)
-		  sql.cert = this.byteArrayToCert(blob);
+		  old.cert = this.byteArrayToCert(blob);
 		certobj.flags = stmt.getInt64(16);
-		sql.stored = stmt.getInt64(17) * 1000;
+		old.stored = stmt.getInt64(17) * 1000;
 	    }
 	} catch(err) {
 	    this.warn("Error trying to check certificate: ", err);
@@ -510,27 +510,27 @@ var CertPatrol = {
 	    stmt.reset();
 	}
 
-	var wild = this.wildcardCertCheck(moz.cert);
+	var wild = this.wildcardCertCheck(now.cert);
 
 	// The certificate changed
-	if (found && (!sql.cert || !moz.cert.equals(sql.cert))) {
+	if (found && (!old.cert || !now.cert.equals(old.cert))) {
 	    // If the cert info was stored in the previous version of CertPatrol
 	    // we don't have the full cert yet, so we just store it in the DB
 	    // and return if everything looks fine.
-	    if (!sql.cert &&
-	      sql.sha1Fingerprint == moz.sha1Fingerprint &&
-	      sql.md5Fingerprint == moz.md5Fingerprint)
+	    if (!old.cert &&
+	      old.sha1Fingerprint == now.sha1Fingerprint &&
+	      old.md5Fingerprint == now.md5Fingerprint)
 	      return this.saveCert(certobj);
 
 	    // has the certificated hostname changed?
-	    if (!wild && moz.commonName != sql.commonName) {
+	    if (!wild && now.commonName != old.commonName) {
 		certobj.warn.commonName = true;
 		certobj.threat += 2;
 	    }
 
 	    if (!wild && !(certobj.flags & this.CHECK_ISSUER_ONLY)) {
 		// try to make some sense out of the certificate changes
-		var natd = this.timedelta(sql.notAfter);
+		var natd = this.timedelta(old.notAfter);
 		// certificate has expired
 		if (natd <= 0) certobj.warn.notAfter_expired = true;
 		// certificate still a long way to go
@@ -550,7 +550,7 @@ var CertPatrol = {
 	    }
 
 	    // now looking into the NEW certificate
-	    var td = this.timedelta(moz.notBefore);
+	    var td = this.timedelta(now.notBefore);
 	    if (td > 0) {
 		// new certificate isn't valid yet
 		certobj.warn.notBefore = true;
@@ -559,13 +559,13 @@ var CertPatrol = {
 	    // further checks done by agent before we even get here
 
 	    // check if they have the same issuer
-	    if (sql.cert && moz.cert.issuer && moz.cert.issuer.equals(sql.cert.issuer)) {
+	    if (old.cert && now.cert.issuer && now.cert.issuer.equals(old.cert.issuer)) {
 		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY)
 		  return;
-	    } else if (sql.cert ||
-		       (!sql.cert && // old method, if we don't have a cert stored yet
-			(moz.issuerOrganization != sql.issuerOrganization ||
-			 moz.issuerCommonName != sql.issuerCommonName))) {
+	    } else if (old.cert ||
+		       (!old.cert && // old method, if we don't have a cert stored yet
+			(now.issuerOrganization != old.issuerOrganization ||
+			 now.issuerCommonName != old.issuerCommonName))) {
 		certobj.warn.issuerCommonName = true;
 		// companies pick different CAs all the time unfortunately
 		certobj.threat++;
@@ -577,11 +577,11 @@ var CertPatrol = {
 	    if (certobj.threat > 3) certobj.threat = 3;
 
 	    // produce human readable expiration dates
-	    sql.notBefore = this.isodatedelta(sql.notBefore);
-	    sql.notAfter = this.isodatedelta(sql.notAfter);
-	    moz.notBefore = this.isodatedelta(moz.notBefore);
-	    moz.notAfter = this.isodatedelta(moz.notAfter);
-	    //sql.stored = this.isodatedelta(sql.stored);
+	    old.notBefore = this.isodatedelta(old.notBefore);
+	    old.notAfter = this.isodatedelta(old.notAfter);
+	    now.notBefore = this.isodatedelta(now.notBefore);
+	    now.notAfter = this.isodatedelta(now.notAfter);
+	    //old.stored = this.isodatedelta(old.stored);
 
 	    if (wild && certobj.threat == 0) {
 		certobj.warn.wildcard = true;
@@ -599,21 +599,21 @@ var CertPatrol = {
 		stmt = this.db.insert;
 		try {
 		    stmt.bindUTF8StringParameter( 0, certobj.host);
-		    stmt.bindUTF8StringParameter( 1, moz.commonName);
-		    stmt.bindUTF8StringParameter( 2, moz.organization);
-		    stmt.bindUTF8StringParameter( 3, moz.organizationalUnit);
-		    stmt.bindUTF8StringParameter( 4, moz.serialNumber);
-		    stmt.bindUTF8StringParameter( 5, moz.emailAddress);
-		    stmt.bindUTF8StringParameter( 6, moz.notBefore);
-		    stmt.bindUTF8StringParameter( 7, moz.notAfter);
-		    stmt.bindUTF8StringParameter( 8, moz.issuerCommonName);
-		    stmt.bindUTF8StringParameter( 9, moz.issuerOrganization);
-		    stmt.bindUTF8StringParameter(10, moz.issuerOrganizationUnit);
-		    stmt.bindUTF8StringParameter(11, moz.md5Fingerprint);
-		    stmt.bindUTF8StringParameter(12, moz.sha1Fingerprint);
-		    stmt.bindUTF8StringParameter(13, moz.issuerMd5Fingerprint);
-		    stmt.bindUTF8StringParameter(14, moz.issuerSha1Fingerprint);
-		    var der = moz.cert.getRawDER({});
+		    stmt.bindUTF8StringParameter( 1, now.commonName);
+		    stmt.bindUTF8StringParameter( 2, now.organization);
+		    stmt.bindUTF8StringParameter( 3, now.organizationalUnit);
+		    stmt.bindUTF8StringParameter( 4, now.serialNumber);
+		    stmt.bindUTF8StringParameter( 5, now.emailAddress);
+		    stmt.bindUTF8StringParameter( 6, now.notBefore);
+		    stmt.bindUTF8StringParameter( 7, now.notAfter);
+		    stmt.bindUTF8StringParameter( 8, now.issuerCommonName);
+		    stmt.bindUTF8StringParameter( 9, now.issuerOrganization);
+		    stmt.bindUTF8StringParameter(10, now.issuerOrganizationUnit);
+		    stmt.bindUTF8StringParameter(11, now.md5Fingerprint);
+		    stmt.bindUTF8StringParameter(12, now.sha1Fingerprint);
+		    stmt.bindUTF8StringParameter(13, now.issuerMd5Fingerprint);
+		    stmt.bindUTF8StringParameter(14, now.issuerSha1Fingerprint);
+		    var der = now.cert.getRawDER({});
 		    stmt.bindBlobParameter(15, der, der.length);
 		    stmt.bindInt64Parameter(16, 0);
 		    stmt.bindInt64Parameter(17, parseInt(new Date().getTime() / 1000));
@@ -627,8 +627,8 @@ var CertPatrol = {
 	    }
 ##	    // checks are done by firefox before we even get here
 ##	    // that's why we don't complain about host != common name etc.
-	    moz.notBefore = this.isodatedelta(moz.notBefore);
-	    moz.notAfter = this.isodatedelta(moz.notAfter);
+	    now.notBefore = this.isodatedelta(now.notBefore);
+	    now.notAfter = this.isodatedelta(now.notAfter);
 
 	    if (wild) {
 		certobj.warn.wildcard = true;
@@ -685,7 +685,7 @@ var CertPatrol = {
     saveCert: function(certobj) {
 ##	this.log(">> saveCert: "+ certobj.host);
 	var stmt = this.db.update;
-	var cert = certobj.moz.cert;
+	var cert = certobj.now.cert;
 	try {
 	    stmt.bindUTF8StringParameter( 0, certobj.host);
 	    stmt.bindUTF8StringParameter( 1, cert.commonName);
@@ -895,9 +895,9 @@ var CertPatrol = {
 	if (notifyBox && !popup) {
 	    var n = notifyBox.appendNotification(
 	      "(CertPatrol) "+ certobj.host +": "+certobj.event +" "+
-	      certobj.moz.commonName +". "+
+	      certobj.now.commonName +". "+
 	      this.locale.issuedBy +" "+
-	      (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName)
+	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName)
 	      , certobj.host, null, notifyBox.PRIORITY_INFO_HIGH, [{
 		label: this.locale.reject,
 		accessKey: this.locale.reject_key,
@@ -943,9 +943,9 @@ var CertPatrol = {
 
 	    var n = notifyBox.appendNotification(
 	      "(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
-	      certobj.moz.commonName +". "+
+	      certobj.now.commonName +". "+
 	      this.locale.issuedBy +" "+
-	      (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName) +" "+
+	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName) +" "+
 	      warn, certobj.host, null, priority[certobj.threat], [{
 		label: this.locale.accept,
 		accessKey: this.locale.accept_key,
