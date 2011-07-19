@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE prefwindow SYSTEM "chrome://certpatrol/locale/prefs.dtd">
 
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
 <prefwindow id="CertPatrol-prefs" title="&_title;"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -16,12 +15,6 @@
   ondialogdisclosure="CertPatrol.showRelNotes()">
 
 <script src="CertPatrol.js"/>
-<script>
-  if (!Components.classes["@mozilla.org/browser/browserglue;1"]) {
-    var btn = document.getElementById("CertPatrol-prefs").getButton("extra2");
-    btn.parentNode.removeChild(btn);
-  }
-</script>
 
 <prefpane id="main" label="&_title_main;">
   <preferences> 
@@ -57,5 +50,12 @@
 	    checked="false" />
   </groupbox> 
 </prefpane>
+
+<script>
+  if (!Components.classes["@mozilla.org/browser/browserglue;1"]) {
+    var btn = document.getElementById("CertPatrol-prefs").getButton("extra1");
+    btn.parentNode.removeChild(btn);
+  }
+</script>
 
 </prefwindow> 
