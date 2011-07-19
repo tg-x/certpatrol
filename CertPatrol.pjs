@@ -350,7 +350,7 @@ var CertPatrol = {
 	obj.subjectAltName = [];
 	while (m = re.exec(san.displayValue))
 	  obj.subjectAltName.push(m[1]);
-	this.log("SAN:", obj.subjectAltName);
+##	this.log("SAN:", obj.subjectAltName);
 	// how do we use this now?
     },
 
