@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?xml-stylesheet href="chrome://certpatrol/skin/CertPatrol.css" type="text/css"?>
+<!-- ?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"? -->
 
 <!DOCTYPE overlay [
   <!ENTITY % certpatrol SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd"> %certpatrol;
