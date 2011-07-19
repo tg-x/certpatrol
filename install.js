@@ -7,7 +7,7 @@
 (function() {
 
 var displayName = "CertPatrol";
-var version     = "2.0.7";
+var version     = "2.0.8";
 var name        = "certpatrol"; // leafname of the JAR file
 
 // The following three sets of variables tell this installer script how your
