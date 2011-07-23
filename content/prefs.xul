@@ -30,6 +30,9 @@
     <preference id="_privatebrowsing_save"
 	name="certpatrol.privatebrowsing.save"
 	type="bool" />
+    <preference id="_notify_timeout"
+	name="certpatrol.notify.timeout"
+	type="int" />
   </preferences>
 
   <dialogheader title="&_title;" />
@@ -48,6 +51,11 @@
     <checkbox label="&_privatebrowsing_save;"
 	    preference="_privatebrowsing_save"
 	    checked="false" />
+    <hbox align="center">
+      <label>&_notify_timeout;</label>
+      <textbox type="number" preference="_notify_timeout" value="0" maxlength="2" width="40" />
+      <label>&_notify_timeout2;</label>
+    </hbox>
   </groupbox> 
 </prefpane>
 

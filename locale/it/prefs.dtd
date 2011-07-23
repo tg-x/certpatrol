@@ -4,6 +4,8 @@
 <!ENTITY _popup_change	"Mostra immediatamente i dettagli anche per cambiamenti di certificato innocui">
 <!ENTITY _popup_wild	"Mostra certificati wildcard gia` accettati ogni volta che si presentano per un host diverso">
 <!ENTITY _privatebrowsing_save	"Memorizza certificati anche se in Private Browsing Mode">
+<!ENTITY _notify_timeout	"TODO: Hide notifications about new certs and low-threat changes after">
+<!ENTITY _notify_timeout2	"TODO: seconds (0: disabled)">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"Mostra la lista dei certificati">

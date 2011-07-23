@@ -4,6 +4,8 @@
 <!ENTITY _popup_change	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
 <!ENTITY _popup_wild	"Details erneut anzeigen für mehrfach eingesetzte Wildcardzertifikate">
 <!ENTITY _privatebrowsing_save	"Speichere Zertifikate auch wenn Private Browsing Mode aktiv ist">
+<!ENTITY _notify_timeout	"TODO: Hide notifications about new certs and low-threat changes after">
+<!ENTITY _notify_timeout2	"TODO: seconds (0: disabled)">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">
 <!ENTITY _certmgr	"Betrachte gespeicherte Zertifikate">

@@ -356,7 +356,6 @@ var CertPatrol = {
 	}
     },
 
-
     registerObserver: function(topic) {
 	var observerService = Components.classes["@mozilla.org/observer-service;1"]
 	  .getService(Components.interfaces.nsIObserverService);
@@ -634,7 +633,7 @@ var CertPatrol = {
 	    if (wild) {
 		certobj.warn.wildcard = true;
 		certobj.event = this.locale.wildEvent;
-		this.outwild(browser, certobj);
+		this.outchange(browser, certobj);
 		return;
 	    }
 	    certobj.event = this.locale.newEvent;
@@ -915,6 +914,16 @@ var CertPatrol = {
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
+
+	    try {
+		var timeout = this.prefs.getIntPref("notify.timeout");
+		if (timeout > 0) {
+		    setTimeout(function() {
+			notifyBox.removeNotification(n);
+			n = null;
+		    }, timeout * 1000);
+		}
+	    } catch (err) {}
 	}
 	if (popup)
 	  browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul", "_blank",
@@ -963,6 +972,19 @@ var CertPatrol = {
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
+
+	    if (certobj.threat == 0) {
+		try {
+		    var timeout = this.prefs.getIntPref("notify.timeout");
+		    if (timeout > 0) {
+			setTimeout(function() {
+			    notifyBox.removeNotification(n);
+			    CertPatrol.saveCert(certobj);
+			    n = certobj = null;
+			}, timeout * 1000);
+		    }
+		} catch (err) {}
+	    }
 	}
 	if (popup)
 	  browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul", "_blank",
