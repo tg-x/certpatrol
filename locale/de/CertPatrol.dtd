@@ -13,7 +13,7 @@
 <!ENTITY daysFuture		"in [_days] Tagen">
 
 <!ENTITY issuedTo		"Ausgegeben an:">
-<!ENTITY issuedBy		"Scheinbar ausgestellt durch:">
+<!ENTITY issuedBy		"Anscheinend ausgestellt durch:">
 <!ENTITY validity		"Gültigkeit:">
 <!ENTITY fingerprints		"Prüfsummen:">
 <!ENTITY commonName		"Name (CN):">
