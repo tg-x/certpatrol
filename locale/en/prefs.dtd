@@ -4,8 +4,8 @@
 <!ENTITY _popup_change	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
 <!ENTITY _popup_wild	"Show already accepted wildcard certificates again when they match a new hostname">
 <!ENTITY _privatebrowsing_save	"Store certificates even when in Private Browsing Mode">
-<!ENTITY _notify_timeout	"Hide notifications about new certs and low-threat changes after">
-<!ENTITY _notify_timeout2	"seconds (0: disabled)">
+<!ENTITY _notify_timeout	"Accept low-threat changes after">
+<!ENTITY _notify_timeout2	"seconds automatically (0 = disabled)">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"View Certificates">
