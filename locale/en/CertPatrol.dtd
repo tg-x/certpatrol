@@ -44,7 +44,7 @@
 <!ENTITY accept_key		"A">
 <!ENTITY reject			"Reject">
 <!ENTITY reject_key		"R">
-<!ENTITY issuerOnly		"Check certification authority only">
+<!ENTITY issuerOnly		"Too many pop-ups? Try checking authority only for this domain">
 <!ENTITY issuerOnly_key		"C">
 <!ENTITY ignoreHost		"Add to ignore list">
 <!ENTITY ignoreHost_key		"I">

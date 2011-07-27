@@ -44,7 +44,7 @@
 <!ENTITY accept_key		"A">
 <!ENTITY reject			"Rigetta">
 <!ENTITY reject_key		"R">
-<!ENTITY issuerOnly		"Controlla solo l'autorità di certificazione">
+<!ENTITY issuerOnly		"Troppi avvisi? Per questo dominio controlla solo l'autorità di certificazione">
 <!ENTITY issuerOnly_key		"C">
 <!ENTITY ignoreHost		"TODO: Add to ignore list">
 <!ENTITY ignoreHost_key		"TODO: I">

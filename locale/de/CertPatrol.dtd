@@ -44,7 +44,7 @@
 <!ENTITY accept_key		"A">
 <!ENTITY reject			"Verwerfen">
 <!ENTITY reject_key		"V">
-<!ENTITY issuerOnly		"Nur Zertifizierungsstelle beachten">
+<!ENTITY issuerOnly		"Zuviele Meldungen? Beachte für diese Domain nur die Zertifizierungsstelle">
 <!ENTITY issuerOnly_key		"Z">
 <!ENTITY ignoreHost		"TODO: Add to ignore list">
 <!ENTITY ignoreHost_key		"TODO: I">
