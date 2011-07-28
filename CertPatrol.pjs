@@ -947,7 +947,7 @@ var CertPatrol = {
 		var t = this.prefs.getIntPref("notify.timeout");
 		if (t > 0) {
 		    timeout = setTimeout(function() {
-			notifyBox.removeNotification(n);
+			if (n.parentNode) notifyBox.removeNotification(n);
 			n = null;
 		    }, t * 1000);
 		}
@@ -1009,8 +1009,10 @@ var CertPatrol = {
 		    var t = this.prefs.getIntPref("notify.timeout");
 		    if (t > 0) {
 			timeout = setTimeout(function() {
-			    notifyBox.removeNotification(n);
-			    CertPatrol.saveCert(certobj);
+			    if (n.parentNode) {
+			        notifyBox.removeNotification(n);
+			        CertPatrol.saveCert(certobj);
+                            }
 			    n = certobj = null;
 			}, t * 1000);
 		    }
