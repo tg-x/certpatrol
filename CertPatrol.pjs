@@ -892,7 +892,7 @@ var CertPatrol = {
             return false;
         }
 
-        return new RegExp('\\b'+host.replace(/\./g,'\\.')+'\\b').test(list);
+        return new RegExp('(?:^|[\\s,])'+host.replace(/\./g,'\\.')+'(?:[\\s,]|$)').test(list);
     },
 
     ignoreHost: function(host) {
