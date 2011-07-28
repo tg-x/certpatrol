@@ -46,6 +46,8 @@
 <!ENTITY reject_key		"R">
 <!ENTITY issuerOnly		"Controlla solo l'autorità di certificazione">
 <!ENTITY issuerOnly_key		"C">
+<!ENTITY ignoreHost		"TODO: Add to ignore list">
+<!ENTITY ignoreHost_key		"TODO: I">
 
 <!ENTITY warn_wildcard		"Info: Questo certificato è stato applicato anche ad altri siti di questo dominio.">
 <!ENTITY warn_commonName	"Attenzione: È cambiato il nome del sito. Controlla se va bene così">

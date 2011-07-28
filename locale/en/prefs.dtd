@@ -6,6 +6,7 @@
 <!ENTITY _privatebrowsing_save	"Store certificates even when in Private Browsing Mode">
 <!ENTITY _notify_timeout	"Accept low-threat changes after">
 <!ENTITY _notify_timeout2	"seconds automatically (0 = disabled)">
+<!ENTITY _hosts_ignore	"Ignored hosts:">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"View Certificates">

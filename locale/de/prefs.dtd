@@ -6,6 +6,7 @@
 <!ENTITY _privatebrowsing_save	"Speichere Zertifikate auch wenn Private Browsing Mode aktiv ist">
 <!ENTITY _notify_timeout	"Unkritische Meldungen werden nach">
 <!ENTITY _notify_timeout2	"Sekunden automatisch angenommen (0 = niemals)">
+<!ENTITY _hosts_ignore	"TODO: Ignored hosts:">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">
 <!ENTITY _certmgr	"Betrachte gespeicherte Zertifikate">

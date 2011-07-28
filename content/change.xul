@@ -7,16 +7,19 @@
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   persist="screenX screenY width height" width="800" height="600"
-  buttons="accept,cancel"
+  buttons="extra1,accept,cancel"
   onload="return onLoad()"
+  buttonlabelextra1="&ignoreHost;"
   buttonlabelaccept="&accept;"
   buttonlabelcancel="&reject;"
+  buttonaccesskeyextra1="&ignoreHost_key;"
   buttonaccesskeyaccept="&accept_key;"
   buttonaccesskeycancel="&reject_key;"
+  ondialogextra1="CertPatrol.ignoreHost(certobj.host); window.close()"
   ondialogaccept="return CertPatrol.saveCert(certobj)"
   ondialogcancel="return true">
-  <script>
 
+  <script>
   var certobj = window.arguments[0];
   var CertPatrol = window.arguments[1];
   //var $ = document.getElementById.bind(document); // TB does not have bind()

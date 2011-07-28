@@ -19,20 +19,23 @@
 <prefpane id="main" label="&_title_main;">
   <preferences> 
     <preference id="_popup_new"
-	name="certpatrol.popup.new"
-	type="bool" />
+                name="certpatrol.popup.new"
+                type="bool" />
     <preference id="_popup_change"
-	name="certpatrol.popup.change"
-	type="bool" />
+                name="certpatrol.popup.change"
+                type="bool" />
     <preference id="_popup_wild"
-	name="certpatrol.popup.wild"
-	type="bool" />
+                name="certpatrol.popup.wild"
+                type="bool" />
     <preference id="_privatebrowsing_save"
-	name="certpatrol.privatebrowsing.save"
-	type="bool" />
+                name="certpatrol.privatebrowsing.save"
+                type="bool" />
     <preference id="_notify_timeout"
-	name="certpatrol.notify.timeout"
-	type="int" />
+                name="certpatrol.notify.timeout"
+                type="int" />
+    <preference id="_hosts_ignore"
+                name="certpatrol.hosts.ignore"
+                type="string" />
   </preferences>
 
   <dialogheader title="&_title;" />
@@ -40,22 +43,29 @@
   <groupbox>
     <caption label="&_title_main;" />
     <checkbox label="&_popup_new;"
-	    preference="_popup_new" 
-	    checked="false" />
+              preference="_popup_new"
+              checked="false" />
     <checkbox label="&_popup_change;"
-	    preference="_popup_change" 
-	    checked="false" />
+              preference="_popup_change"
+              checked="false" />
     <checkbox label="&_popup_wild;"
-	    preference="_popup_wild" 
-	    checked="false" />
+              preference="_popup_wild"
+              checked="false" />
     <checkbox label="&_privatebrowsing_save;"
-	    preference="_privatebrowsing_save"
-	    checked="false" />
+              preference="_privatebrowsing_save"
+              checked="false" />
     <hbox align="center">
       <label>&_notify_timeout;</label>
-      <textbox type="number" preference="_notify_timeout" value="0" maxlength="2" width="40" />
+      <textbox type="number" maxlength="2" width="40"
+               preference="_notify_timeout"
+               value="0" />
       <label>&_notify_timeout2;</label>
     </hbox>
+    <vbox>
+      <label>&_hosts_ignore;</label>
+      <textbox multiline="true" rows="5"
+               preference="_hosts_ignore" />
+    </vbox>
   </groupbox> 
 </prefpane>
 
