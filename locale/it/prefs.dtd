@@ -1,12 +1,19 @@
 <!ENTITY _title		"Preferenze riguardo a Certificate Patrol">
-<!ENTITY _title_main	"Opzioni">
+<!ENTITY _title_notify	"TODO: Notification bar">
+<!ENTITY _title_popup	"TODO: Pop-up dialogs">
+<!ENTITY _title_options	"Opzioni">
+<!ENTITY _title_ignore	"TODO: Ignored hosts">
+<!ENTITY _notify_new	"TODO: Notify about new certificates">
+<!ENTITY _notify_wild	"TODO: Notify about already accepted wildcard certificates again when they match a new hostname">
+<!ENTITY _notify_timeout	"Accetta modificazioni di basso pericolo automaticamente dopo">
+<!ENTITY _notify_timeout2	"secondi (0 = disattivato)">
 <!ENTITY _popup_new	"Mostra sempre i dettagli per certificati nuovamente adottati">
 <!ENTITY _popup_change	"Mostra immediatamente i dettagli anche per cambiamenti di certificato innocui">
 <!ENTITY _popup_wild	"Mostra certificati wildcard gia` accettati ogni volta che si presentano per un host diverso">
 <!ENTITY _privatebrowsing_save	"Memorizza certificati anche se in Private Browsing Mode">
-<!ENTITY _notify_timeout	"Accetta modificazioni di basso pericolo automaticamente dopo">
-<!ENTITY _notify_timeout2	"secondi (0 = disattivato)">
-<!ENTITY _hosts_ignore	"TODO: Ignored hosts:">
+<!ENTITY _hosts_ignore_1	"TODO: Certificates for these hosts are not checked and not stored.">
+<!ENTITY _hosts_ignore_2	"TODO: Useful when a host uses multiple certificates with different issuers.">
+<!ENTITY _hosts_ignore_3	"TODO: In case when the issuer stays the same use the '&issuerOnly;' checkbox instead in the change notification dialog.">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"Mostra la lista dei certificati">

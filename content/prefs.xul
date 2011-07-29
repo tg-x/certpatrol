@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<!DOCTYPE prefwindow SYSTEM "chrome://certpatrol/locale/prefs.dtd">
+
+<!DOCTYPE prefwindow [
+  <!ENTITY % prefs SYSTEM "chrome://certpatrol/locale/prefs.dtd"> %prefs;
+  <!ENTITY % certpatrol SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd"> %certpatrol;
+]>
+<!--DOCTYPE prefwindow SYSTEM "chrome://certpatrol/locale/prefs.dtd"-->
 
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
@@ -16,7 +21,7 @@
 
 <script src="CertPatrol.js"/>
 
-<prefpane id="main" label="&_title_main;">
+<prefpane id="main">
   <preferences> 
     <preference id="_popup_new"
                 name="certpatrol.popup.new"
@@ -27,12 +32,18 @@
     <preference id="_popup_wild"
                 name="certpatrol.popup.wild"
                 type="bool" />
-    <preference id="_privatebrowsing_save"
-                name="certpatrol.privatebrowsing.save"
+    <preference id="_notify_new"
+                name="certpatrol.notify.new"
+                type="bool" />
+    <preference id="_notify_wild"
+                name="certpatrol.notify.wild"
                 type="bool" />
     <preference id="_notify_timeout"
                 name="certpatrol.notify.timeout"
                 type="int" />
+    <preference id="_privatebrowsing_save"
+                name="certpatrol.privatebrowsing.save"
+                type="bool" />
     <preference id="_hosts_ignore"
                 name="certpatrol.hosts.ignore"
                 type="string" />
@@ -41,7 +52,24 @@
   <dialogheader title="&_title;" />
 
   <groupbox>
-    <caption label="&_title_main;" />
+    <caption label="&_title_notify;" />
+    <checkbox label="&_notify_new;"
+              preference="_notify_new"
+              checked="true" />
+    <checkbox label="&_notify_wild;"
+              preference="_notify_wild"
+              checked="true" />
+    <hbox align="center">
+      <label>&_notify_timeout_1;</label>
+      <textbox type="number" maxlength="2" width="40"
+               preference="_notify_timeout"
+               value="0" />
+      <label>&_notify_timeout_2;</label>
+    </hbox>
+  </groupbox>
+
+  <groupbox>
+    <caption label="&_title_popup;" />
     <checkbox label="&_popup_new;"
               preference="_popup_new"
               checked="false" />
@@ -51,18 +79,21 @@
     <checkbox label="&_popup_wild;"
               preference="_popup_wild"
               checked="false" />
+  </groupbox>
+
+  <groupbox>
+    <caption label="&_title_options;" />
     <checkbox label="&_privatebrowsing_save;"
               preference="_privatebrowsing_save"
               checked="false" />
-    <hbox align="center">
-      <label>&_notify_timeout;</label>
-      <textbox type="number" maxlength="2" width="40"
-               preference="_notify_timeout"
-               value="0" />
-      <label>&_notify_timeout2;</label>
-    </hbox>
+  </groupbox>
+
+  <groupbox>
+    <caption label="&_title_ignore;" />
     <vbox>
-      <label>&_hosts_ignore;</label>
+      <label>&#8226; &_hosts_ignore_1;</label>
+      <label>&#8226; &_hosts_ignore_2;</label>
+      <label>&#8226; &_hosts_ignore_3;</label>
       <textbox multiline="true" rows="5"
                preference="_hosts_ignore" />
     </vbox>

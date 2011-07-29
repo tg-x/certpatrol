@@ -912,6 +912,11 @@ var CertPatrol = {
 	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
 	} catch (err) {}
 
+	try {
+	    if (!forcePopup && !this.prefs.getBoolPref("notify.new"))
+                return;
+	} catch (err) {}
+
 	var notifyBox = this.getNotificationBox(browser);
 	var popup = forcePopup || !notifyBox;
 ##      // https://developer.mozilla.org/en/XUL/Method/appendNotification
@@ -963,6 +968,11 @@ var CertPatrol = {
 	try {
 	    if (this.prefs)
 	      forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.change");
+	} catch (err) {}
+
+	try {
+	    if (!forcePopup && certobj.warn.wildcard && !this.prefs.getBoolPref("notify.wild"))
+                return;
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
