@@ -38,7 +38,7 @@
 <!ENTITY viewNewCert		"Vedi certificato nuovo">
 <!ENTITY viewNewCert_key	"N">
 <!ENTITY viewDetails		"Vedi dettagli">
-<!ENTITY viewDetails_key	"D">
+<!ENTITY viewDetails_key	"V">
 
 <!ENTITY accept			"Accetta">
 <!ENTITY accept_key		"A">
