@@ -637,10 +637,9 @@ var CertPatrol = {
 	    if (wild) {
 		certobj.warn.wildcard = true;
 		certobj.event = this.locale.wildEvent;
-		this.outchange(browser, certobj);
-		return;
-	    }
-	    certobj.event = this.locale.newEvent;
+	    } else {
+	        certobj.event = this.locale.newEvent;
+            }
 	    this.outnew(browser, certobj);
 	}
     },
@@ -909,11 +908,12 @@ var CertPatrol = {
     outnew: function(browser, certobj) {
 	var forcePopup = false;
 	try {
-	    if (this.prefs) forcePopup = this.prefs.getBoolPref("popup.new");
+	    if (this.prefs) this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.new");
 	} catch (err) {}
 
 	try {
-	    if (!forcePopup && !this.prefs.getBoolPref("notify.new"))
+	    if (!forcePopup && (!certobj.warn.wildcard && !this.prefs.getBoolPref("notify.new") ||
+                                certobj.warn.wildcard && !this.prefs.getBoolPref("notify.wild")))
                 return;
 	} catch (err) {}
 
@@ -967,12 +967,7 @@ var CertPatrol = {
 	var forcePopup = false;
 	try {
 	    if (this.prefs)
-	      forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.change");
-	} catch (err) {}
-
-	try {
-	    if (!forcePopup && certobj.warn.wildcard && !this.prefs.getBoolPref("notify.wild"))
-                return;
+	      forcePopup = this.prefs.getBoolPref("popup.change");
 	} catch (err) {}
 
 	var notifyBox = this.getNotificationBox(browser);
