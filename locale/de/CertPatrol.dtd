@@ -46,8 +46,8 @@
 <!ENTITY reject_key		"V">
 <!ENTITY issuerOnly		"Zuviele Meldungen? Beachte für diese Domain nur die Zertifizierungsstelle">
 <!ENTITY issuerOnly_key		"Z">
-<!ENTITY ignoreHost		"TODO: Add to ignore list">
-<!ENTITY ignoreHost_key		"TODO: I">
+<!ENTITY ignoreHost		"Ignoriere diese Adresse">
+<!ENTITY ignoreHost_key		"I">
 
 <!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch für andere Sites dieser Domain eingesetzt.">
 <!ENTITY warn_commonName	"Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">

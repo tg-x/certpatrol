@@ -46,7 +46,7 @@
 <!ENTITY reject_key		"R">
 <!ENTITY issuerOnly		"Too many pop-ups? Try checking authority only for this domain">
 <!ENTITY issuerOnly_key		"C">
-<!ENTITY ignoreHost		"Add to ignore list">
+<!ENTITY ignoreHost		"Ignore this website">
 <!ENTITY ignoreHost_key		"I">
 
 <!ENTITY warn_wildcard		"Info: This certificate has a wildcard for several hostnames.">

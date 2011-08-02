@@ -7,9 +7,9 @@
 <!ENTITY _notify_wild	"Notify about already accepted wildcard certificates again when they match a new hostname">
 <!ENTITY _notify_timeout_1	"Accept low-threat changes after">
 <!ENTITY _notify_timeout_2	"seconds automatically (0 = disabled)">
-<!ENTITY _popup_new	"Newly accepted certificates are always shown in a pop-up by default">
-<!ENTITY _popup_change	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
-<!ENTITY _popup_wild	"Show already accepted wildcard certificates again in a pop-up when they match a new hostname">
+<!ENTITY _popup_new	"Show details of newly accepted certificates by default">
+<!ENTITY _popup_change	"Show details of all certificate changes, even harmless ones, by default">
+<!ENTITY _popup_wild	"Show details of an already accepted wildcard certificate again when it matches a new hostname">
 <!ENTITY _privatebrowsing_save	"Store certificates even when in Private Browsing Mode">
 <!ENTITY _hosts_ignore_1	"Certificates for these hosts are not checked and not stored.">
 <!ENTITY _hosts_ignore_2	"Useful when a host uses multiple certificates with different issuers.">
