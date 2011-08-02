@@ -4,16 +4,16 @@
 <!ENTITY _title_options	"Opzioni">
 <!ENTITY _title_ignore	"Siti ignorati">
 <!ENTITY _notify_new	"Mostra certificati nuovamente adottati">
-<!ENTITY _notify_wild	"Mostra certificati wildcard gia` accettati ogni volta che si presentano per un host diverso">
+<!ENTITY _notify_wild	"Mostra certificati wildcard giÃ  accettati ogni volta che si presentano per un host diverso">
 <!ENTITY _notify_timeout	"Accetta modificazioni di basso pericolo automaticamente dopo">
 <!ENTITY _notify_timeout2	"secondi (0 = disattivato)">
 <!ENTITY _popup_new	"Mostra sempre i dettagli per certificati nuovamente adottati">
 <!ENTITY _popup_change	"Mostra sempre i dettagli anche per cambiamenti di certificato innocui">
-<!ENTITY _popup_wild	"Mostra sempre i dettagli per certificati wildcard gia` accettati">
+<!ENTITY _popup_wild	"Mostra sempre i dettagli per certificati wildcard giÃ  accettati">
 <!ENTITY _privatebrowsing_save	"Memorizza certificati anche se in Private Browsing Mode">
 <!ENTITY _hosts_ignore_1	"Certificati per i questi siti non verranno ne controllati ne memorizzati.">
-<!ENTITY _hosts_ignore_2	"Utile quando un sito confonde certificati di autorità diverse.">
-<!ENTITY _hosts_ignore_3	"Se l'autorità è sempre la stessa è meglio cliccare la funzione '&issuerOnly;' nel dialogo con i dettagli.">
+<!ENTITY _hosts_ignore_2	"Utile quando un sito confonde certificati di autoritÃ  diverse.">
+<!ENTITY _hosts_ignore_3	"Se l'autoritÃ  Ã¨ sempre la stessa Ã¨ meglio cliccare la funzione '&issuerOnly;' nel dialogo con i dettagli.">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 <!ENTITY _certmgr	"Mostra la lista dei certificati">
