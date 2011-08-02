@@ -239,7 +239,7 @@ var CertPatrol = {
 	if (!isNaN(tim)) tim /= 1000;
 	var d = new Date(tim);
 	// Y2K bug in Javascript...  :)
-	if (d.getFullYear() < 2000) d.setFullYear(100 + d.getFullYear());
+	if (d.getFullYear() < 1990) d.setFullYear(100 + d.getFullYear());
 	var now = new Date();
 	//alert("Now is "+ now.getTime() +" and cert is "+ d.getTime());
 	return d.getTime() - now.getTime();
