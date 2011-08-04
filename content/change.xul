@@ -62,6 +62,11 @@
           }
       }
 
+      if (certobj.old.stored)
+          $("stored").value = certobj.old.stored;
+      else
+          $("stored").hidden = true;
+
       for (var k in certobj.warn)
         if (certobj.warn[k])
           $("warn_"+k).hidden = false;
@@ -189,6 +194,12 @@
 	  <vbox flex="1">
 	    <textbox class="plain" readonly="true" id="notAfter" />
 	    <textbox class="plain" readonly="true" id="notAfter2" />
+	  </vbox>
+        </row>
+        <row>
+          <label id="cmnbl" value="&stored;" />
+	  <vbox flex="1">
+	    <textbox class="plain" readonly="true" id="stored" />
 	  </vbox>
         </row>
         <groupbox>

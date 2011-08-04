@@ -585,7 +585,7 @@ var CertPatrol = {
 	    old.notAfter = this.isodatedelta(old.notAfter);
 	    now.notBefore = this.isodatedelta(now.notBefore);
 	    now.notAfter = this.isodatedelta(now.notAfter);
-	    //old.stored = this.isodatedelta(old.stored);
+            if (old.stored) old.stored = this.isodatedelta(old.stored * 1000);
 
 	    if (wild && certobj.threat == 0) {
 		certobj.warn.wildcard = true;

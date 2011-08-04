@@ -23,6 +23,7 @@
 <!ENTITY emailAddress		"Contatto:">
 <!ENTITY notBefore		"Data di rilascio:">
 <!ENTITY notAfter		"Data di scadenza:">
+<!ENTITY stored			"Memorizzato il:">
 <!ENTITY md5Fingerprint		"Impronta MD5:">
 <!ENTITY sha1Fingerprint	"Impronta SHA1:">
 

@@ -23,6 +23,7 @@
 <!ENTITY emailAddress		"Kontakt:">
 <!ENTITY notBefore		"Ausgestellt am:">
 <!ENTITY notAfter		"Gültig bis:">
+<!ENTITY stored			"Gespeichert am:">
 <!ENTITY md5Fingerprint		"MD5 Fingerprint:">
 <!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
 
