@@ -55,7 +55,7 @@
 <!ENTITY warn_issuerCommonName	"Vorsicht: Es wurde die Zertifizierungsstelle gewechselt.">
 <!ENTITY warn_notBefore		"Achtung! Dieses Zertifikat ist noch nicht gültig.">
 <!ENTITY warn_notAfter_expired	"Info: Altes Zertifikat ist abgelaufen. Es muss ersetzt werden.">
-<!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig, aber vielleicht gab es andere Gründe es zu ersetzen.">
+<!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig. Sollte diese Site regelmäßig mehr als ein Zertifikat verwenden, ist es nützlich die 'Nur CA beachten' Option in der Detailansicht zu aktivieren.">
 <!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
 
 <!ENTITY sanitizer.itemLabel	"Durch Certificate Patrol gespeicherte Zertifikate">

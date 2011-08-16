@@ -55,7 +55,7 @@
 <!ENTITY warn_issuerCommonName	"Attenzione: È cambiata l'autorità di certificazione.">
 <!ENTITY warn_notBefore		"Errore: Questo certificato non è ancora valido!">
 <!ENTITY warn_notAfter_expired	"Info: Il vecchio certificato è scaduto. Era necessario cambiarlo.">
-<!ENTITY warn_notAfter_notdue	"Attenzione: Il vecchio certificato non era ancora scaduto, ma forse c'erano altre ragioni per cambiarlo.">
+<!ENTITY warn_notAfter_notdue	"Attenzione: Il vecchio certificato non è ancora scaduto. Se questo sito regolarmente usa più di un certificato conviene attivare la funzione 'Controlla solo la CA' sotto ai dettagli.">
 <!ENTITY warn_notAfter_due	"Info: Il vecchio certificato scade prossimamente. È normale cambiarlo.">
 
 <!ENTITY sanitizer.itemLabel	"Certificati memorizzati da Certificate Patrol">
