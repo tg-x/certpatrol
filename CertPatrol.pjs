@@ -144,7 +144,7 @@ var CertPatrol = {
 	    this.db = {
 		selectAll: this.dbh.createStatement("SELECT * FROM certificates"),
 		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1"),
-		selectWild: this.dbh.createStatement("SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
+		selectWild: this.dbh.createStatement("SELECT min(flags) FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
 		insert: this.dbh.createStatement(
 		  "INSERT INTO certificates ("+
 		  "  host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
@@ -514,7 +514,12 @@ var CertPatrol = {
 	    stmt.reset();
 	}
 
-	var wild = this.wildcardCertCheck(now.cert);
+	var wild = false;
+	var flags = this.wildcardCertCheck(now.cert);
+	if (flags !== null) {
+	    certobj.flags = flags;
+	    wild = true;
+	}
 
 	// The certificate changed
 	if (found && (!old.cert || !now.cert.equals(old.cert))) {
@@ -655,33 +660,34 @@ var CertPatrol = {
 	// we have one but no SHA1 fingerprint we should show it for security's
 	// sake...
 ##	alert("doing wildcardCertCheck for "+ sha1Fingerprint);
-	if (cert.commonName.charAt(0) === '*' && cert.md5Fingerprint && cert.sha1Fingerprint) {
-	    // We got one, check now if we have it already. If not, return false and
-	    // the certificate will be shown. Otherwise, return yes and the new cert
-	    // dialog will be omitted.
-	    try {
-		stmt = this.db.selectWild;
-		// starts counting from 0, so ?13 is 12 here. you gotta love it.
-		stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
-		stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
-		if (stmt.executeStep()) {
-		    return true;
-		} else {
-		    // This case could occur as well if we have *.example.com and
-		    // foo.example.com with SHA1(1) saved and we find a cert with
-		    // *.example.com and bar.example.com and SHA1(2): We would show
-		    // the dialog even if we have already saved the wildcard cert. But
-		    // that's okay due to the changed SHA1 fingerprint, thus prioritizing
-		    // security and not convenience...
-		    return false;
-		}
-	    } catch (err) {
-		this.warn("Error trying to check wildcard certificate "+
-		  cert.commonName +": ", err);
-	    } finally {
-		stmt.reset();
+	if (!cert.md5Fingerprint || !cert.sha1Fingerprint) return null; // || cert.commonName.charAt(0) !== '*'
+
+	// We got one, check now if we have it already. If not, return false and
+	// the certificate will be shown. Otherwise, return yes and the new cert
+	// dialog will be omitted.
+	try {
+	    stmt = this.db.selectWild;
+	    // starts counting from 0, so ?13 is 12 here. you gotta love it.
+	    stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
+	    stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
+	    if (stmt.executeStep()) {
+		var minflags = stmt.getInt64(0);
+		return minflags;
+	    } else {
+		// This case could occur as well if we have *.example.com and
+		// foo.example.com with SHA1(1) saved and we find a cert with
+		// *.example.com and bar.example.com and SHA1(2): We would show
+		// the dialog even if we have already saved the wildcard cert. But
+		// that's okay due to the changed SHA1 fingerprint, thus prioritizing
+		// security and not convenience...
 	    }
-	} else return false;
+	} catch (err) {
+	    this.warn("Error trying to check wildcard certificate "+
+		      cert.commonName +": ", err);
+	} finally {
+	    stmt.reset();
+	}
+	return null;
     },
 
     // accept changed cert
@@ -908,7 +914,8 @@ var CertPatrol = {
     outnew: function(browser, certobj) {
 	var forcePopup = false;
 	try {
-	    if (this.prefs) this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.new");
+	    if (this.prefs)
+                forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.new");
 	} catch (err) {}
 
 	try {
