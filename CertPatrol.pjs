@@ -908,7 +908,8 @@ var CertPatrol = {
     outnew: function(browser, certobj) {
 	var forcePopup = false;
 	try {
-	    if (this.prefs) this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.new");
+	    if (this.prefs)
+                forcePopup = this.prefs.getBoolPref(certobj.warn.wildcard ? "popup.wild" : "popup.new");
 	} catch (err) {}
 
 	try {
