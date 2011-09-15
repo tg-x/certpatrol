@@ -918,6 +918,7 @@ var CertPatrol = {
                 return;
 	} catch (err) {}
 
+        var win = browser && browser.contentWindow ? browser.contentWindow : window;
 	var notifyBox = this.getNotificationBox(browser);
 	var popup = forcePopup || !notifyBox;
 ##      // https://developer.mozilla.org/en/XUL/Method/appendNotification
@@ -942,9 +943,9 @@ var CertPatrol = {
 		accessKey: this.locale.viewDetails_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul",
-						     "_blank", "chrome,dialog,modal",
-						     certobj, CertPatrol);
+		    win.openDialog("chrome://certpatrol/content/new.xul",
+				   "_blank", "chrome,dialog,modal",
+				   certobj, CertPatrol);
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
@@ -960,8 +961,8 @@ var CertPatrol = {
 	    } catch (err) {}
 	}
 	if (popup)
-	  browser.contentWindow.openDialog("chrome://certpatrol/content/new.xul", "_blank",
-					   "chrome,dialog,modal", certobj, CertPatrol);
+	  win.openDialog("chrome://certpatrol/content/new.xul", "_blank",
+			 "chrome,dialog,modal", certobj, CertPatrol);
     },
 
     outchange: function(browser, certobj) {
@@ -971,6 +972,7 @@ var CertPatrol = {
 	      forcePopup = this.prefs.getBoolPref("popup.change");
 	} catch (err) {}
 
+        var win = browser && browser.contentWindow ? browser.contentWindow : window;
 	var notifyBox = this.getNotificationBox(browser);
 	var popup = forcePopup || certobj.threat > 1 || !notifyBox;
 	if (notifyBox && !popup) {
@@ -1003,9 +1005,9 @@ var CertPatrol = {
 		accessKey: this.locale.viewDetails_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul",
-						     "_blank", "chrome,dialog,modal",
-						     certobj, CertPatrol);
+		    win.openDialog("chrome://certpatrol/content/change.xul",
+				   "_blank", "chrome,dialog,modal",
+				   certobj, CertPatrol);
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
@@ -1026,8 +1028,8 @@ var CertPatrol = {
 	    }
 	}
 	if (popup)
-	  browser.contentWindow.openDialog("chrome://certpatrol/content/change.xul", "_blank",
-					   "chrome,dialog,modal", certobj, CertPatrol);
+	  win.openDialog("chrome://certpatrol/content/change.xul", "_blank",
+			 "chrome,dialog,modal", certobj, CertPatrol);
     },
 
     getNotificationBox: function (win) {
