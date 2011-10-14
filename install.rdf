@@ -7,7 +7,7 @@
     <em:id>CertPatrol@PSYC.EU</em:id>
     <em:type>2</em:type>    <!-- Extension -->
     <em:name>Certificate Patrol</em:name>
-    <em:version>2.0.12</em:version>
+    <em:version>2.0.14</em:version>
     <em:unpack>false</em:unpack>
     <em:creator>Aiko Barz, tg, 20after4 and symlynX</em:creator>
     <em:developer>Aiko Barz</em:developer>
@@ -41,7 +41,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
         <em:minVersion>3.5</em:minVersion>
-        <em:maxVersion>9.0a1</em:maxVersion>
+        <em:maxVersion>10.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -57,7 +57,7 @@
       <Description>
 	<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id> <!-- Thunderbird -->
 	<em:minVersion>3.0</em:minVersion>
-	<em:maxVersion>9.0a1</em:maxVersion>
+	<em:maxVersion>10.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -75,7 +75,7 @@
       <Description>
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id> <!-- SeaMonkey -->
         <em:minVersion>2.0</em:minVersion>
-        <em:maxVersion>2.6a1</em:maxVersion>
+        <em:maxVersion>2.7a1</em:maxVersion>
       </Description>
     </em:targetApplication>
 
