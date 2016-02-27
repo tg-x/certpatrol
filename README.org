@@ -1,0 +1,82 @@
+* Certificate Patrol
+
+- Website: http://patrol.psyced.org/
+- Add-on: https://addons.mozilla.org/en-US/firefox/addon/certificate-patrol/
+
+Your web browser trusts a lot of certification authorities and chained sub-authorities, and it does so blindly. [[http://en.wikipedia.org/wiki/Intermediate_certificate_authorities][Subordinate or intermediate certification authorities]] are a little known device: The root CAs in your browser can delegate permission to issue certificates to an unlimited amount of subordinate CAs ([[http://www.linuxsecurity.com/component/option,com_dictionary/task,view/id,411/][SCA]]) just by signing their certificate, not by borrowing their precious private key to them. You can even buy yourself such a CA from [[http://geotrust.com/enterprise-ssl-certificates/georoot/][GeoTrust]] or [[http://www.sslshopper.com/article-trusted-root-signing-certificates.html][elsewhere]].
+
+It is unclear how many intermediate certification authorities really exist, and yet each of them has /god-like power/ to impersonate any HTTPS web site using a [[http://en.wikipedia.org/wiki/Man-in-the-middle_attack][Man in the Middle]] (MITM) attack scenario. [[http://www.freedom-to-tinker.com/blog/sjs/web-security-trust-models][Researchers at Princeton are acknowledging this problem]] and recommending Certificate Patrol.  Revealing the inner workings of [[http://en.wikipedia.org/wiki/X.509][X.509]] to end users is still deemed too difficult, but only getting familiar with this will really help you get in control. That's why Certificate Patrol gives you insight of what is happening.
+
+* News
+
+- Mozilla recently [[https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/][announced]] that they are deprecating XUL & XPCOM this add-on depends on.
+- See also [[https://github.com/tg-x/libcertpatrol][libcertpatrol]], a C library version of Certificate Patrol with improved functionality.
+
+* Developer comments
+
+You'll see certificate information pop up whenever you visit a
+new HTTPS website, including https://addons.mozilla.org for
+example. "New" is anything Patrol hasn't seen and stored yet.
+
+You are also prompted whenever a web site updates its certificate
+and given the opportunity to compare the two certificates side by
+side, line by line. See the screenshot for an example.
+
+*Even if you do not fully understand what is shown to you, you
+get a chance of distinguishing legitimate from suspicious changes.*
+
+Here's a little list of things to look out for:
+
+- If the old certificate is about to expire (Validity / Expires On),
+  it was necessary to replace it with a new one.
+- In most cases web sites keep using the same certification
+  authority (Issued By) over time. Should the web site have changed
+  its certification authority, make sure the old certificate was
+  about to expire.
+- You may want to consider the most popular CAs (like maybe CAcert, Entrust,
+  Equifax, GoDaddy, NetworkSolutions, Thawte and VeriSign.. to mention some)
+  to be less likely to help in MITM attacks, but that is only a guess.
+  Especially since in each country local CAs may be legitimately
+  well established.
+- Comodo, GeoTrust, GlobalSign, QuoVadis, RSA WebTrust and StartCom
+  are known to offer intermediate CA for money. Still StartCom is extremely
+  popular with small and private web sites for its free services.
+- If all certificates you see are always issued by the same
+  certification authority, you should be very suspicious. Try
+  searching for random HTTPS sites and see if they still all appear to be
+  signed by the same CA.
+- In case of doubt install the Perspectives add-on to make further
+  checks on the credibility of a certificate. The downside of Perspectives
+  is, you reveal who you communicate with to an external service &mdash; so
+  better only use it when necessary.
+- If the web site is important to you, make a research on the name of
+  the new CA. Make a phone call to the owner of the web site and ask them
+  to confirm the SHA1 fingerprint shown on your screen. Ask them to send you
+  future certification data by snail mail <i>before</i> they install it.
+
+It is very important to understand that certificates do not make a statement about the trustworthiness of a web site, but whether that web site is indeed what you think it is. In practice you should always be very suspicious if there are problems with your electronic banking or other sites you trust for very important operations, whereas you can probably relax if a certification problem arises for a web site that you are merely intending to have a quick look at. <b>The more a web site is important to YOU, the more you should be cautious!</b> That is the most essential rule of thumb in dealing with the wild west of Internet certification today.
+
+* Testing the add-on
+
+For the interested ones, to manually trigger seeing a web site
+replace its certificate, you can do one of these things:
+
+- Have an HTTPS web site yourself and change the certificate.
+- Manually have an address in /etc/hosts point to this or that
+  HTTPS IP address and add many security exceptions to Firefox
+  in order for Patrol to even get to do its warning part.
+- Use an sqlite editor like the "SQLite Manager" add-on, edit
+  the CertPatrol.sqlite file and modify any of the fingerprints
+  of an HTTPS website you have visited before. This way, Patrol
+  will think it has seen that web site using a different certificate
+  than it actually does, so as soon as you go to that web site it
+  will warn you of an apparent change in certificate.
+- Make a manual backup of an old or patched CertPatrol.sqlite file
+  and copy it back whenever you need to test a warning.
+
+* Credits
+
+- Prototyped by 20after4 (Mukunda Modell).
+- Reengineered by [[http://www.deepco.de][Aiko Barz]].
+- New features by Gabor X Toth.
+- Originally conceived, planned and continously refined by [[http://psyced.org/~lynX][the lynX]] (Carlo v. Loesch).
